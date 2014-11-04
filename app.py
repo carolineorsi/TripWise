@@ -1,6 +1,7 @@
 from flask import Flask, request, session, render_template, g, redirect, url_for, flash
 import jinja2
 import os
+import model
 import map_data
 
 app = Flask(__name__)
@@ -16,13 +17,11 @@ def list_directions():
     """Prints out directions from user input"""
     origin = request.args.get("origin")
     destination = request.args.get("destination")
+    route = model.Route(origin, destination)
 
-    # print origin, destination
-
-    directions = map_data.get_initial_route(origin, destination)
     direction_steps = []
 
-    for step in directions['routes'][0]['legs'][0]['steps']:
+    for step in route.directions['routes'][0]['legs'][0]['steps']:
         direction_steps.append(step['html_instructions'])
     
     return render_template("test.html", direction_steps=direction_steps)
