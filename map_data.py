@@ -4,8 +4,8 @@ import os
 
 # Set authorization key
 AUTH_KEY = os.environ.get('GOOGLE_API_KEY')
-origin = "3896+19th+St,San+Francisco,CA"
-destination = "683+Sutter+St,San+Francisco,CA"
+# origin = "3896+19th+St,SF,CA"
+# destination = "683+Sutter+St,SF,CA"
 
 
 def get_initial_route(origin, destination):
@@ -22,8 +22,7 @@ def get_initial_route(origin, destination):
  	json_raw = response.read()
  	json_data = json.loads(json_raw)
 
- 	for step in json_data['routes'][0]['legs'][0]['steps']:
- 		print step['html_instructions']
+ 	return json_data
 
 
 
