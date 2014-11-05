@@ -22,8 +22,7 @@ def get_initial_route(origin, destination):
  	json_raw = response.read()
  	json_data = json.loads(json_raw)
 
- 	return json_data
-
+	return json_data
 
 
 # def test_function():

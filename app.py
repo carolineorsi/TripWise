@@ -17,15 +17,22 @@ def list_directions():
     """Prints out directions from user input"""
     origin = request.args.get("origin")
     destination = request.args.get("destination")
+
     route = model.Route(origin, destination)
+    route.get_directions()
 
-    direction_steps = []
 
-    for step in route.directions['routes'][0]['legs'][0]['steps']:
-        direction_steps.append(step['html_instructions'])
-    
-    return render_template("test.html", direction_steps=direction_steps)
+    # Checks that valid results were returned from Google Directions API
+    if route.directions['status'] == 'OK':
+        direction_steps = []
+        for step in route.directions['routes'][0]['legs'][0]['steps']:
+            direction_steps.append(step['html_instructions'])
+        
+        return render_template("test.html", direction_steps=direction_steps)
 
+    else:
+        direction_steps = ["It didn't work"]
+        return render_template("test.html", direction_steps=direction_steps)
 
 
 # @app.route("/melon/<int:id>")
