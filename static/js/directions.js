@@ -45,6 +45,8 @@ function getPlaces(polyline, place) {
 		//     map: map
 		// });
 
+		getPlacesByPoint(decodedPolyline[i], place);
+
 		var circle = {
 			fillColor: '#000',
 			fillOpacity: 0.3,
@@ -54,35 +56,42 @@ function getPlaces(polyline, place) {
 			radius: 500
 		}
 		pointRadius = new google.maps.Circle(circle);		
-		
-		// Create Places request
-		var request = {
-			location: decodedPolyline[i],
-			radius: 500,
-			rankby: 'distance',
-			keyword: place
-		}
-
-		placesService.nearbySearch(request, function(results, status) {
-			// if (status != google.maps.places.PlacesServiceStatus.OK) {
-			// 	console.log(status);
-			// }
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				for (var j = 0; j < results.length; j++) {
-					// console.log(results[j].name, i);
-					var marker = new google.maps.Marker({
-						position: results[j].geometry.location,
-						map: map
-			    		// icon: {
-			      //   		path: google.maps.SymbolPath.CIRCLE,
-			      //   		scale: 8.5,
-			      //   		fillColor: "#00F",
-			      //   		fillOpacity: 0.4,
-			      //   		strokeWeight: 0.4
-			    		// },
-					});
-				}
-			}
-		});
 	};
+}
+
+function getPlacesByPoint(location, place) {
+	var placesList = [];
+
+	// Create Places request
+	var request = {
+		location: location,
+		radius: 500,
+		rankby: 'distance',
+		keyword: place
+	}
+
+	placesService.nearbySearch(request, function(results, status) {
+	// if (status != google.maps.places.PlacesServiceStatus.OK) {
+	// 	console.log(status);
+	// }
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			for (var j = 0; j < results.length; j++) {
+				// console.log(results[j].name);
+				placesList.push(results[j].name);
+				var marker = new google.maps.Marker({
+					position: results[j].geometry.location,
+					map: map
+		    		// icon: {
+		      //   		path: google.maps.SymbolPath.CIRCLE,
+		      //   		scale: 8.5,
+		      //   		fillColor: "#00F",
+		      //   		fillOpacity: 0.4,
+		      //   		strokeWeight: 0.4
+		    		// },
+				});
+			}
+		}
+	});
+	console.log(placesList);
+
 }
