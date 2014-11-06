@@ -1,21 +1,29 @@
-function getInitialDirections(evt) {
+function findPlaces(evt) {
 	event.preventDefault();
-	console.log("check here")
-	var start = document.getElementById('start').value;
-	var end = document.getElementById('end').value;
-	var request = {
-		origin: start,
-		destination: end,
-		travelMode: google.maps.TravelMode.DRIVING
-	};
-	
-	directionsService.route(request, function(response, status) {
-	if (status == google.maps.DirectionsStatus.OK) {
-			showSteps(response);
-			getPlaces(response);
+
+	var route = {
+		start: document.getElementById('start').value,
+		end: document.getElementById('end').value,
+		place: document.getElementById('place').value,
+
+		getDirections: function() {
+			var request = {
+				origin: this.start,
+				destination: this.end,
+				travelMode: google.maps.TravelMode.DRIVING
+			};
+
+			directionsService.route(request, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK) {
+					this.polyline = response.routes[0].overview_polyline;
+					directionsDisplay.setDirections(response);
+				}
+			});
 		}
-	
-	});
+	}
+
+	route.getDirections();
+	// getPlaces(route.polyline);
 }
 
 function showSteps(directionResult) {
@@ -25,10 +33,11 @@ function showSteps(directionResult) {
 	}
 }
 
-function getPlaces(directionResult) {
+function getPlaces(polyline) {
 	
 	// Decode polyline from Google Directions response:
-	var decodedPolyline = google.maps.geometry.encoding.decodePath(directionResult.routes[0].overview_polyline);
+	var decodedPolyline = google.maps.geometry.encoding.decodePath(polyline);
+	console.log(decodedPolyline);
 
 	for (var i = 0; i < decodedPolyline.length; i++) {
 		var marker = new google.maps.Marker({
