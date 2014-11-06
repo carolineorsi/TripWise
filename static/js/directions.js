@@ -5,6 +5,7 @@ function findPlaces(evt) {
 		start: document.getElementById('start').value,
 		end: document.getElementById('end').value,
 		place: document.getElementById('place').value,
+		polyline: "",
 
 		getDirections: function() {
 			var request = {
@@ -17,13 +18,13 @@ function findPlaces(evt) {
 				if (status == google.maps.DirectionsStatus.OK) {
 					this.polyline = response.routes[0].overview_polyline;
 					directionsDisplay.setDirections(response);
+					getPlaces(this.polyline);
 				}
 			});
 		}
 	}
 
 	route.getDirections();
-	// getPlaces(route.polyline);
 }
 
 function showSteps(directionResult) {
@@ -34,16 +35,14 @@ function showSteps(directionResult) {
 }
 
 function getPlaces(polyline) {
-	
 	// Decode polyline from Google Directions response:
 	var decodedPolyline = google.maps.geometry.encoding.decodePath(polyline);
-	console.log(decodedPolyline);
 
 	for (var i = 0; i < decodedPolyline.length; i++) {
-		var marker = new google.maps.Marker({
-		    position: decodedPolyline[i],
-		    map: map
-		});		
+		// var marker = new google.maps.Marker({
+		//     position: decodedPolyline[i],
+		//     map: map
+		// });		
 		
 		// Create Places request
 		var request = {
@@ -56,18 +55,18 @@ function getPlaces(polyline) {
 		placesService.nearbySearch(request, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				for (var j = 0; j < results.length; j++) {
-					console.log(results[j].name);
-					// var marker = new google.maps.Marker({
-					// 	position: results[j].geometry.location,
-					// 	map: map,
-		   //  		icon: {
-		   //      		path: google.maps.SymbolPath.CIRCLE,
-		   //      		scale: 8.5,
-		   //      		fillColor: "#00F",
-		   //      		fillOpacity: 0.4,
-		   //      		strokeWeight: 0.4
-		   //  		},
-					// });
+					console.log(results[j].name, j);
+					var marker = new google.maps.Marker({
+						position: results[j].geometry.location,
+						map: map,
+			    		icon: {
+			        		path: google.maps.SymbolPath.CIRCLE,
+			        		scale: 8.5,
+			        		fillColor: "#00F",
+			        		fillOpacity: 0.4,
+			        		strokeWeight: 0.4
+			    		},
+					});
 				}
 			}
 		});
