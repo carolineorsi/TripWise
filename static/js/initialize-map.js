@@ -5,10 +5,10 @@ $(document).ready(function () {
 	directionsService = new google.maps.DirectionsService();
 	placesService = new google.maps.places.PlacesService(map);
 	directionsDisplay = new google.maps.DirectionsRenderer();
+	allPlaces = {};
 	directionsDisplay.setMap(map);
 
-	$("#directions-form").submit(findPlaces);	
-
+	$("#directions-form").submit(findPlaces);
 });
 
 function initializeMap() {

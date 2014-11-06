@@ -3,6 +3,7 @@ import jinja2
 import os
 import model
 import map_data
+import test
 
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
@@ -15,6 +16,16 @@ def index():
 @app.route("/javascript")
 def js_index():
     return render_template("test_js_directions.html")
+
+@app.route("/getplaces", methods=["POST"])
+def get_places():
+    polyline = request.form.get('polyline')
+    return test.places()
+
+    # print polyline
+    # return "worked"
+
+
 
 @app.route("/directions")
 def list_directions():
