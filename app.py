@@ -55,14 +55,15 @@ def find_top_ten(route):
     for latlng, place in route.places.iteritems():
         destinations += latlng + "|"
     
-    url = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
+    url_start = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
         '&destinations=%s'
         '&key=%s') % (route.start, destinations[0:-2], model.AUTH_KEY)
 
-    print "**********"
-    print url
-    print "**********"
-    # response = urllib2.urlopen(url)
+    url_end = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
+        '&destinations=%s'
+        '&key=%s') % (route.end, destinations[0:-2], model.AUTH_KEY)
+
+    # response = urllib2.urlopen(url_start)
 
     # # Get the response and use the JSON library to decode the JSON
     # json_raw = response.read()

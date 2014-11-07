@@ -32,18 +32,14 @@ class Route(object):
 				'&keyword=%s'
 				'&key=%s') % (latlng, self.radius, self.keyword, AUTH_KEY)
 			
-			response = urllib2.urlopen(url)
+			response = send_request(url)
 
-			# Get the response and use the JSON library to decode the JSON
-			json_raw = response.read()
-			json_data = json.loads(json_raw)
-
-			for place in json_data['results']:
+			for place in response['results']:
 				latlng = str(place['geometry']['location']['lat']) + "," + str(place['geometry']['location']['lng'])
 				self.places[latlng] = Place(place['name'], 
-													place['place_id'], 
-													place['geometry']['location']['lat'], 
-													place['geometry']['location']['lng'])
+											place['place_id'], 
+											place['geometry']['location']['lat'], 
+											place['geometry']['location']['lng'])
 
 
 class Place(object):
@@ -55,3 +51,11 @@ class Place(object):
 		self.lng = lng
 
 
+def send_request(url):
+	response = urllib2.urlopen(url)
+
+	# Get the response and use the JSON library to decode the JSON
+	json_raw = response.read()
+	json_data = json.loads(json_raw)
+
+	return json_data
