@@ -3,6 +3,7 @@ import jinja2
 import os
 import model
 import map_data
+import urllib2
 # import test
 
 app = Flask(__name__)
@@ -31,8 +32,8 @@ def get_places():
 
     route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
     
-    places = route.get_places()
-    print places
+    route.get_places()
+    find_top_ten(route)
 
     return "worked"
 
@@ -49,7 +50,26 @@ def optimize_polyline(raw_polyline):
     return new_polyline
 
 
-# def find_top_ten()
+def find_top_ten(route):
+    destinations = ""
+    for latlng, place in route.places.iteritems():
+        destinations += latlng + "|"
+    
+    url = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
+        '&destinations=%s'
+        '&key=%s') % (route.start, destinations[0:-2], model.AUTH_KEY)
+
+    print "**********"
+    print url
+    print "**********"
+    # response = urllib2.urlopen(url)
+
+    # # Get the response and use the JSON library to decode the JSON
+    # json_raw = response.read()
+    # json_data = json.loads(json_raw)
+
+    # print json_data["status"]
+
 
 # @app.route("/directions")
 # def list_directions():

@@ -39,12 +39,11 @@ class Route(object):
 			json_data = json.loads(json_raw)
 
 			for place in json_data['results']:
-				self.places[place['place_id']] = Place(place['name'], 
+				latlng = str(place['geometry']['location']['lat']) + "," + str(place['geometry']['location']['lng'])
+				self.places[latlng] = Place(place['name'], 
 													place['place_id'], 
 													place['geometry']['location']['lat'], 
 													place['geometry']['location']['lng'])
-
-		return self.places
 
 
 class Place(object):
