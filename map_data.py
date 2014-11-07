@@ -2,6 +2,7 @@ import urllib2
 import json
 import os
 import model
+import urllib
 
 # Set authorization key
 AUTH_KEY = os.environ.get('GOOGLE_API_KEY')
@@ -26,7 +27,8 @@ def get_initial_route(origin, destination):
 	return json_data
 
 def send_request(url):
-	response = urllib2.urlopen(url)
+	# response = urllib2.urlopen(url)
+	response = urllib.urlopen(url)
 
 	# Get the response and use the JSON library to decode the JSON
 	json_raw = response.read()
@@ -45,34 +47,44 @@ def optimize_polyline(raw_polyline):
 
 
 def find_top_ten(route):
-    destinations = ""
-    destinationList = []
+    # destinations = ""
+    destinations = []
 
     for latlng, place in route.places.iteritems():
-        destinations += latlng + "|"
-        destinationList.append(latlng)
+        # destinations += latlng + "|"
+        destinations.append(latlng)
+
+    destinations_string = "|".join(destinations)
     
     url_start = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
         '&destinations=%s'
-        '&key=%s') % (route.start, destinations[0:-2], model.AUTH_KEY)
+        '&key=%s') % (route.start, destinations_string, model.AUTH_KEY)
 
     url_end = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
         '&destinations=%s'
-        '&key=%s') % (route.end, destinations[0:-2], model.AUTH_KEY)
+        '&key=%s') % (route.end, destinations_string, model.AUTH_KEY)
 
-    print url_start
-    print url_end
+    # contents = urllib.urlopen(url_start).read()
+    # print "We did it!"
+
+    # url_test = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=683 sutter st, sf, ca&destinations=37.790901,-122.420939&key=AIzaSyDdYX2uSHJsvjQhI2eJo-6peidlfFlMvIs"
+
+    # print url_start
+    # print url_end
+
+    # result = send_request(url_test)
 
     start_distances = send_request(url_start)
     end_distances = send_request(url_end)
 
-    num_destinations = len(destinationList)
+    num_destinations = len(destinations)
     for i in range(num_destinations):
-    	distance = start_distances['rows'][i]['distance']['value'] + end_distances['rows'][i]['distance']['value']
-    	duration = start_distances['rows'][i]['duration']['value'] + end_distances['rows'][i]['duration']['value']
-    	route.places[destinationlist[i]]['distance'] = distance
-    	route.places[destinationlist[i]]['duration'] = distance
-    	print route.places[destinationlist[i]]['distance'], route.places[destinationlist[i]]['duration']
+    	latlng = destinations[i]
+    	distance = start_distances['rows'][0]['elements'][i]['distance']['value'] + end_distances['rows'][0]['elements'][i]['distance']['value']
+    	duration = start_distances['rows'][0]['elements'][i]['duration']['value'] + end_distances['rows'][0]['elements'][i]['duration']['value']
+    	route.places[latlng]['distance'] = distance
+    	route.places[latlng]['duration'] = distance
+    	print route.places[latlng]['distance'], route.places[latlng]['duration']
 
 
 
