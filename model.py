@@ -1,6 +1,7 @@
 import urllib2
 import json
 import os
+import map_data
 from flask import make_response
 
 # Set authorization key
@@ -32,11 +33,12 @@ class Route(object):
 				'&keyword=%s'
 				'&key=%s') % (latlng, self.radius, self.keyword, AUTH_KEY)
 			
-			response = send_request(url)
+			response = map_data.send_request(url)
 
 			for place in response['results']:
 				latlng = str(place['geometry']['location']['lat']) + "," + str(place['geometry']['location']['lng'])
-				self.places[latlng] = Place(place['name'], 
+				self.places[latlng] = {}
+				self.places[latlng]['place'] = Place(place['name'], 
 											place['place_id'], 
 											place['geometry']['location']['lat'], 
 											place['geometry']['location']['lng'])
@@ -50,12 +52,3 @@ class Place(object):
 		self.lat = lat
 		self.lng = lng
 
-
-def send_request(url):
-	response = urllib2.urlopen(url)
-
-	# Get the response and use the JSON library to decode the JSON
-	json_raw = response.read()
-	json_data = json.loads(json_raw)
-
-	return json_data

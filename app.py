@@ -28,48 +28,16 @@ def get_places():
     initial_distance = request.args.get('initialDistance')
 
     raw_polyline = request.args.get('polyline')
-    polyline = optimize_polyline(raw_polyline)
+    polyline = map_data.optimize_polyline(raw_polyline)
 
     route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
     
     route.get_places()
-    find_top_ten(route)
+    map_data.find_top_ten(route)
 
     return "worked"
 
-    # print polyline
-    # return "worked"
 
-def optimize_polyline(raw_polyline):
-    polyline = raw_polyline[2:-3].split('","')
-    polyline_length = len(polyline)
-    increment = polyline_length / 10
-    new_polyline = []
-    for i in range(increment / 2, polyline_length, increment):
-        new_polyline.append(polyline[i])
-    return new_polyline
-
-
-def find_top_ten(route):
-    destinations = ""
-    for latlng, place in route.places.iteritems():
-        destinations += latlng + "|"
-    
-    url_start = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
-        '&destinations=%s'
-        '&key=%s') % (route.start, destinations[0:-2], model.AUTH_KEY)
-
-    url_end = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
-        '&destinations=%s'
-        '&key=%s') % (route.end, destinations[0:-2], model.AUTH_KEY)
-
-    # response = urllib2.urlopen(url_start)
-
-    # # Get the response and use the JSON library to decode the JSON
-    # json_raw = response.read()
-    # json_data = json.loads(json_raw)
-
-    # print json_data["status"]
 
 
 # @app.route("/directions")
