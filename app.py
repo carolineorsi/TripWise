@@ -31,7 +31,8 @@ def get_places():
 
     route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
     
-    route.get_places()
+    places = route.get_places()
+    print places
 
     return "worked"
 
@@ -44,31 +45,33 @@ def optimize_polyline(raw_polyline):
     increment = polyline_length / 10
     new_polyline = []
     for i in range(increment / 2, polyline_length, increment):
-        print i
         new_polyline.append(polyline[i])
     return new_polyline
 
-@app.route("/directions")
-def list_directions():
-    """Prints out directions from user input"""
-    origin = request.args.get("origin")
-    destination = request.args.get("destination")
 
-    route = model.Route(origin, destination)
-    route.get_directions()
+# def find_top_ten()
+
+# @app.route("/directions")
+# def list_directions():
+#     """Prints out directions from user input"""
+#     origin = request.args.get("origin")
+#     destination = request.args.get("destination")
+
+#     route = model.Route(origin, destination)
+#     route.get_directions()
 
 
-    # Checks that valid results were returned from Google Directions API
-    if route.directions['status'] == 'OK':
-        direction_steps = []
-        for step in route.directions['routes'][0]['legs'][0]['steps']:
-            direction_steps.append(step['html_instructions'])
+#     # Checks that valid results were returned from Google Directions API
+#     if route.directions['status'] == 'OK':
+#         direction_steps = []
+#         for step in route.directions['routes'][0]['legs'][0]['steps']:
+#             direction_steps.append(step['html_instructions'])
         
-        return render_template("test.html", direction_steps=direction_steps, distance=route.distance, duration=route.duration, polyline=route.polyline)
+#         return render_template("test.html", direction_steps=direction_steps, distance=route.distance, duration=route.duration, polyline=route.polyline)
 
-    else:
-        direction_steps = ["It didn't work"]
-        return render_template("test.html", direction_steps=direction_steps)
+#     else:
+#         direction_steps = ["It didn't work"]
+#         return render_template("test.html", direction_steps=direction_steps)
 
 
 if __name__ == "__main__":

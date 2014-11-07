@@ -1,5 +1,3 @@
-# import map_data
-
 import urllib2
 import json
 import os
@@ -25,23 +23,14 @@ class Route(object):
 		self.polyline = polyline
 		self.initial_duration = initial_duration
 		self.initial_distance = initial_distance
+		self.places = {}
 
 	def get_places(self):
-		places = []
-
-		# for latlng in self.polyline:
-		# 	url = ('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s'
-		# 		'&radius=%d'
-		# 		'&keyword=%s'
-		# 		'&key=%s') % (latlng, self.radius, self.keyword, AUTH_KEY)
-		
-		polyline_length = len(self.polyline)
-		increment = polyline_length / 10
-		for i in range (increment / 2, polyline_length, increment):
+		for latlng in self.polyline:
 			url = ('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s'
 				'&radius=%d'
 				'&keyword=%s'
-				'&key=%s') % (self.polyline[i], self.radius, self.keyword, AUTH_KEY)
+				'&key=%s') % (latlng, self.radius, self.keyword, AUTH_KEY)
 			
 			response = urllib2.urlopen(url)
 
@@ -50,13 +39,20 @@ class Route(object):
 			json_data = json.loads(json_raw)
 
 			for place in json_data['results']:
-				if place['name'] not in places:
-					places.append(place['name'])
+				self.places[place['place_id']] = Place(place['name'], 
+													place['place_id'], 
+													place['geometry']['location']['lat'], 
+													place['geometry']['location']['lng'])
 
-			print places
-
-    # return _convert_to_JSON(places)
+		return self.places
 
 
 class Place(object):
-	pass
+
+	def __init__(self, name, place_id, lat, lng):
+		self.name = name
+		self.place_id = place_id
+		self.lat = lat
+		self.lng = lng
+
+
