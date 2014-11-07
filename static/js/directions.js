@@ -1,99 +1,86 @@
 function findPlaces(evt) {
 	event.preventDefault();
 
-	var route = {
-		start: document.getElementById('start').value,
-		end: document.getElementById('end').value,
-		place: document.getElementById('place').value,
-		polyline: "",
+	var route = new Route(
+		document.getElementById('start').value,
+		document.getElementById('end').value,
+		document.getElementById('place').value
+	);
 
-		getDirections: function() {
-			var request = {
-				origin: this.start,
-				destination: this.end,
-				travelMode: google.maps.TravelMode.DRIVING
-			};
-
-			directionsService.route(request, function(response, status) {
-				if (status == google.maps.DirectionsStatus.OK) {
-					this.polyline = response.routes[0].overview_polyline;
-					this.distance = response.routes[0].legs[0].distance.value;
-					directionsDisplay.setDirections(response);
-					getPlaces(this.polyline, this.place.value, this.distance);
-					// decodePolyline(this.polyline);
-				}
-			});
-		}
-	};
-
-	route.getDirections();
-	printPlaces();
+	getDirections(route);
 }
 
-// function showSteps(directionResult) {
-// 	var myRoute = directionResult.routes[0].legs[0];
-// 	for (var i = 0; i < myRoute.steps.length; i++) {
-// 		$("#instructions-container").append("<li>" + myRoute.steps[i].instructions + "</li>");
-// 	}
-// }
+function Route(start, end, keyword) {
+	this.start = start;
+	this.end = end;
+	this.keyword = keyword;
+	// getDirections(this);
+}
 
-// function sleep(milliseconds) {
-//   var start = new Date().getTime();
-//   for (var i = 0; i < 1e7; i++) {
-//     if ((new Date().getTime() - start) > milliseconds){
-//       break;
-//     }
-//   }
-// }
+function getDirections(route) {
+	var request = {
+		origin: route.start,
+		destination: route.end,
+		travelMode: google.maps.TravelMode.DRIVING
+	};
 
-function getPlaces(polyline, place, distance) {
-	// Decode polyline from Google Directions response:
-	var decodedPolyline = google.maps.geometry.encoding.decodePath(polyline);
-	placeIDs = [];
+	directionsService.route(request, function(response, status){
+		if (status == google.maps.DirectionsStatus.OK) {
 
+			// Displays route on map.
+			directionsDisplay.setDirections(response);
+
+			// Decodes directions polyline and identifies search points and radii
+			var polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
+			pointsInPolyline = polyline.length;
+			increment = Math.ceil(pointsInPolyline / 11);
+			var radius = defineRadius(response.routes[0].legs[0].distance.value);
+
+			// For each search point, display it on the map and find places.
+			for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
+				point = polyline[i];
+				displayPoint(point, radius);
+				getPlacesByPoint(point, route.keyword, radius);
+			}
+		}
+	});
+}
+
+function defineRadius(distance) {
+	// Defines radius of search area based on total distance of initial route.
 	var radius = distance / 10;
 	if (radius > 50000) {
 		radius = 50000;
 	}
+	return radius;
+}
 
-	pointsInPolyline = decodedPolyline.length;
-	increment = Math.ceil(pointsInPolyline / 11);
-	// for (var i = 0; i < pointsInPolyline; i++) {
-	for (var i = increment/2; i < pointsInPolyline; i = (i + increment)) {
-
-		// allPlaces.push(getPlacesByPoint(decodedPolyline[i], place, i, radius));
-		getPlacesByPoint(decodedPolyline[i], place, i, radius);
-		// sleep(400);
-		
-		var circle = {
+function displayPoint(point, radius) {
+	// Displays search points for purposes of testing.
+	var circle = {
 			fillColor: '#000',
 			fillOpacity: 0.5,
 			strokeWeight: 0.3,
 			map: map,
-			center: decodedPolyline[i],
+			center: point,
 			radius: radius
 		}
-		pointRadius = new google.maps.Circle(circle);		
-	};
+	pointRadius = new google.maps.Circle(circle);	
 }
 
-function getPlacesByPoint(location, place, i, radius) {
+function getPlacesByPoint(point, keyword, radius) {
 
 	// Create Places request
 	var request = {
-		location: location,
+		location: point,
 		radius: radius,
 		rankby: 'distance',
-		keyword: place
+		keyword: keyword
 	}
 
 	placesService.nearbySearch(request, function(results, status) {
-		// console.log(status);
-		// console.log(i);
-		// var placesArray = [];
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var j = 0; j < results.length; j++) {
-				// console.log(results[j].name);
 				
 				var placeID = results[j].id;
 				var name = results[j].name;
@@ -107,6 +94,7 @@ function getPlacesByPoint(location, place, i, radius) {
 					position: results[j].geometry.location,
 					map: map
 				});
+			console.log(allPlaces);
 
 			}
 		}
