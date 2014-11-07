@@ -64,12 +64,12 @@ function getDirections(route) {
 					});
 
 
-			// // For each search point, display it on the map and find places.
-			// for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
-			// 	point = polyline[i];
-			// 	displayPoint(point, radius);
-			// 	getPlacesByPoint(point, route.keyword, radius);
-			// }
+			// For each search point, display it on the map and find places.
+			for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
+				point = polyline[i];
+				displayPoint(point, radius);
+				getPlacesByPoint(point, route.keyword, radius);
+			}
 		}
 	});
 }

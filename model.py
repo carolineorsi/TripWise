@@ -39,9 +39,9 @@ class Route(object):
 				latlng = str(place['geometry']['location']['lat']) + "," + str(place['geometry']['location']['lng'])
 				self.places[latlng] = {}
 				self.places[latlng]['place'] = Place(place['name'], 
-											place['place_id'], 
-											place['geometry']['location']['lat'], 
-											place['geometry']['location']['lng'])
+													place['place_id'], 
+													place['geometry']['location']['lat'], 
+													place['geometry']['location']['lng'])
 
 
 class Place(object):
