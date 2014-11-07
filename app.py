@@ -3,7 +3,7 @@ import jinja2
 import os
 import model
 import map_data
-import test
+# import test
 
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
@@ -17,15 +17,36 @@ def index():
 def js_index():
     return render_template("test_js_directions.html")
 
-@app.route("/getplaces", methods=["POST"])
+@app.route("/getplaces", methods=["GET"])
 def get_places():
-    polyline = request.form.get('polyline')
-    return test.places()
+    start = request.args.get('start')
+    end = request.args.get('end')
+    keyword = request.args.get('keyword')
+    radius = request.args.get('radius')
+    initial_duration = request.args.get('initialDuration')
+    initial_distance = request.args.get('initialDistance')
+
+    raw_polyline = request.args.get('polyline')
+    polyline = optimize_polyline(raw_polyline)
+
+    route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
+    
+    route.get_places()
+
+    return "worked"
 
     # print polyline
     # return "worked"
 
-
+def optimize_polyline(raw_polyline):
+    polyline = raw_polyline[2:-3].split('","')
+    polyline_length = len(polyline)
+    increment = polyline_length / 10
+    new_polyline = []
+    for i in range(increment / 2, polyline_length, increment):
+        print i
+        new_polyline.append(polyline[i])
+    return new_polyline
 
 @app.route("/directions")
 def list_directions():

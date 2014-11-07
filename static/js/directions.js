@@ -18,6 +18,8 @@ function Route(start, end, keyword) {
 }
 
 function getDirections(route) {
+
+	// Creates directions request
 	var request = {
 		origin: route.start,
 		destination: route.end,
@@ -30,18 +32,44 @@ function getDirections(route) {
 			// Displays route on map.
 			directionsDisplay.setDirections(response);
 
+			console.log(response);
+
 			// Decodes directions polyline and identifies search points and radii
 			var polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
+			var initialDuration = response.routes[0].legs[0].duration.value;
+			var initialDistance = response.routes[0].legs[0].distance.value;
+
+			var polylineArray = [];
+
+			for (i = 0; i < polyline.length; i++) {
+				var latlng = (polyline[i].k + "," + polyline[i].B)
+				polylineArray.push(latlng);
+			}
+
 			pointsInPolyline = polyline.length;
 			increment = Math.ceil(pointsInPolyline / 11);
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
-			// For each search point, display it on the map and find places.
-			for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
-				point = polyline[i];
-				displayPoint(point, radius);
-				getPlacesByPoint(point, route.keyword, radius);
-			}
+			$.get("/getplaces", {
+	 					'polyline': JSON.stringify(polylineArray),
+	 					'initialDuration': initialDuration,
+	 					'initialDistance': initialDistance,
+	 					'start': route.start,
+	 					'end': route.end,
+	 					'keyword': route.keyword,
+	 					'radius': radius
+	 				},
+	  				function(result) {
+						console.log(result);
+					});
+
+
+			// // For each search point, display it on the map and find places.
+			// for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
+			// 	point = polyline[i];
+			// 	displayPoint(point, radius);
+			// 	getPlacesByPoint(point, route.keyword, radius);
+			// }
 		}
 	});
 }
@@ -78,29 +106,35 @@ function getPlacesByPoint(point, keyword, radius) {
 		keyword: keyword
 	}
 
+
 	placesService.nearbySearch(request, function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var j = 0; j < results.length; j++) {
 				
-				var placeID = results[j].id;
+				var placeID = results[j].place_id;
 				var name = results[j].name;
 				var lat = results[j].geometry.location.k;
 				var lng = results[j].geometry.location.B; 
 
 				allPlaces.placeID = new Place(name, placeID, lat, lng);
+
+				// allPlaces.placeID = new Place(name, placeID, lat, lng);
 				// console.log(allPlaces.placeID);
 
-				var marker = new google.maps.Marker({
-					position: results[j].geometry.location,
-					map: map
-				});
-			console.log(allPlaces);
-
+				displayPlace(results[j].geometry.location);
 			}
+			//console.log(allPlaces.placeID);
 		}
 	});
 }
 
+function displayPlace(location) {
+	// Displays marker on map for purposes of testing
+	var marker = new google.maps.Marker({
+		position: location,
+		map: map
+	});
+}
 
 function Place(name, id, lat, lng) {
 	this.name = name;
@@ -108,7 +142,6 @@ function Place(name, id, lat, lng) {
 	this.lat = lat;
 	this.lng = lng;
 }
-
 
 
 // function decodePolyline(polyline) {
