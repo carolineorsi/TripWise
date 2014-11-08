@@ -162,69 +162,63 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
-	var numPlaces = placeList.length;
-	// for (var i = 0; i < numPlaces; i++) {
-	// 	if 
-	// 	for (var j = 0)
+	// var numPlaces = placeList.length;
+	
+	// // Limits requests to Distance Matrix to 25 items per API quotas
+	// for (var i = 0; i < Math.ceil(numPlaces / 25); i++) {
+	// 	var requestList = [];
+	// 	if (placeList.length >= 25) {
+	// 		for (var j = 0; j < 25 || placeList.length == 0; j++) {
+	// 			var item = placeList.pop();
+	// 			requestList.push(item);
+	// 		}
+	// 	}
+	// 	else {
+	// 		requestList = placeList;
+	// 	}
+	
+	// 	var request = {
+	// 		origins: [route.start],
+	// 		destinations: requestList,
+	// 		travelMode: google.maps.TravelMode.DRIVING
+	// 	}
+
+	// 	service.getDistanceMatrix(request, function(response, status) {
+	// 		processDistances(response, status, requestList);
+	// 	});
 
 	// }
-	
-	for (var i = 0; i < Math.ceil(numPlaces / 25); i++) {
-		var requestList = [];
-		if (placeList.length >= 25) {
-			for (var j = 0; j < 25 || placeList.length == 0; j++) {
-				var item = placeList.pop();
-				requestList.push(item);
-			}
-		}
-		else {
-			requestList = placeList;
-		}
-	
-		var request = {
-			origins: [route.start],
-			destinations: requestList,
-			travelMode: google.maps.TravelMode.DRIVING
-		}
 
-		service.getDistanceMatrix(request, processDistances);
-
+	var request = {
+		origins: [route.start],
+		// API only allows 25 places per call
+		destinations: placeList.slice(0,25),
+		travelMode: google.maps.TravelMode.DRIVING
 	}
 
-
-	// This doesn't work!
-	// var lengthy = placeList.length;
-	// var i = 0;
-	// while (i < lengthy) {
-	// 	var workingList = [];
-	// 	for (var i = 0; i < 25; i++) {
-			// var item = placeList.pop();
-	// 		workingList.push(item);
-	// 		console.log(workingList.length);
-	// 		console.log(placeList.length);
-	// 	}
-	// 	console.log("repeat");
-	// 	i++;
-	// }
-
-	// var request = {
-	// 	origins: [route.start],
-	// 	// API only allows 25 places per call
-	// 	destinations: placeList.slice(0,25),
-	// 	travelMode: google.maps.TravelMode.DRIVING
-	// }
-
-	// service.getDistanceMatrix(request, processDistances);
+	service.getDistanceMatrix(request, function(response, status) {
+		processDistances(response, status, placeList);
+	});
 }
 
 
-function processDistances (response, status) {
+
+function processDistances (response, status, requestList) {
+
 	// if (status == google.maps.DistanceMatrixService.OK) {
-	// 	for (var i = 0; i < response.rows[0].length; i++) {
-	// 		console.log(response.rows[0].elements[i]);
-	// 	}
+		for (var i = 0; i < response.rows[0].elements.length; i++) {
+			// var 
+			var distance = response.rows[0].elements[i].distance.value;
+			var duration = response.rows[0].elements[i].duration.value;
+			allPlaces[requestList[i]]['duration'] = duration;
+			allPlaces[requestList[i]]['distance'] = distance;
+			console.log(allPlaces[requestList[i]]);
+			// console.log("distance", distance);
+			// console.log("duration", duration);
+		}
+
 	// }
-	console.log(status);
+
 }
 
 // function decodePolyline(polyline) {
