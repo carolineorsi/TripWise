@@ -75,7 +75,7 @@ function getDirections(route) {
 
 			setTimeout( function () {
 				getAddedDistance(route);
-			}, 1000 );
+			}, 500 );
 
 		}
 	});
@@ -129,12 +129,13 @@ function processPlaces(results, status) {
 			var name = results[j].name;
 			var lat = results[j].geometry.location.k;
 			var lng = results[j].geometry.location.B; 
+			var location = results[j].geometry.location
 			var latlng = new google.maps.LatLng(lat, lng)
 
 			allPlaces[latlng] = {};
-			allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng);
+			allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng, location);
 
-			displayPlace(results[j].geometry.location);
+			// displayPlace(results[j].geometry.location);
 		}
 	}
 }
@@ -148,11 +149,12 @@ function displayPlace(location) {
 	markersArray.push(marker);	
 }
 
-function Place(name, id, lat, lng) {
+function Place(name, id, lat, lng, location) {
 	this.name = name;
 	this.id = id;
 	this.lat = lat;
 	this.lng = lng;
+	this.location = location;
 }
 
 function getAddedDistance(route) {
@@ -212,8 +214,11 @@ function getAddedDistance(route) {
 		service.getDistanceMatrix(request, function(response, status) {
 			processDistancesToEnd(response, status, placeList);
 		});
-	}, 1000);
+	}, 500);
 
+	setTimeout(function() {
+		returnTopTen(route, placeList.slice(0,25));
+	}, 1000);
 
 }
 
@@ -240,5 +245,23 @@ function processDistancesToEnd (response, status, requestList) {
 			allPlaces[requestList[i]]['distance'] = allPlaces[requestList[i]]['distance'] + distance;
 			// console.log(allPlaces[requestList[i]]);
 		}
+	}
+}
+
+function returnTopTen (route, placeList) {
+	var sortedPlaces = [];
+	for (var i = 0; i < placeList.length; i++) {
+		sortedPlaces.push([allPlaces[placeList[i]].duration, allPlaces[placeList[i]].place.location, placeList[i]]);
+	}
+	sortedPlaces.sort();
+
+	displayTopTen(sortedPlaces);
+}
+
+function displayTopTen (sortedPlaces) {
+	for (var i = 0; i < 10; i++) {
+		// console.log(sortedPlaces[i][1]);
+		displayPlace(sortedPlaces[i][1]);
+		$("#place-list").append("<li>" + allPlaces[sortedPlaces[i][2]].place.name + "</li>");
 	}
 }
