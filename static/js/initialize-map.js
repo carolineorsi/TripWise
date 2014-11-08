@@ -6,6 +6,7 @@ $(document).ready(function () {
 	placesService = new google.maps.places.PlacesService(map);
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	allPlaces = {};
+	// allPlacesList = [];
 	directionsDisplay.setMap(map);
 
 	$("#directions-form").submit(findPlaces);

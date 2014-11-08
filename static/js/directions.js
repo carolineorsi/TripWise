@@ -32,8 +32,6 @@ function getDirections(route) {
 			// Displays route on map.
 			directionsDisplay.setDirections(response);
 
-			console.log(response);
-
 			// Decodes directions polyline and identifies search points and radii
 			var polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
 			var initialDuration = response.routes[0].legs[0].duration.value;
@@ -50,26 +48,37 @@ function getDirections(route) {
 			increment = Math.ceil(pointsInPolyline / 11);
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
-			$.get("/getplaces", {
-	 					'polyline': JSON.stringify(polylineArray),
-	 					'initialDuration': initialDuration,
-	 					'initialDistance': initialDistance,
-	 					'start': route.start,
-	 					'end': route.end,
-	 					'keyword': route.keyword,
-	 					'radius': radius
-	 				},
-	  				function(result) {
-						console.log(result);
-					});
-
+// AJAX CALL TO MY SERVER-SIDE SCRIPTS
+			// $.get("/getplaces", {
+	 	// 				'polyline': JSON.stringify(polylineArray),
+	 	// 				'initialDuration': initialDuration,
+	 	// 				'initialDistance': initialDistance,
+	 	// 				'start': route.start,
+	 	// 				'end': route.end,
+	 	// 				'keyword': route.keyword,
+	 	// 				'radius': radius
+	 	// 			},
+	  // 				function(result) {
+			// 			console.log(result);
+			// 		});
 
 			// For each search point, display it on the map and find places.
-			for (var i = increment; i < pointsInPolyline; i = (i + increment)) {
+			// When the increment variable exceeds the number of points in 
+			// the polyline, end the loop.
+			var i = increment;
+			while (i < pointsInPolyline) {
 				point = polyline[i];
 				displayPoint(point, radius);
 				getPlacesByPoint(point, route.keyword, radius);
+				i = (i + increment);
 			}
+
+			setTimeout( function () {
+				getAddedDistance();
+			}, 1000 );
+
+
+
 		}
 	});
 }
@@ -116,7 +125,9 @@ function getPlacesByPoint(point, keyword, radius) {
 				var lat = results[j].geometry.location.k;
 				var lng = results[j].geometry.location.B; 
 
-				allPlaces.placeID = new Place(name, placeID, lat, lng);
+				allPlaces[placeID] = new Place(name, placeID, lat, lng);
+				// place = new Place(name, placeID, lat, lng)
+				// allPlacesList.push(place)
 
 				// allPlaces.placeID = new Place(name, placeID, lat, lng);
 				// console.log(allPlaces.placeID);
@@ -141,6 +152,10 @@ function Place(name, id, lat, lng) {
 	this.id = id;
 	this.lat = lat;
 	this.lng = lng;
+}
+
+function getAddedDistance() {
+	console.log(allPlaces);
 }
 
 
