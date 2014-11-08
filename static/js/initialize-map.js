@@ -3,7 +3,6 @@ $(document).ready(function () {
 	initializeMap();
 
 	directionsService = new google.maps.DirectionsService();
-	placesService = new google.maps.places.PlacesService(map);
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	allPlaces = {};
 	// allPlacesList = [];

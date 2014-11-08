@@ -104,6 +104,7 @@ function displayPoint(point, radius) {
 }
 
 function getPlacesByPoint(point, keyword, radius) {
+	var placesService = new google.maps.places.PlacesService(map);
 
 	// Create Places request
 	var request = {
@@ -113,25 +114,28 @@ function getPlacesByPoint(point, keyword, radius) {
 		keyword: keyword
 	}
 
-	// Make places request. For each place return, create new Place object and
-	// add them to allPlaces
-	placesService.nearbySearch(request, function(results, status) {
-		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			for (var j = 0; j < results.length; j++) {
-				
-				var placeID = results[j].place_id;
-				var name = results[j].name;
-				var lat = results[j].geometry.location.k;
-				var lng = results[j].geometry.location.B; 
-				var latlng = new google.maps.LatLng(lat, lng)
+	// Make places request. 
+	placesService.nearbySearch(request, processPlaces);
+}
 
-				allPlaces[latlng] = {};
-				allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng);
 
-				displayPlace(results[j].geometry.location);
-			}
+function processPlaces(results, status) {
+	// For each place return, create new Place object and add  to allPlaces
+	if (status == google.maps.places.PlacesServiceStatus.OK) {
+		for (var j = 0; j < results.length; j++) {
+			
+			var placeID = results[j].place_id;
+			var name = results[j].name;
+			var lat = results[j].geometry.location.k;
+			var lng = results[j].geometry.location.B; 
+			var latlng = new google.maps.LatLng(lat, lng)
+
+			allPlaces[latlng] = {};
+			allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng);
+
+			displayPlace(results[j].geometry.location);
 		}
-	});
+	}
 }
 
 function displayPlace(location) {
@@ -158,19 +162,22 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
+	console.log(placeList.length);
+
 	var request = {
 		origins: [route.start],
-		destinations: [route.end],
+		// API only allows 25 places per call
+		destinations: placeList.slice(0,25),
 		travelMode: google.maps.TravelMode.DRIVING
 	}
 
-	service.getDistanceMatrix(request, callback);
-
-	function callback (response, status) {
-		console.log(status);
-	}
+	service.getDistanceMatrix(request, processDistances);
 }
 
+
+function processDistances (response, status) {
+	console.log(status);
+}
 
 // function decodePolyline(polyline) {
 // 	var decodePolyline = google.maps.geometry.encoding.decodePath(polyline);
