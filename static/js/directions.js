@@ -74,10 +74,8 @@ function getDirections(route) {
 			}
 
 			setTimeout( function () {
-				getAddedDistance();
+				getAddedDistance(route);
 			}, 1000 );
-
-
 
 		}
 	});
@@ -115,7 +113,8 @@ function getPlacesByPoint(point, keyword, radius) {
 		keyword: keyword
 	}
 
-
+	// Make places request. For each place return, create new Place object and
+	// add them to allPlaces
 	placesService.nearbySearch(request, function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var j = 0; j < results.length; j++) {
@@ -124,17 +123,13 @@ function getPlacesByPoint(point, keyword, radius) {
 				var name = results[j].name;
 				var lat = results[j].geometry.location.k;
 				var lng = results[j].geometry.location.B; 
+				var latlng = new google.maps.LatLng(lat, lng)
 
-				allPlaces[placeID] = new Place(name, placeID, lat, lng);
-				// place = new Place(name, placeID, lat, lng)
-				// allPlacesList.push(place)
-
-				// allPlaces.placeID = new Place(name, placeID, lat, lng);
-				// console.log(allPlaces.placeID);
+				allPlaces[latlng] = {};
+				allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng);
 
 				displayPlace(results[j].geometry.location);
 			}
-			//console.log(allPlaces.placeID);
 		}
 	});
 }
@@ -154,8 +149,26 @@ function Place(name, id, lat, lng) {
 	this.lng = lng;
 }
 
-function getAddedDistance() {
-	console.log(allPlaces);
+function getAddedDistance(route) {
+
+	var service = new google.maps.DistanceMatrixService();
+	
+	placeList = [];
+	$.each(allPlaces, function(latlng, Place) {
+		placeList.push(latlng);
+	});
+
+	var request = {
+		origins: [route.start],
+		destinations: [route.end],
+		travelMode: google.maps.TravelMode.DRIVING
+	}
+
+	service.getDistanceMatrix(request, callback);
+
+	function callback (response, status) {
+		console.log(status);
+	}
 }
 
 
