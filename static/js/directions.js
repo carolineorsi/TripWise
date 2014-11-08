@@ -162,6 +162,34 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
+	var numPlaces = placeList.length;
+	// for (var i = 0; i < numPlaces; i++) {
+	// 	if 
+	// 	for (var j = 0)
+
+	// }
+	
+	for (var i = 0; i < Math.ceil(numPlaces / 25); i++) {
+		var requestList = [];
+		if (placeList.length >= 25) {
+			for (var j = 0; j < 25 || placeList.length == 0; j++) {
+				var item = placeList.pop();
+				requestList.push(item);
+			}
+		}
+		else {
+			requestList = placeList;
+		}
+	
+		var request = {
+			origins: [route.start],
+			destinations: requestList,
+			travelMode: google.maps.TravelMode.DRIVING
+		}
+
+		service.getDistanceMatrix(request, processDistances);
+
+	}
 
 
 	// This doesn't work!
@@ -170,7 +198,7 @@ function getAddedDistance(route) {
 	// while (i < lengthy) {
 	// 	var workingList = [];
 	// 	for (var i = 0; i < 25; i++) {
-	// 		var item = placeList.pop();
+			// var item = placeList.pop();
 	// 		workingList.push(item);
 	// 		console.log(workingList.length);
 	// 		console.log(placeList.length);
@@ -179,14 +207,14 @@ function getAddedDistance(route) {
 	// 	i++;
 	// }
 
-	var request = {
-		origins: [route.start],
-		// API only allows 25 places per call
-		destinations: placeList.slice(0,25),
-		travelMode: google.maps.TravelMode.DRIVING
-	}
+	// var request = {
+	// 	origins: [route.start],
+	// 	// API only allows 25 places per call
+	// 	destinations: placeList.slice(0,25),
+	// 	travelMode: google.maps.TravelMode.DRIVING
+	// }
 
-	service.getDistanceMatrix(request, processDistances);
+	// service.getDistanceMatrix(request, processDistances);
 }
 
 

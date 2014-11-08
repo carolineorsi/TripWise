@@ -11,6 +11,7 @@ $(document).ready(function () {
 	$("#directions-form").submit(findPlaces);
 });
 
+
 function initializeMap() {
 	
 	// Set initial map options
