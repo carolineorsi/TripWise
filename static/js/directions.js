@@ -162,7 +162,22 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
-	console.log(placeList.length);
+
+
+	// This doesn't work!
+	// var lengthy = placeList.length;
+	// var i = 0;
+	// while (i < lengthy) {
+	// 	var workingList = [];
+	// 	for (var i = 0; i < 25; i++) {
+	// 		var item = placeList.pop();
+	// 		workingList.push(item);
+	// 		console.log(workingList.length);
+	// 		console.log(placeList.length);
+	// 	}
+	// 	console.log("repeat");
+	// 	i++;
+	// }
 
 	var request = {
 		origins: [route.start],
@@ -176,6 +191,11 @@ function getAddedDistance(route) {
 
 
 function processDistances (response, status) {
+	// if (status == google.maps.DistanceMatrixService.OK) {
+	// 	for (var i = 0; i < response.rows[0].length; i++) {
+	// 		console.log(response.rows[0].elements[i]);
+	// 	}
+	// }
 	console.log(status);
 }
 
