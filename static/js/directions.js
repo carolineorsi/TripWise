@@ -100,7 +100,8 @@ function displayPoint(point, radius) {
 			center: point,
 			radius: radius
 		}
-	pointRadius = new google.maps.Circle(circle);	
+	pointRadius = new google.maps.Circle(circle);
+	markersArray.push(circle);	
 }
 
 function getPlacesByPoint(point, keyword, radius) {
@@ -144,6 +145,7 @@ function displayPlace(location) {
 		position: location,
 		map: map
 	});
+	markersArray.push(marker);	
 }
 
 function Place(name, id, lat, lng) {
@@ -197,45 +199,46 @@ function getAddedDistance(route) {
 	}
 
 	service.getDistanceMatrix(request, function(response, status) {
-		processDistances(response, status, placeList);
+		processDistancesFromStart(response, status, placeList);
 	});
+
+	var request = {
+		origins: placeList.slice(0,25),
+		destinations: [route.end],
+		travelMode: google.maps.TravelMode.DRIVING
+	}
+
+	setTimeout(function() {
+		service.getDistanceMatrix(request, function(response, status) {
+			processDistancesToEnd(response, status, placeList);
+		});
+	}, 1000);
+
+
 }
 
+function processDistancesFromStart (response, status, requestList) {
 
-
-function processDistances (response, status, requestList) {
-
-	// if (status == google.maps.DistanceMatrixService.OK) {
+	if (status == google.maps.DistanceMatrixStatus.OK) {
 		for (var i = 0; i < response.rows[0].elements.length; i++) {
-			// var 
 			var distance = response.rows[0].elements[i].distance.value;
 			var duration = response.rows[0].elements[i].duration.value;
 			allPlaces[requestList[i]]['duration'] = duration;
 			allPlaces[requestList[i]]['distance'] = distance;
-			console.log(allPlaces[requestList[i]]);
-			// console.log("distance", distance);
-			// console.log("duration", duration);
+			// console.log(allPlaces[requestList[i]]);
 		}
-
-	// }
-
+	}
 }
 
-// function decodePolyline(polyline) {
-// 	var decodePolyline = google.maps.geometry.encoding.decodePath(polyline);
-// 	console.log(decodePolyline);
-// 	var pointsArray = [];
-// 	pointsInPolyline = decodePolyline.length;
-// 	for (var i = 0; i < pointsInPolyline; i++) {
-// 		latLng = [decodePolyline[i].k, decodePolyline[i].B];
-// 		pointsArray.push(latLng);
-// 	}
-// 	console.log(pointsArray);
+function processDistancesToEnd (response, status, requestList) {
 
-
-// 	$.post("/getplaces", 
-// 		 	{'polyline': pointsArray},
-// 		  		function(result) {
-// 				console.log(result);
-// 			});
-// }
+	if (status == google.maps.DistanceMatrixStatus.OK) {
+		for (var i = 0; i < response.rows.length; i++) {
+			var distance = response.rows[i].elements[0].distance.value;
+			var duration = response.rows[i].elements[0].duration.value;
+			allPlaces[requestList[i]]['duration'] = allPlaces[requestList[i]]['duration'] + duration;
+			allPlaces[requestList[i]]['distance'] = allPlaces[requestList[i]]['distance'] + distance;
+			// console.log(allPlaces[requestList[i]]);
+		}
+	}
+}

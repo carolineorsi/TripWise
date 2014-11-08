@@ -5,10 +5,13 @@ $(document).ready(function () {
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	allPlaces = {};
+	markersArray = [];
 	// allPlacesList = [];
 	directionsDisplay.setMap(map);
 
-	$("#directions-form").submit(findPlaces);
+	$("#directions-form").submit(function(){
+		findPlaces();
+	});
 });
 
 
@@ -27,4 +30,13 @@ function initializeMap() {
 
 	// Create instance of map object, specifying the <div> container and map options
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
+}
+
+function clearMap(){
+	directionsDisplay.setMap(null);
+	for (var i = 0; i < markersArray.length; i++) {
+		markersArray[i].setMap(null);
+	}
+	markersArray.length = 0;
+
 }
