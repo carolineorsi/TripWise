@@ -6,6 +6,7 @@ $(document).ready(function () {
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	markersArray = [];
 	// allPlacesList = [];
+	counter = null;
 
 	$("#directions-form").submit(function(){
 		findPlaces();
@@ -67,6 +68,12 @@ function displayPlace(location, delay, placeName) {
 			map: map
 		});
 		markersArray.push(marker);
+
+		// google.maps.event.addListener(marker, 'click', function(evt) {
+		// 	infowindow.setContent(placeName);
+		// 	infowindow.open(map, this);
+		// });
+
 		addInfoWindow(marker, placeName);
 	}, delay);	
 }
@@ -76,7 +83,7 @@ function addInfoWindow (marker, placeName) {
 	var infoWindow = new google.maps.InfoWindow({
 		content: contentString
 	});
-	google.maps.event.addListener(marker, 'click', function() {
+	google.maps.event.addListener(marker, 'click', function(evt) {
 		infoWindow.open(map, marker);
 	});
 }

@@ -139,9 +139,10 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
-	var numPlaces = placeList.length;
-	var numRequests = Math.ceil(numPlaces / 25);
-	var placeListCopy = placeList;
+	// var numPlaces = placeList.length;
+	// var numRequests = Math.ceil(numPlaces / 25);
+	// counter = numRequests * 2;
+	// var placeListCopy = placeList;
 	
 	// // Limits requests to Distance Matrix to 25 items per API quotas
 	// for (var i = 0; i < numRequests; i++) {
@@ -157,17 +158,8 @@ function getAddedDistance(route) {
 	// 		requestList = placeListCopy;
 	// 	}
 
-	// 	var requestStart = {
-	// 		origins: [route.start],
-	// 		destinations: requestList,
-	// 		travelMode: google.maps.TravelMode.DRIVING
-	// 	}
-
-	// 	var requestEnd = {
-	// 		origins: requestList,
-	// 		destinations: [route.end],
-	// 		travelMode: google.maps.TravelMode.DRIVING			
-	// 	}
+	// var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
+	// var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
 
 	// 	service.getDistanceMatrix(requestStart, 
 	// 		function(response, status) {
@@ -175,29 +167,21 @@ function getAddedDistance(route) {
 	// 		}
 	// 	);
 
-	// 	service.getDistanceMatrix(requestEnd,
-	// 		function(response, status) {
-	// 			processDistancesToEnd(response, status, route, requestEnd)
-	// 		}
-	// 	);
+	// 	setTimeout(function() {
+	// 		service.getDistanceMatrix(requestEnd,
+	// 			function(response, status) {
+	// 				processDistancesToEnd(response, status, route, requestEnd)
+	// 			}
+	// 		);
+	// 	}, 500);
 	// }
 
-	var requestStart = {
-		origins: [route.start],
-		// API only allows 25 places per call
-		destinations: placeList.slice(0,25),
-		travelMode: google.maps.TravelMode.DRIVING
-	}
+	var requestStart = new distanceMatrixRequest([route.start], placeList.slice(0,25), google.maps.TravelMode.DRIVING);
+	var requestEnd = new distanceMatrixRequest(placeList.slice(0,25), [route.end], google.maps.TravelMode.DRIVING);
 
 	service.getDistanceMatrix(requestStart, function(response, status) {
 		processDistancesFromStart(response, status, route, requestStart);
 	});
-
-	var requestEnd = {
-		origins: placeList.slice(0,25),
-		destinations: [route.end],
-		travelMode: google.maps.TravelMode.DRIVING
-	}
 
 	setTimeout(function() {
 		service.getDistanceMatrix(requestEnd, function(response, status) {
