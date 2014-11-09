@@ -15,7 +15,7 @@ function Route(start, end, keyword) {
 	this.start = start;
 	this.end = end;
 	this.keyword = keyword;
-	// getDirections(this);
+	this.places = {};
 }
 
 
@@ -41,7 +41,7 @@ function getDirections(route) {
 
 function processDirections(response, route) {
 			// Decodes directions polyline and identifies search points and radii
-			polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
+			route['polyline'] = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
 			route['initialDuration'] = response.routes[0].legs[0].duration.value;
 			route['initialDistance'] = response.routes[0].legs[0].distance.value;
 
@@ -52,7 +52,7 @@ function processDirections(response, route) {
 			// 	polylineArray.push(latlng);
 			// }
 
-			pointsInPolyline = polyline.length;
+			pointsInPolyline = route.polyline.length;
 			increment = Math.ceil(pointsInPolyline / 11);
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
@@ -75,9 +75,9 @@ function processDirections(response, route) {
 			// the polyline, end the loop.
 			var i = increment;
 			while (i < pointsInPolyline) {
-				point = polyline[i];
+				point = route.polyline[i];
 				// displayPoint(point, radius);
-				getPlacesByPoint(point, route.keyword, radius);
+				getPlacesByPoint(point, route, radius);
 				i = (i + increment);
 			}
 
@@ -97,7 +97,7 @@ function defineRadius(distance) {
 }
 
 
-function getPlacesByPoint(point, keyword, radius) {
+function getPlacesByPoint(point, route, radius) {
 	var placesService = new google.maps.places.PlacesService(map);
 
 	// Create Places request
@@ -105,16 +105,18 @@ function getPlacesByPoint(point, keyword, radius) {
 		location: point,
 		radius: radius,
 		rankby: 'distance',
-		keyword: keyword
+		keyword: route.keyword
 	}
 
 	// Make places request. 
-	placesService.nearbySearch(request, processPlaces);
+	placesService.nearbySearch(request, function(results, status) {
+		processPlaces(results, status, route);
+	});
 }
 
 
-function processPlaces(results, status) {
-	// For each place return, create new Place object and add  to allPlaces
+function processPlaces(results, status, route) {
+	// For each place return, create new Place object and add to allPlaces
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
 		for (var j = 0; j < results.length; j++) {
 			
@@ -125,8 +127,9 @@ function processPlaces(results, status) {
 			var location = results[j].geometry.location
 			var latlng = new google.maps.LatLng(lat, lng)
 
-			allPlaces[latlng] = {};
-			allPlaces[latlng]["place"] = new Place(name, placeID, lat, lng, location);
+			route.places[latlng] = {};
+			// allPlaces[latlng] = {};
+			route.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
 
 			// displayPlace(results[j].geometry.location);
 		}
@@ -148,7 +151,7 @@ function getAddedDistance(route) {
 	var service = new google.maps.DistanceMatrixService();
 	
 	placeList = [];
-	$.each(allPlaces, function(latlng, Place) {
+	$.each(route.places, function(latlng, Place) {
 		placeList.push(latlng);
 	});
 
@@ -187,7 +190,7 @@ function getAddedDistance(route) {
 	}
 
 	service.getDistanceMatrix(request, function(response, status) {
-		processDistancesFromStart(response, status, placeList);
+		processDistancesFromStart(response, status, route, placeList);
 	});
 
 	var request = {
@@ -198,7 +201,7 @@ function getAddedDistance(route) {
 
 	setTimeout(function() {
 		service.getDistanceMatrix(request, function(response, status) {
-			processDistancesToEnd(response, status, placeList);
+			processDistancesToEnd(response, status, route, placeList);
 		});
 	}, 500);
 
@@ -208,28 +211,28 @@ function getAddedDistance(route) {
 }
 
 
-function processDistancesFromStart (response, status, requestList) {
+function processDistancesFromStart (response, status, route, requestList) {
 
 	if (status == google.maps.DistanceMatrixStatus.OK) {
 		for (var i = 0; i < response.rows[0].elements.length; i++) {
 			var distance = response.rows[0].elements[i].distance.value;
 			var duration = response.rows[0].elements[i].duration.value;
-			allPlaces[requestList[i]]['duration'] = duration;
-			allPlaces[requestList[i]]['distance'] = distance;
+			route.places[requestList[i]]['duration'] = duration;
+			route.places[requestList[i]]['distance'] = distance;
 			// console.log(allPlaces[requestList[i]]);
 		}
 	}
 }
 
 
-function processDistancesToEnd (response, status, requestList) {
+function processDistancesToEnd (response, status, route, requestList) {
 
 	if (status == google.maps.DistanceMatrixStatus.OK) {
 		for (var i = 0; i < response.rows.length; i++) {
 			var distance = response.rows[i].elements[0].distance.value;
 			var duration = response.rows[i].elements[0].duration.value;
-			allPlaces[requestList[i]]['duration'] = allPlaces[requestList[i]]['duration'] + duration;
-			allPlaces[requestList[i]]['distance'] = allPlaces[requestList[i]]['distance'] + distance;
+			route.places[requestList[i]]['duration'] = route.places[requestList[i]]['duration'] + duration;
+			route.places[requestList[i]]['distance'] = route.places[requestList[i]]['distance'] + distance;
 			// console.log(allPlaces[requestList[i]]);
 		}
 	}
@@ -239,19 +242,19 @@ function processDistancesToEnd (response, status, requestList) {
 function returnTopTen (route, placeList) {
 	var sortedPlaces = [];
 	for (var i = 0; i < placeList.length; i++) {
-		sortedPlaces.push([allPlaces[placeList[i]].duration, allPlaces[placeList[i]].place.location, placeList[i]]);
+		sortedPlaces.push([route.places[placeList[i]].duration, route.places[placeList[i]].place.location, placeList[i]]);
 	}
 	sortedPlaces.sort();
 
-	displayTopTen(sortedPlaces);
+	displayTopTen(route, sortedPlaces);
 }
 
 
-function displayTopTen (sortedPlaces) {
+function displayTopTen (route, sortedPlaces) {
 	for (var i = 0; i < 10; i++) {
 		// console.log(sortedPlaces[i][1]);
 		displayPlace(sortedPlaces[i][1], i * 200);
 
-		$("#place-list").append("<li>" + allPlaces[sortedPlaces[i][2]].place.name + "</li>");
+		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + "</li>");
 	}
 }

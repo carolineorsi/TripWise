@@ -4,7 +4,6 @@ $(document).ready(function () {
 
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer();
-	allPlaces = {};
 	markersArray = [];
 	// allPlacesList = [];
 
