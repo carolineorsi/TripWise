@@ -12,11 +12,7 @@ app.secret_key = 'kbegw*^6^Fhjkh'
 @app.route("/")
 def index():
     """This is the 'cover' page of the site"""
-    return render_template("index.html")
-
-@app.route("/javascript")
-def js_index():
-    return render_template("test_js_directions.html")
+    return render_template("directions.html")
 
 @app.route("/getplaces", methods=["GET"])
 def get_places():

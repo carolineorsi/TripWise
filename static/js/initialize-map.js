@@ -7,7 +7,6 @@ $(document).ready(function () {
 	allPlaces = {};
 	markersArray = [];
 	// allPlacesList = [];
-	directionsDisplay.setMap(map);
 
 	$("#directions-form").submit(function(){
 		findPlaces();
@@ -32,11 +31,42 @@ function initializeMap() {
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
 }
 
-function clearMap(){
+
+function clearMap(route){
 	directionsDisplay.setMap(null);
 	for (var i = 0; i < markersArray.length; i++) {
 		markersArray[i].setMap(null);
 	}
 	markersArray.length = 0;
+	$("#place-list").empty();
+	route = null;
 
+}
+
+
+function displayPoint(point, radius) {
+	// Displays search points for purposes of testing.
+	var circle = {
+			fillColor: '#000',
+			fillOpacity: 0.5,
+			strokeWeight: 0.3,
+			map: map,
+			center: point,
+			radius: radius
+		}
+	pointRadius = new google.maps.Circle(circle);
+	markersArray.push(circle);	
+}
+
+
+function displayPlace(location, delay) {
+	// Displays marker on map for purposes of testing
+	setTimeout ( function() {
+		var marker = new google.maps.Marker({
+			position: location,
+			animation: google.maps.Animation.DROP,
+			map: map
+		});
+		markersArray.push(marker);
+	}, delay);	
 }

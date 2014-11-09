@@ -7,6 +7,7 @@ function findPlaces(evt) {
 		document.getElementById('place').value
 	);
 
+	clearMap(route);
 	getDirections(route);
 }
 
@@ -17,8 +18,8 @@ function Route(start, end, keyword) {
 	// getDirections(this);
 }
 
-function getDirections(route) {
 
+function getDirections(route) {
 	// Creates directions request
 	var request = {
 		origin: route.start,
@@ -28,21 +29,28 @@ function getDirections(route) {
 
 	directionsService.route(request, function(response, status){
 		if (status == google.maps.DirectionsStatus.OK) {
-
 			// Displays route on map.
+			directionsDisplay.setMap(map);
 			directionsDisplay.setDirections(response);
 
+			processDirections(response, route)
+		}
+	});
+}
+
+
+function processDirections(response, route) {
 			// Decodes directions polyline and identifies search points and radii
-			var polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
-			var initialDuration = response.routes[0].legs[0].duration.value;
-			var initialDistance = response.routes[0].legs[0].distance.value;
+			polyline = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
+			route['initialDuration'] = response.routes[0].legs[0].duration.value;
+			route['initialDistance'] = response.routes[0].legs[0].distance.value;
 
-			var polylineArray = [];
+			// var polylineArray = [];
 
-			for (i = 0; i < polyline.length; i++) {
-				var latlng = (polyline[i].k + "," + polyline[i].B)
-				polylineArray.push(latlng);
-			}
+			// for (i = 0; i < polyline.length; i++) {
+			// 	var latlng = (polyline[i].k + "," + polyline[i].B)
+			// 	polylineArray.push(latlng);
+			// }
 
 			pointsInPolyline = polyline.length;
 			increment = Math.ceil(pointsInPolyline / 11);
@@ -68,7 +76,7 @@ function getDirections(route) {
 			var i = increment;
 			while (i < pointsInPolyline) {
 				point = polyline[i];
-				displayPoint(point, radius);
+				// displayPoint(point, radius);
 				getPlacesByPoint(point, route.keyword, radius);
 				i = (i + increment);
 			}
@@ -76,10 +84,8 @@ function getDirections(route) {
 			setTimeout( function () {
 				getAddedDistance(route);
 			}, 500 );
-
-		}
-	});
 }
+
 
 function defineRadius(distance) {
 	// Defines radius of search area based on total distance of initial route.
@@ -90,19 +96,6 @@ function defineRadius(distance) {
 	return radius;
 }
 
-function displayPoint(point, radius) {
-	// Displays search points for purposes of testing.
-	var circle = {
-			fillColor: '#000',
-			fillOpacity: 0.5,
-			strokeWeight: 0.3,
-			map: map,
-			center: point,
-			radius: radius
-		}
-	pointRadius = new google.maps.Circle(circle);
-	markersArray.push(circle);	
-}
 
 function getPlacesByPoint(point, keyword, radius) {
 	var placesService = new google.maps.places.PlacesService(map);
@@ -140,14 +133,6 @@ function processPlaces(results, status) {
 	}
 }
 
-function displayPlace(location) {
-	// Displays marker on map for purposes of testing
-	var marker = new google.maps.Marker({
-		position: location,
-		map: map
-	});
-	markersArray.push(marker);	
-}
 
 function Place(name, id, lat, lng, location) {
 	this.name = name;
@@ -156,6 +141,7 @@ function Place(name, id, lat, lng, location) {
 	this.lng = lng;
 	this.location = location;
 }
+
 
 function getAddedDistance(route) {
 
@@ -219,8 +205,8 @@ function getAddedDistance(route) {
 	setTimeout(function() {
 		returnTopTen(route, placeList.slice(0,25));
 	}, 1000);
-
 }
+
 
 function processDistancesFromStart (response, status, requestList) {
 
@@ -235,6 +221,7 @@ function processDistancesFromStart (response, status, requestList) {
 	}
 }
 
+
 function processDistancesToEnd (response, status, requestList) {
 
 	if (status == google.maps.DistanceMatrixStatus.OK) {
@@ -248,6 +235,7 @@ function processDistancesToEnd (response, status, requestList) {
 	}
 }
 
+
 function returnTopTen (route, placeList) {
 	var sortedPlaces = [];
 	for (var i = 0; i < placeList.length; i++) {
@@ -258,10 +246,12 @@ function returnTopTen (route, placeList) {
 	displayTopTen(sortedPlaces);
 }
 
+
 function displayTopTen (sortedPlaces) {
 	for (var i = 0; i < 10; i++) {
 		// console.log(sortedPlaces[i][1]);
-		displayPlace(sortedPlaces[i][1]);
+		displayPlace(sortedPlaces[i][1], i * 200);
+
 		$("#place-list").append("<li>" + allPlaces[sortedPlaces[i][2]].place.name + "</li>");
 	}
 }
