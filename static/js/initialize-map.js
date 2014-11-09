@@ -58,7 +58,7 @@ function displayPoint(point, radius) {
 }
 
 
-function displayPlace(location, delay) {
+function displayPlace(location, delay, placeName) {
 	// Displays marker on map for purposes of testing
 	setTimeout ( function() {
 		var marker = new google.maps.Marker({
@@ -67,5 +67,17 @@ function displayPlace(location, delay) {
 			map: map
 		});
 		markersArray.push(marker);
+		addInfoWindow(marker, placeName);
 	}, delay);	
 }
+
+function addInfoWindow (marker, placeName) {
+	var contentString = placeName;
+	var infoWindow = new google.maps.InfoWindow({
+		content: contentString
+	});
+	google.maps.event.addListener(marker, 'click', function() {
+		infoWindow.open(map, marker);
+	});
+}
+

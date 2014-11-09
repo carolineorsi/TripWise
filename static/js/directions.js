@@ -248,7 +248,7 @@ function returnTopTen (route, placeList) {
 
 function displayTopTen (route, sortedPlaces) {
 	for (var i = 0; i < 10; i++) {
-		displayPlace(sortedPlaces[i][1], i * 200);
+		displayPlace(sortedPlaces[i][1], i * 200, route.places[sortedPlaces[i][2]].place.name);
 
 		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + "</li>");
 	}
