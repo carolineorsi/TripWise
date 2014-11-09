@@ -11,13 +11,6 @@ function findPlaces(evt) {
 	getDirections(route);
 }
 
-function Route(start, end, keyword) {
-	this.start = start;
-	this.end = end;
-	this.keyword = keyword;
-	this.places = {};
-}
-
 
 function getDirections(route) {
 	// Creates directions request
@@ -137,15 +130,6 @@ function processPlaces(results, status, route) {
 }
 
 
-function Place(name, id, lat, lng, location) {
-	this.name = name;
-	this.id = id;
-	this.lat = lat;
-	this.lng = lng;
-	this.location = location;
-}
-
-
 function getAddedDistance(route) {
 
 	var service = new google.maps.DistanceMatrixService();
@@ -155,53 +139,69 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
-	// var numPlaces = placeList.length;
+	var numPlaces = placeList.length;
+	var numRequests = Math.ceil(numPlaces / 25);
+	var placeListCopy = placeList;
 	
 	// // Limits requests to Distance Matrix to 25 items per API quotas
-	// for (var i = 0; i < Math.ceil(numPlaces / 25); i++) {
+	// for (var i = 0; i < numRequests; i++) {
 	// 	var requestList = [];
-	// 	if (placeList.length >= 25) {
-	// 		for (var j = 0; j < 25 || placeList.length == 0; j++) {
-	// 			var item = placeList.pop();
+	// 	if (placeListCopy.length > 25) {
+	// 		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
+	// 		for (var j = 0; j < 25; j++) {				
+	// 			var item = placeListCopy.pop();
 	// 			requestList.push(item);
 	// 		}
 	// 	}
 	// 	else {
-	// 		requestList = placeList;
+	// 		requestList = placeListCopy;
 	// 	}
-	
-	// 	var request = {
+
+	// 	var requestStart = {
 	// 		origins: [route.start],
 	// 		destinations: requestList,
 	// 		travelMode: google.maps.TravelMode.DRIVING
 	// 	}
 
-	// 	service.getDistanceMatrix(request, function(response, status) {
-	// 		processDistances(response, status, requestList);
-	// 	});
+	// 	var requestEnd = {
+	// 		origins: requestList,
+	// 		destinations: [route.end],
+	// 		travelMode: google.maps.TravelMode.DRIVING			
+	// 	}
 
+	// 	service.getDistanceMatrix(requestStart, 
+	// 		function(response, status) {
+	// 			processDistancesFromStart(response, status, route, requestStart);
+	// 		}
+	// 	);
+
+	// 	service.getDistanceMatrix(requestEnd,
+	// 		function(response, status) {
+	// 			processDistancesToEnd(response, status, route, requestEnd)
+	// 		}
+	// 	);
 	// }
 
-	var request = {
+	var requestStart = {
 		origins: [route.start],
 		// API only allows 25 places per call
 		destinations: placeList.slice(0,25),
 		travelMode: google.maps.TravelMode.DRIVING
 	}
 
-	service.getDistanceMatrix(request, function(response, status) {
-		processDistancesFromStart(response, status, route, placeList);
+	service.getDistanceMatrix(requestStart, function(response, status) {
+		processDistancesFromStart(response, status, route, requestStart);
 	});
 
-	var request = {
+	var requestEnd = {
 		origins: placeList.slice(0,25),
 		destinations: [route.end],
 		travelMode: google.maps.TravelMode.DRIVING
 	}
 
 	setTimeout(function() {
-		service.getDistanceMatrix(request, function(response, status) {
-			processDistancesToEnd(response, status, route, placeList);
+		service.getDistanceMatrix(requestEnd, function(response, status) {
+			processDistancesToEnd(response, status, route, requestEnd);
 		});
 	}, 500);
 
@@ -211,29 +211,25 @@ function getAddedDistance(route) {
 }
 
 
-function processDistancesFromStart (response, status, route, requestList) {
-
+function processDistancesFromStart (response, status, route, request) {
 	if (status == google.maps.DistanceMatrixStatus.OK) {
 		for (var i = 0; i < response.rows[0].elements.length; i++) {
 			var distance = response.rows[0].elements[i].distance.value;
 			var duration = response.rows[0].elements[i].duration.value;
-			route.places[requestList[i]]['duration'] = duration;
-			route.places[requestList[i]]['distance'] = distance;
-			// console.log(allPlaces[requestList[i]]);
+			route.places[request.destinations[i]]['duration'] = duration;
+			route.places[request.destinations[i]]['distance'] = distance;
 		}
 	}
 }
 
 
-function processDistancesToEnd (response, status, route, requestList) {
-
+function processDistancesToEnd (response, status, route, request) {
 	if (status == google.maps.DistanceMatrixStatus.OK) {
 		for (var i = 0; i < response.rows.length; i++) {
 			var distance = response.rows[i].elements[0].distance.value;
 			var duration = response.rows[i].elements[0].duration.value;
-			route.places[requestList[i]]['duration'] = route.places[requestList[i]]['duration'] + duration;
-			route.places[requestList[i]]['distance'] = route.places[requestList[i]]['distance'] + distance;
-			// console.log(allPlaces[requestList[i]]);
+			route.places[request.origins[i]]['duration'] = route.places[request.origins[i]]['duration'] + duration;
+			route.places[request.origins[i]]['distance'] = route.places[request.origins[i]]['distance'] + distance;
 		}
 	}
 }
@@ -252,7 +248,6 @@ function returnTopTen (route, placeList) {
 
 function displayTopTen (route, sortedPlaces) {
 	for (var i = 0; i < 10; i++) {
-		// console.log(sortedPlaces[i][1]);
 		displayPlace(sortedPlaces[i][1], i * 200);
 
 		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + "</li>");
