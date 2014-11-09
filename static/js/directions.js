@@ -14,11 +14,7 @@ function findPlaces(evt) {
 
 function getDirections(route) {
 	// Creates directions request
-	var request = {
-		origin: route.start,
-		destination: route.end,
-		travelMode: google.maps.TravelMode.DRIVING
-	};
+	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING);
 
 	directionsService.route(request, function(response, status){
 		if (status == google.maps.DirectionsStatus.OK) {
@@ -94,14 +90,7 @@ function getPlacesByPoint(point, route, radius) {
 	var placesService = new google.maps.places.PlacesService(map);
 
 	// Create Places request
-	var request = {
-		location: point,
-		radius: radius,
-		rankby: 'distance',
-		keyword: route.keyword
-	}
-
-	// Make places request. 
+	var request = new placesRequest(point, radius, route.keyword);
 	placesService.nearbySearch(request, function(results, status) {
 		processPlaces(results, status, route);
 	});
