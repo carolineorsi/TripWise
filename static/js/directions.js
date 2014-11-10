@@ -22,6 +22,7 @@ function getDirections(route) {
 			directionsDisplay.setMap(map);
 			directionsDisplay.setDirections(response);
 
+			// Calls function to break polyline into points for Places search.
 			processDirections(response, route)
 		}
 	});
@@ -59,20 +60,24 @@ function processDirections(response, route) {
 			// 			console.log(result);
 			// 		});
 
+			var placesService = new google.maps.places.PlacesService(map);
+			var counter = 0;
+
 			// For each search point, display it on the map and find places.
 			// When the increment variable exceeds the number of points in 
 			// the polyline, end the loop.
-			var i = increment;
-			while (i < pointsInPolyline) {
-				point = route.polyline[i];
-				// displayPoint(point, radius);
-				getPlacesByPoint(point, route, radius);
-				i = (i + increment);
-			}
+			for (i = increment / 2; i < pointsInPolyline; i = i + increment){
+				// displayPoint(route.polyline[i], radius);
+				var request = new placesRequest(route.polyline[i], radius, route.keyword);
+				placesService.nearbySearch(request, function(results, status) {
+					processPlaces(results, status, route);
 
-			setTimeout( function () {
-				getAddedDistance(route);
-			}, 500 );
+					counter++;
+					if (counter == 11) {
+						getAddedDistance(route);
+					}
+				});
+			}
 }
 
 
@@ -83,17 +88,6 @@ function defineRadius(distance) {
 		radius = 50000;
 	}
 	return radius;
-}
-
-
-function getPlacesByPoint(point, route, radius) {
-	var placesService = new google.maps.places.PlacesService(map);
-
-	// Create Places request
-	var request = new placesRequest(point, radius, route.keyword);
-	placesService.nearbySearch(request, function(results, status) {
-		processPlaces(results, status, route);
-	});
 }
 
 
@@ -128,17 +122,22 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
+	console.log(placeList.length);
+
 	// var numPlaces = placeList.length;
 	// var numRequests = Math.ceil(numPlaces / 25);
-	// counter = numRequests * 2;
+	// // counter = numRequests * 2;
 	// var placeListCopy = placeList;
+	// var counter = 0;
+	// console.log(numRequests);
+	// console.log(numPlaces);
 	
 	// // Limits requests to Distance Matrix to 25 items per API quotas
 	// for (var i = 0; i < numRequests; i++) {
 	// 	var requestList = [];
 	// 	if (placeListCopy.length > 25) {
 	// 		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
-	// 		for (var j = 0; j < 25; j++) {				
+	// 		for (var j = 0; j <= 25; j++) {				
 	// 			var item = placeListCopy.pop();
 	// 			requestList.push(item);
 	// 		}
@@ -153,17 +152,19 @@ function getAddedDistance(route) {
 	// 	service.getDistanceMatrix(requestStart, 
 	// 		function(response, status) {
 	// 			processDistancesFromStart(response, status, route, requestStart);
+				
+	// 			service.getDistanceMatrix(requestEnd,
+	// 				function(response, status) {
+	// 					processDistancesToEnd(response, status, route, requestEnd)
+	// 				})
+
+	// 			counter++;
+	// 			console.log(counter);
+	// 			if (counter == numRequests) {
+	// 				returnTopTen(route, placeList);
+	// 			}
 	// 		}
 	// 	);
-
-	// 	setTimeout(function() {
-	// 		service.getDistanceMatrix(requestEnd,
-	// 			function(response, status) {
-	// 				processDistancesToEnd(response, status, route, requestEnd)
-	// 			}
-	// 		);
-	// 	}, 500);
-	// }
 
 	var requestStart = new distanceMatrixRequest([route.start], placeList.slice(0,25), google.maps.TravelMode.DRIVING);
 	var requestEnd = new distanceMatrixRequest(placeList.slice(0,25), [route.end], google.maps.TravelMode.DRIVING);

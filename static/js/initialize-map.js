@@ -8,8 +8,8 @@ $(document).ready(function () {
 	// allPlacesList = [];
 	counter = null;
 
-	$("#directions-form").submit(function(){
-		findPlaces();
+	$("#directions-form").submit(function() {
+		findPlaces()
 	});
 });
 
