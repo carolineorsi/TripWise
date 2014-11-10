@@ -43,7 +43,7 @@ function processDirections(response, route) {
 			// }
 
 			pointsInPolyline = route.polyline.length;
-			increment = Math.ceil(pointsInPolyline / 11);
+			increment = Math.ceil(pointsInPolyline / 10);
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
 // AJAX CALL TO MY SERVER-SIDE SCRIPTS
@@ -61,19 +61,29 @@ function processDirections(response, route) {
 			// 		});
 
 			var placesService = new google.maps.places.PlacesService(map);
-			var counter = 0;
+			var counter = pointsInPolyline / increment;
 
 			// For each search point, display it on the map and find places.
 			// When the increment variable exceeds the number of points in 
 			// the polyline, end the loop.
-			for (i = increment / 2; i < pointsInPolyline; i = i + increment){
+			for (i = 0; i < pointsInPolyline; i = i + increment){
 				// displayPoint(route.polyline[i], radius);
 				var request = new placesRequest(route.polyline[i], radius, route.keyword);
 				placesService.nearbySearch(request, function(results, status) {
+					// while (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
+					// 	setTimeout(function () {
+					// 		placesService.nearbySearch(request, function(results, status) {
+					// 			console.log("retry", status);
+					// 			processPlaces(results, status, route);
+					// 		});
+					// 	}, 1000);
+					// }
+					
 					processPlaces(results, status, route);
 
-					counter++;
-					if (counter == 11) {
+					counter--;
+					if (counter <= 0) {
+						// console.log(Object.keys(route.places).length);
 						getAddedDistance(route);
 					}
 				});
@@ -122,15 +132,11 @@ function getAddedDistance(route) {
 		placeList.push(latlng);
 	});
 
-	console.log(placeList.length);
-
 	// var numPlaces = placeList.length;
 	// var numRequests = Math.ceil(numPlaces / 25);
 	// // counter = numRequests * 2;
-	// var placeListCopy = placeList;
+	// var placeListCopy = placeList.slice(0);
 	// var counter = 0;
-	// console.log(numRequests);
-	// console.log(numPlaces);
 	
 	// // Limits requests to Distance Matrix to 25 items per API quotas
 	// for (var i = 0; i < numRequests; i++) {
@@ -146,8 +152,8 @@ function getAddedDistance(route) {
 	// 		requestList = placeListCopy;
 	// 	}
 
-	// var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
-	// var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
+	// 	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
+	// 	var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
 
 	// 	service.getDistanceMatrix(requestStart, 
 	// 		function(response, status) {
@@ -156,15 +162,15 @@ function getAddedDistance(route) {
 	// 			service.getDistanceMatrix(requestEnd,
 	// 				function(response, status) {
 	// 					processDistancesToEnd(response, status, route, requestEnd)
-	// 				})
 
-	// 			counter++;
-	// 			console.log(counter);
-	// 			if (counter == numRequests) {
-	// 				returnTopTen(route, placeList);
-	// 			}
+	// 					counter++;
+	// 					if (counter == numRequests) {
+	// 						returnTopTen(route, placeList);
+	// 					}
+	// 				})
 	// 		}
 	// 	);
+	// }
 
 	var requestStart = new distanceMatrixRequest([route.start], placeList.slice(0,25), google.maps.TravelMode.DRIVING);
 	var requestEnd = new distanceMatrixRequest(placeList.slice(0,25), [route.end], google.maps.TravelMode.DRIVING);
@@ -215,15 +221,14 @@ function returnTopTen (route, placeList) {
 		sortedPlaces.push([route.places[placeList[i]].duration, route.places[placeList[i]].place.location, placeList[i]]);
 	}
 	sortedPlaces.sort();
-
 	displayTopTen(route, sortedPlaces);
 }
 
 
 function displayTopTen (route, sortedPlaces) {
+	// for (var i = 0; i < 10; i++) {
 	for (var i = 0; i < 10; i++) {
 		displayPlace(sortedPlaces[i][1], i * 200, route.places[sortedPlaces[i][2]].place.name);
-
-		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + "</li>");
+		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + ", " + (Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60)) + " min added to route</li>");
 	}
 }
