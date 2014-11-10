@@ -143,7 +143,7 @@ function getAddedDistance(route) {
 	// 	var requestList = [];
 	// 	if (placeListCopy.length > 25) {
 	// 		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
-	// 		for (var j = 0; j <= 25; j++) {				
+	// 		for (var j = 0; j < 25; j++) {				
 	// 			var item = placeListCopy.pop();
 	// 			requestList.push(item);
 	// 		}
@@ -161,7 +161,7 @@ function getAddedDistance(route) {
 				
 	// 			service.getDistanceMatrix(requestEnd,
 	// 				function(response, status) {
-	// 					processDistancesToEnd(response, status, route, requestEnd)
+	// 					processDistancesToEnd(response, status, route, requestEnd);
 
 	// 					counter++;
 	// 					if (counter == numRequests) {
@@ -172,22 +172,19 @@ function getAddedDistance(route) {
 	// 	);
 	// }
 
+
 	var requestStart = new distanceMatrixRequest([route.start], placeList.slice(0,25), google.maps.TravelMode.DRIVING);
 	var requestEnd = new distanceMatrixRequest(placeList.slice(0,25), [route.end], google.maps.TravelMode.DRIVING);
 
 	service.getDistanceMatrix(requestStart, function(response, status) {
 		processDistancesFromStart(response, status, route, requestStart);
-	});
 
-	setTimeout(function() {
 		service.getDistanceMatrix(requestEnd, function(response, status) {
 			processDistancesToEnd(response, status, route, requestEnd);
-		});
-	}, 500);
 
-	setTimeout(function() {
-		returnTopTen(route, placeList.slice(0,25));
-	}, 1000);
+			returnTopTen(route, placeList.slice(0,25));
+		});
+	});
 }
 
 
@@ -229,6 +226,7 @@ function displayTopTen (route, sortedPlaces) {
 	// for (var i = 0; i < 10; i++) {
 	for (var i = 0; i < 10; i++) {
 		displayPlace(sortedPlaces[i][1], i * 200, route.places[sortedPlaces[i][2]].place.name);
-		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + ", " + (Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60)) + " min added to route</li>");
+		var durationAdded = Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60);
+		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + ", " + durationAdded + " min added to route</li>");
 	}
 }
