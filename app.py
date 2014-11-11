@@ -28,9 +28,12 @@ def get_places():
 
     route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
     
-    # route.get_places()
-    # map_data.calculate_added_distance(route)
-    # top_ten = map_data.return_top_ten(route)
+    route.get_places()
+    map_data.calculate_added_distance(route)
+    top_ten = map_data.return_top_ten(route)
+
+    for item in top_ten:
+        print item['place'].name, "-", ((item['duration'] - route.initial_duration) / 60), "mins added to trip"
 
     return "worked"
 

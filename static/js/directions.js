@@ -35,22 +35,22 @@ function processDirections(response, route) {
 			route['initialDuration'] = response.routes[0].legs[0].duration.value;
 			route['initialDistance'] = response.routes[0].legs[0].distance.value;
 
-			// var polylineArray = [];
-
-			// for (i = 0; i < polyline.length; i++) {
-			// 	var latlng = (polyline[i].k + "," + polyline[i].B)
-			// 	polylineArray.push(latlng);
-			// }
-
 			pointsInPolyline = route.polyline.length;
 			increment = Math.ceil(pointsInPolyline / 10);
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
 // AJAX CALL TO MY SERVER-SIDE SCRIPTS
+			// var polylineArray = [];
+
+			// for (i = 0; i < route.polyline.length; i++) {
+			// 	var latlng = (route.polyline[i].k + "," + route.polyline[i].B)
+			// 	polylineArray.push(latlng);
+			// }
+
 			// $.get("/getplaces", {
 	 	// 				'polyline': JSON.stringify(polylineArray),
-	 	// 				'initialDuration': initialDuration,
-	 	// 				'initialDistance': initialDistance,
+	 	// 				'initialDuration': route.initialDuration,
+	 	// 				'initialDistance': route.initialDistance,
 	 	// 				'start': route.start,
 	 	// 				'end': route.end,
 	 	// 				'keyword': route.keyword,

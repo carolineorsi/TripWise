@@ -70,16 +70,16 @@ def calculate_added_distance(route):
 
     url_end = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
         '&destinations=%s'
-        '&key=%s') % (places_string, route.end, model.AUTH_KEY)
+        '&key=%s') % (route.end, places_string, model.AUTH_KEY)
 
     # NOTE TO SELF: Need to adjust this to make sure that distances, durations returned
     # for each place to the end point are the right direction (i.e. place to end, not the
     # other way around.)
 
-    print "***********************"
-    print url_start
-    print url_end
-    print "***********************"
+    # print "***********************"
+    # print url_start
+    # print url_end
+    # print "***********************"
 
     start_distances = send_request(url_start)
     end_distances = send_request(url_end)
