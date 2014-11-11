@@ -61,8 +61,9 @@ function displayPoint(point, radius) {
 
 function displayPlace(location, delay, placeName) {
 	// Displays marker on map for purposes of testing
-	inactive = "//maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png";
-	active = "//maps.google.com/mapfiles/kml/paddle/blu-blank.png";
+	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|4D70B8";
+	// active = "//maps.google.com/mapfiles/kml/paddle/blu-blank.png";
+	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|1F2D4A";
 
 	setTimeout ( function() {
 		var marker = new google.maps.Marker({
@@ -95,6 +96,7 @@ function addInfoWindow (marker, placeName) {
 function toggleIcon (marker) {
 	if (marker.icon == inactive) {
 		marker.setIcon(active);
+		marker.size.height * 2;
 	}
 	else {
 		marker.setIcon(inactive);
