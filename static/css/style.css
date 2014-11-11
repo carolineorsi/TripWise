@@ -1,0 +1,30 @@
+html, body, #map-container {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#control-bar {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	display: inline-block;
+	z-index: 10;
+	background-color: white;
+	padding: 10px;
+	width: 15%;
+}
+
+.form-group {
+	line-height: 10px;
+}
+
+.list-item {
+	padding: 5px;
+	border-top: 2px solid #EEE;
+}
+
+.list-item:hover {
+	background-color: #EEE;
+}
+

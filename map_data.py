@@ -1,8 +1,9 @@
-import urllib2
+# import urllib2
 import json
 import os
 import model
-import urllib
+# import urllib
+import requests
 from operator import itemgetter
 
 # Set authorization key
@@ -12,33 +13,37 @@ AUTH_KEY = os.environ.get('GOOGLE_API_KEY')
 
 
 def get_initial_route(origin, destination):
-	""" Using start and end point from user, get directions. """
-	
-	url = ('https://maps.googleapis.com/maps/api/directions/json?origin=%s'
-			'&destination=%s'
-			'&key=%s') % (origin, destination, AUTH_KEY)
+    """ Using start and end point from user, get directions. """
 
-	# Send the GET request to the Place details service (using url from above)
- 	response = urllib2.urlopen(url)
+    url = ('https://maps.googleapis.com/maps/api/directions/json?origin=%s'
+            '&destination=%s'
+            '&key=%s') % (origin, destination, AUTH_KEY)
 
-  	# Get the response and use the JSON library to decode the JSON
- 	json_raw = response.read()
- 	json_data = json.loads(json_raw)
+    # Send the GET request to the Place details service (using url from above)
+    # response = urllib2.urlopen(url)
+    response = requests.get(url)
 
-	return json_data
+    # Get the response and use the JSON library to decode the JSON
+    # json_raw = response.read()
+    # json_data = json.loads(json_raw)
+    json_data = response.json()
+
+    return json_data
 
 
 def send_request(url):
-	""" Sends HTTP request using complete query url. """
+    """ Sends HTTP request using complete query url. """
 
-	# response = urllib2.urlopen(url)
-	response = urllib.urlopen(url)
+    # response = urllib2.urlopen(url)
+    # response = urllib.urlopen(url)
+    response = requests.get(url)
 
-	# Get the response and use the JSON library to decode the JSON
-	json_raw = response.read()
-	json_data = json.loads(json_raw)
+    # Get the response and use the JSON library to decode the JSON
+    # json_raw = response.read()
+    # json_data = json.loads(json_raw)
+    json_data = response.json()
 
-	return json_data
+    return json_data
 
 
 def optimize_polyline(raw_polyline):
@@ -70,7 +75,7 @@ def calculate_added_distance(route):
 
     url_end = ('https://maps.googleapis.com/maps/api/distancematrix/json?origins=%s'
         '&destinations=%s'
-        '&key=%s') % (route.end, places_string, model.AUTH_KEY)
+        '&key=%s') % (places_string, route.end, model.AUTH_KEY)
 
     # NOTE TO SELF: Need to adjust this to make sure that distances, durations returned
     # for each place to the end point are the right direction (i.e. place to end, not the
@@ -87,8 +92,8 @@ def calculate_added_distance(route):
     num_places = len(places_list)
     for i in range(num_places):
     	latlng = places_list[i]
-    	distance = start_distances['rows'][0]['elements'][i]['distance']['value'] + end_distances['rows'][0]['elements'][i]['distance']['value']
-    	duration = start_distances['rows'][0]['elements'][i]['duration']['value'] + end_distances['rows'][0]['elements'][i]['duration']['value']
+    	distance = start_distances['rows'][0]['elements'][i]['distance']['value'] + end_distances['rows'][i]['elements'][0]['distance']['value']
+    	duration = start_distances['rows'][0]['elements'][i]['duration']['value'] + end_distances['rows'][i]['elements'][0]['duration']['value']
     	route.places[latlng]['distance'] = distance
     	route.places[latlng]['duration'] = duration
 

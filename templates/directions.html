@@ -1,32 +1,35 @@
 <html>
 	<head>
 		<title>Test</title>
-		<style>
-		#map-container {
-			height: 300px;
-			width: 500px
-		}
-		</style>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/css/style.css"/>
 	</head>
 	<body>
-		<form id="directions-form">
-			Start: <input type="text" id="start" value="3896 19th st, sf, ca"><br>
-			End: <input type="text" id="end" value="683 sutter st, sf, ca"><br>
-			Place: <input type="text" id="place" value="sushi"><br>
-			<input type="submit">
-		</form>
+		<div id="control-bar">
+			<div class="form-group">
+				<form id="directions-form">
+					<label for="start">Start</label>
+					<input type="text" id="start" class="form-control" value="3896 19th St, San Francisco, CA"><br>
+					
+					<label for="end">End</label>
+					<input type="text" id="end" class="form-control" value="683 Sutter St, San Francisco, CA"><br>
+					
+					<label for="keyword">Keyword</label>
+					<input type="text" id="keyword" class="form-control" value="Sushi"><br>
+					<button class="btn btn-default" type="submit">Go!</button>
+				</form>
+			</div>
 
-		<div class="instructions">
+			<div id="list-container">
+        	</div>
+		</div>
+
+<!-- 		<div class="instructions">
           <ul class="instructions-list" id="instructions-container">
           </ul>
-        </div>
+        </div> -->
 
         <div id="map-container"></div>
-
-        <div>
-        	<ul id="place-list">
-        	</ul>
-        </div>
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdYX2uSHJsvjQhI2eJo-6peidlfFlMvIs&libraries=places"></script>
 		<script src="/static/js/jquery-1.11.0.min.js"></script>

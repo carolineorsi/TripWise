@@ -4,7 +4,7 @@ function findPlaces(evt) {
 	var route = new Route(
 		document.getElementById('start').value,
 		document.getElementById('end').value,
-		document.getElementById('place').value
+		document.getElementById('keyword').value
 	);
 
 	clearMap(route);
@@ -36,29 +36,29 @@ function processDirections(response, route) {
 			route['initialDistance'] = response.routes[0].legs[0].distance.value;
 
 			pointsInPolyline = route.polyline.length;
-			increment = Math.ceil(pointsInPolyline / 10);
+			increment = Math.ceil(pointsInPolyline / 10); // TODO: make the 10 a constant
 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
 
-// AJAX CALL TO MY SERVER-SIDE SCRIPTS
-			// var polylineArray = [];
+// // AJAX CALL TO MY SERVER-SIDE SCRIPTS
+// 			var polylineArray = [];
 
-			// for (i = 0; i < route.polyline.length; i++) {
-			// 	var latlng = (route.polyline[i].k + "," + route.polyline[i].B)
-			// 	polylineArray.push(latlng);
-			// }
+// 			for (i = 0; i < route.polyline.length; i++) {
+// 				var latlng = (route.polyline[i].k + "," + route.polyline[i].B)
+// 				polylineArray.push(latlng);
+// 			}
 
-			// $.get("/getplaces", {
-	 	// 				'polyline': JSON.stringify(polylineArray),
-	 	// 				'initialDuration': route.initialDuration,
-	 	// 				'initialDistance': route.initialDistance,
-	 	// 				'start': route.start,
-	 	// 				'end': route.end,
-	 	// 				'keyword': route.keyword,
-	 	// 				'radius': radius
-	 	// 			},
-	  // 				function(result) {
-			// 			console.log(result);
-			// 		});
+// 			$.get("/getplaces", {
+// 	 					'polyline': JSON.stringify(polylineArray),
+// 	 					'initialDuration': route.initialDuration,
+// 	 					'initialDistance': route.initialDistance,
+// 	 					'start': route.start,
+// 	 					'end': route.end,
+// 	 					'keyword': route.keyword,
+// 	 					'radius': radius
+// 	 				},
+// 	  				function(result) {
+// 						console.log(result);
+// 					});
 
 			var placesService = new google.maps.places.PlacesService(map);
 			var counter = pointsInPolyline / increment;
@@ -69,6 +69,7 @@ function processDirections(response, route) {
 			for (i = 0; i < pointsInPolyline; i = i + increment){
 				// displayPoint(route.polyline[i], radius);
 				var request = new placesRequest(route.polyline[i], radius, route.keyword);
+					// counter = callPlaces(request, route, counter);
 				placesService.nearbySearch(request, function(results, status) {
 					// while (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
 					// 	setTimeout(function () {
@@ -83,11 +84,33 @@ function processDirections(response, route) {
 
 					counter--;
 					if (counter <= 0) {
-						// console.log(Object.keys(route.places).length);
+						console.log(Object.keys(route.places).length);
 						getAddedDistance(route);
 					}
+					// console.log(counter);
+					// setTimeout(function () {
+					// 	getAddedDistance(route);
+					// }, 5000);
+
 				});
 			}
+}
+
+function callPlaces(request, route, counter) {
+	var placesService = new google.maps.places.PlacesService(map);
+	placesService.nearbySearch(request, function(results, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
+			console.log("retry");
+			setTimeout(function() {
+				callPlaces(request, route)
+			}, 1000);
+		}
+		else {
+			processPlaces(results, status, route);
+			counter--;
+			return counter;
+		}
+	})
 }
 
 
@@ -155,46 +178,46 @@ function getAddedDistance(route) {
 }
 
 
-// function limitRequest (placeListCopy, numRequests, counter, route, service) {
-// 	// Limits requests to Distance Matrix to 25 items per API quotas
-// 	var requestList = [];
-// 	if (placeListCopy.length > 25) {
-// 		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
-// 		for (var j = 0; j < 25; j++) {				
-// 			var item = placeListCopy.pop();
-// 			requestList.push(item);
-// 		}
-// 	}
-// 	else {
-// 		requestList = placeListCopy;
-// 	}
+function limitRequest (placeListCopy, numRequests, counter, route, service) {
+	// Limits requests to Distance Matrix to 25 items per API quotas
+	var requestList = [];
+	if (placeListCopy.length > 25) {
+		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
+		for (var j = 0; j < 25; j++) {				
+			var item = placeListCopy.pop();
+			requestList.push(item);
+		}
+	}
+	else {
+		requestList = placeListCopy;
+	}
 
-// 	console.log("requestList: ", requestList.length);
+	console.log("requestList: ", requestList.length);
 
-// 	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
-// 	var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
+	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
+	var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
 
-// 	service.getDistanceMatrix(requestStart, 
-// 		function(response, status) {
-// 			processDistancesFromStart(response, status, route, requestStart);
+	service.getDistanceMatrix(requestStart, 
+		function(response, status) {
+			processDistancesFromStart(response, status, route, requestStart);
 			
-// 			service.getDistanceMatrix(requestEnd,
-// 				function(response, status) {
-// 					processDistancesToEnd(response, status, route, requestEnd);
+			service.getDistanceMatrix(requestEnd,
+				function(response, status) {
+					processDistancesToEnd(response, status, route, requestEnd);
 
-// 					counter++;
-// 					if (counter == numRequests) {
-// 						returnTopTen(route, placeList);
-// 					}
-// 					else {
-// 						setTimeout(function() {
-// 							limitRequest(placeListCopy, numRequests, counter, route, service)
-// 						}, 500);
-// 					}
-// 				})
-// 		}
-// 	);
-// }
+					counter++;
+					if (counter == numRequests) {
+						returnTopTen(route, placeList);
+					}
+					else {
+						setTimeout(function() {
+							limitRequest(placeListCopy, numRequests, counter, route, service)
+						}, 500);
+					}
+				})
+		}
+	);
+}
 
 
 function processDistancesFromStart (response, status, route, request) {
@@ -238,6 +261,20 @@ function displayTopTen (route, sortedPlaces) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
 		displayPlace(sortedPlaces[i][1], i * 200, route.places[sortedPlaces[i][2]].place.name);
 		var durationAdded = Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60);
-		$("#place-list").append("<li>" + route.places[sortedPlaces[i][2]].place.name + ", " + durationAdded + " min added to route</li>");
+		// if (durationAdded == 0) {
+		// 	$("#place-list").append("<li><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>No travel time added.</em></li>");
+		// }
+		// else {
+		// 	$("#place-list").append("<li><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></li>");
+		// }
+
+		if (durationAdded == 0) {
+			$("#list-container").append("<div class='list-item'><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>No travel time added.</em></div>");
+		}
+		else {
+			$("#list-container").append("<div class='list-item'><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
+		}
 	}
 }
+
+

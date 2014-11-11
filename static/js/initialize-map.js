@@ -38,7 +38,7 @@ function clearMap(route){
 		markersArray[i].setMap(null);
 	}
 	markersArray.length = 0;
-	$("#place-list").empty();
+	$("#list-container").empty();
 	route = null;
 
 }
@@ -61,18 +61,17 @@ function displayPoint(point, radius) {
 
 function displayPlace(location, delay, placeName) {
 	// Displays marker on map for purposes of testing
+	inactive = "//maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png";
+	active = "//maps.google.com/mapfiles/kml/paddle/blu-blank.png";
+
 	setTimeout ( function() {
 		var marker = new google.maps.Marker({
 			position: location,
 			animation: google.maps.Animation.DROP,
-			map: map
+			map: map,
+			icon: inactive
 		});
 		markersArray.push(marker);
-
-		// google.maps.event.addListener(marker, 'click', function(evt) {
-		// 	infowindow.setContent(placeName);
-		// 	infowindow.open(map, this);
-		// });
 
 		addInfoWindow(marker, placeName);
 	}, delay);	
@@ -83,8 +82,22 @@ function addInfoWindow (marker, placeName) {
 	var infoWindow = new google.maps.InfoWindow({
 		content: contentString
 	});
-	google.maps.event.addListener(marker, 'click', function(evt) {
+	google.maps.event.addListener(marker, 'mouseover', function(evt) {
 		infoWindow.open(map, marker);
+		toggleIcon(marker);
 	});
+	google.maps.event.addListener(marker, 'mouseout', function(evt) {
+		infoWindow.close(map, marker);
+		toggleIcon(marker);
+	});
+}
+
+function toggleIcon (marker) {
+	if (marker.icon == inactive) {
+		marker.setIcon(active);
+	}
+	else {
+		marker.setIcon(inactive);
+	}
 }
 
