@@ -259,20 +259,17 @@ function returnTopTen (route, placeList) {
 function displayTopTen (route, sortedPlaces) {
 	for (var i = 0; i < 10; i++) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
-		displayPlace(sortedPlaces[i][1], i * 200, route.places[sortedPlaces[i][2]].place.name);
+		place = route.places[sortedPlaces[i][2]].place;
+		displayPlace(place.location, i * 200, place);
 		var durationAdded = Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60);
-		// if (durationAdded == 0) {
-		// 	$("#place-list").append("<li><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>No travel time added.</em></li>");
-		// }
-		// else {
-		// 	$("#place-list").append("<li><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></li>");
-		// }
 
 		if (durationAdded == 0) {
-			$("#list-container").append("<div class='list-item'><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>No travel time added.</em></div>");
+			$("#list-container").append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
+			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
 		}
 		else {
-			$("#list-container").append("<div class='list-item'><strong>" + route.places[sortedPlaces[i][2]].place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
+			$("#list-container").append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
+			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
 		}
 	}
 }

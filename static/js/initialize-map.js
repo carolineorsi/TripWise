@@ -59,7 +59,7 @@ function displayPoint(point, radius) {
 }
 
 
-function displayPlace(location, delay, placeName) {
+function displayPlace(location, delay, place) {
 	// Displays marker on map for purposes of testing
 	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|4D70B8";
 	// active = "//maps.google.com/mapfiles/kml/paddle/blu-blank.png";
@@ -73,13 +73,14 @@ function displayPlace(location, delay, placeName) {
 			icon: inactive
 		});
 		markersArray.push(marker);
+		place.marker = marker;
 
-		addInfoWindow(marker, placeName);
+		addInfoWindow(marker, place);
 	}, delay);	
 }
 
-function addInfoWindow (marker, placeName) {
-	var contentString = placeName;
+function addInfoWindow (marker, place) {
+	var contentString = place.name;
 	var infoWindow = new google.maps.InfoWindow({
 		content: contentString
 	});
@@ -96,10 +97,8 @@ function addInfoWindow (marker, placeName) {
 function toggleIcon (marker) {
 	if (marker.icon == inactive) {
 		marker.setIcon(active);
-		marker.size.height * 2;
 	}
 	else {
 		marker.setIcon(inactive);
 	}
 }
-
