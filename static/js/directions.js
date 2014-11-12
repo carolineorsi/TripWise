@@ -8,17 +8,24 @@ function findPlaces(evt) {
 	);
 
 	clearMap(route);
-	getDirections(route);
-	// TODO: Get Q to work.
-	// getDirections(route)
-	// .then(processDirections(response, route));
+	// getDirections(route);
+
+	getDirections(route)
+		.then(
+			function (response) {
+				processDirections(response, route);
+			},
+			function (status) {
+				console.log(status);
+			}
+		);
 }
 
 
 function getDirections(route) {
 	// Creates directions request
 	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING);
-	// var deferred = Q.defer();
+	var deferred = Q.defer();
 
 	directionsService.route(request, function(response, status){
 		if (status == google.maps.DirectionsStatus.OK) {
@@ -26,18 +33,14 @@ function getDirections(route) {
 			directionsDisplay.setMap(map);
 			directionsDisplay.setDirections(response);
 
-			// deferred.resolve(response);
-
-			// Calls function to break polyline into points for Places search.
-			processDirections(response, route)
+			deferred.resolve(response);
 		}
 		else {
 			console.log(status);
-            // deferred.reject(status);
+            deferred.reject(status);
 		}
-
-		// return deferred.promise;
 	});
+	return deferred.promise;
 }
 
 
