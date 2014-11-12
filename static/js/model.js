@@ -3,7 +3,7 @@ function Route(start, end, keyword) {
 	this.end = end;
 	this.keyword = keyword;
 	this.places = {};
-	this.waypts = [];
+	this.waypoints = [];
 }
 
 
@@ -32,8 +32,15 @@ function placesRequest(location, radius, keyword) {
 }
 
 
-function directionsRequest(origin, destination, travelMode) {
+function directionsRequest(origin, destination, travelMode, waypoints) {
 	this.origin = origin;
 	this.destination = destination;
-	this.travelMode = travelMode
+	this.travelMode = travelMode;
+	this.waypoints = waypoints;
+}
+
+
+function Waypoint(location) {
+	this.location = location;
+	stopover = true;
 }

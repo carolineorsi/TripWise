@@ -1,7 +1,7 @@
 function findPlaces(evt) {
 	event.preventDefault();
 
-	var route = new Route(
+	route = new Route(
 		document.getElementById('start').value,
 		document.getElementById('end').value,
 		document.getElementById('keyword').value
@@ -30,7 +30,7 @@ function findPlaces(evt) {
 
 function getDirections(route) {
 	// Creates directions request
-	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING);
+	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING, route.waypoints);
 	var deferred = Q.defer();
 
 	directionsService.route(request, function(response, status){
@@ -270,12 +270,21 @@ function displayTopTen (route, sortedPlaces) {
 }
 
 function displayDirections (place) {
-	// route = 
+	var waypoint = new Waypoint(place.location)
+	route.waypoints.push(waypoint);
 
-	$("#list-container").empty();
-	$("#directions").append(place.name);
+	getDirections(route)
+		.then(
+			function (response) {
+				$("#list-container").empty();
+				$("#directions").empty();
+				$("#directions").append(place.name);
+			},
+			function (status) {
+				console.log(status);
+			}
+		);
 }
-
 
 // AJAX CALL TO MY SERVER-SIDE SCRIPTS
 // function ajaxCall(route, radius) {
