@@ -27,7 +27,7 @@ function placesRequest(location, radius, keyword) {
 	this.radius = radius;
 	this.rankby = 'distance';
 	this.keyword = keyword;
-	// this.openNow = document.getElementById('opennow').checked;
+	this.openNow = document.getElementById('opennow').checked;
 }
 
 

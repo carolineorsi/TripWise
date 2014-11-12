@@ -7,6 +7,8 @@
 	<body>
 		<div id="control-bar">
 			<div class="form-group">
+
+				<!-- TODO: Make start and end fields autocomplete -->
 				<form id="directions-form">
 					<label for="start">Start</label>
 					<input type="text" id="start" class="form-control" value="3896 19th St, San Francisco, CA"><br>
@@ -17,23 +19,19 @@
 					<label for="keyword">Keyword</label>
 					<input type="text" id="keyword" class="form-control" value="Sushi"><br>
 					
-<!-- 					TODO: Add open now feature:
 					<input type="checkbox" id="opennow">
-					<label for="opennow">Open Now</label>  -->
+					<label for="opennow">Open Now</label> 
 
 					<button class="btn btn-default" type="submit">Go!</button>
 				</form>
 			</div>
 
+
+			<!-- TODO: Make list container scrollable for small screens. -->
 			<div id="list-container">
 				<div id="results" class="hidden"><h4>Results</h4></div>
         	</div>
 		</div>
-
-<!-- 		<div class="instructions">
-          <ul class="instructions-list" id="instructions-container">
-          </ul>
-        </div> -->
 
         <div id="map-container"></div>
 
