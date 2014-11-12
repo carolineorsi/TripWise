@@ -12,15 +12,19 @@ function findPlaces(evt) {
 	getDirections(route)
 		.then(
 			function (response) {
-				searchCriteria = pointifyPolyline(response, route);
-				searchPoints = searchCriteria[0];
-				radius = searchCriteria[1];
-				searchPlaces(searchPoints, radius, route);
+				return pointifyPolyline(response, route);
 			},
 			function (status) {
 				console.log(status);
 			}
+		)
+		.then(function (searchCriteria) {
+				searchPoints = searchCriteria[0];
+				radius = searchCriteria[1];
+				searchPlaces(searchPoints, radius, route);
+			}
 		);
+
 }
 
 
@@ -46,7 +50,9 @@ function getDirections(route) {
 	return deferred.promise;
 }
 
+
 function pointifyPolyline(directions, route) {
+	var NUMPOINTS = 10;
 
 	// Decodes directions polyline and identifies search points and radius
 	route['polyline'] = google.maps.geometry.encoding.decodePath(directions.routes[0].overview_polyline);
@@ -54,8 +60,12 @@ function pointifyPolyline(directions, route) {
 	route['initialDistance'] = directions.routes[0].legs[0].distance.value;
 
 	pointsInPolyline = route.polyline.length;
-	increment = Math.ceil(pointsInPolyline / 10);
-	var radius = defineRadius(route.initialDistance);
+	increment = Math.ceil(pointsInPolyline / NUMPOINTS);
+
+	var radius = route.initialDistance / NUMPOINTS;
+	if (radius > 50000) {
+		radius = 50000;
+	}
 
 	searchPoints = [];
 	for (i = 0; i < pointsInPolyline; i = i + increment) {
@@ -65,79 +75,31 @@ function pointifyPolyline(directions, route) {
 	return [searchPoints, radius];
 }
 
+
 function searchPlaces(searchPoints, radius, route) {
-			var placesService = new google.maps.places.PlacesService(map);
-			var counter = searchPoints.length;
+	var placesService = new google.maps.places.PlacesService(map);
+	var numSearches = searchPoints.length;
+	var counter = 0;
 
-			// Find places for each search point.
-			// When the increment variable exceeds the number of search points, 
-			// end the loop.
-			for (i = 0; i < searchPoints.length; i++){
-				var request = new placesRequest(searchPoints[i], radius, route.keyword);
-				displayPoint(searchPoints[i], radius);
+	// Find places for each search point. When the increment variable
+	// exceeds the number of search points, end the loop.
+	for (var i = 0; i < numSearches; i++){
+		var request = new placesRequest(searchPoints[i], radius, route.keyword);
+		// displayPoint(searchPoints[i], radius);
 
-				placesService.nearbySearch(request, function(results, status) {
-					
-					processPlaces(results, status, route);
+		placesService.nearbySearch(request, function(results, status) {
 
-					counter--;
-					if (counter <= 0) {
-						console.log(Object.keys(route.places).length);
-						getAddedDistance(route);
-					}
-				});
+			processPlaces(results, status, route);
+
+			counter++;
+			if (counter >= numSearches) {
+				// console.log(Object.keys(route.places).length);
+				getAddedDistance(route);
 			}
+		});
+	}
 }
 
-
-// function processDirections(response, route) {
-// 			// Decodes directions polyline and identifies search points and radii
-// 			route['polyline'] = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline);
-// 			route['initialDuration'] = response.routes[0].legs[0].duration.value;
-// 			route['initialDistance'] = response.routes[0].legs[0].distance.value;
-
-// 			pointsInPolyline = route.polyline.length;
-// 			increment = Math.ceil(pointsInPolyline / 10); // TODO: make the 10 a constant
-// 			var radius = defineRadius(response.routes[0].legs[0].distance.value);
-
-// 			// Not used:
-// 			// ajaxCall(route, radius);
-
-// 			var placesService = new google.maps.places.PlacesService(map);
-// 			var counter = pointsInPolyline / increment;
-
-// 			// For each search point, display it on the map and find places.
-// 			// When the increment variable exceeds the number of points in 
-// 			// the polyline, end the loop.
-// 			for (i = 0; i < pointsInPolyline; i = i + increment){
-// 				// displayPoint(route.polyline[i], radius);
-// 				var request = new placesRequest(route.polyline[i], radius, route.keyword);
-// 					// counter = callPlaces(request, route, counter);
-// 				placesService.nearbySearch(request, function(results, status) {
-// 					// while (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
-// 					// 	setTimeout(function () {
-// 					// 		placesService.nearbySearch(request, function(results, status) {
-// 					// 			console.log("retry", status);
-// 					// 			processPlaces(results, status, route);
-// 					// 		});
-// 					// 	}, 1000);
-// 					// }
-					
-// 					processPlaces(results, status, route);
-
-// 					counter--;
-// 					if (counter <= 0) {
-// 						console.log(Object.keys(route.places).length);
-// 						getAddedDistance(route);
-// 					}
-// 					// console.log(counter);
-// 					// setTimeout(function () {
-// 					// 	getAddedDistance(route);
-// 					// }, 5000);
-
-// 				});
-// 			}
-// }
 
 function callPlaces(request, route, counter) {
 	var placesService = new google.maps.places.PlacesService(map);
@@ -154,16 +116,6 @@ function callPlaces(request, route, counter) {
 			return counter;
 		}
 	})
-}
-
-
-function defineRadius(distance) {
-	// Defines radius of search area based on total distance of initial route.
-	var radius = distance / 10;
-	if (radius > 50000) {
-		radius = 50000;
-	}
-	return radius;
 }
 
 
@@ -264,9 +216,9 @@ function limitRequest (placeListCopy, numRequests, counter, route, service) {
 
 
 function processDistancesFromStart (response, status, route, request) {
-	console.log(status);
+	// console.log(status);
 	if (status == google.maps.DistanceMatrixStatus.OK) {
-		console.log(request.destinations.length);
+		// console.log(request.destinations.length);
 		for (var i = 0; i < request.destinations.length; i++) {
 			var distance = response.rows[0].elements[i].distance.value;
 			var duration = response.rows[0].elements[i].duration.value;
@@ -300,7 +252,7 @@ function returnTopTen (route, placeList) {
 
 
 function displayTopTen (route, sortedPlaces) {
-	for (var i = 0; i < 10; i++) {
+	for (var i = 0; i < 10 ; i++) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
 		place = route.places[sortedPlaces[i][2]].place;
 		displayPlace(place.location, i * 200, place);
@@ -317,8 +269,16 @@ function displayTopTen (route, sortedPlaces) {
 	}
 }
 
-function ajaxCall(route, radius) {
-	// // AJAX CALL TO MY SERVER-SIDE SCRIPTS
+function displayDirections (place) {
+	// route = 
+
+	$("#list-container").empty();
+	$("#directions").append(place.name);
+}
+
+
+// AJAX CALL TO MY SERVER-SIDE SCRIPTS
+// function ajaxCall(route, radius) {
 // 			var polylineArray = [];
 
 // 			for (i = 0; i < route.polyline.length; i++) {
@@ -338,5 +298,5 @@ function ajaxCall(route, radius) {
 // 	  				function(result) {
 // 						console.log(result);
 // 					});
-}
+// }
 

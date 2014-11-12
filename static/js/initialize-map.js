@@ -5,7 +5,6 @@ $(document).ready(function () {
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	markersArray = [];
-	// allPlacesList = [];
 	counter = null;
 
 	$("#directions-form").submit(function() {
@@ -40,7 +39,6 @@ function clearMap(route){
 	markersArray.length = 0;
 	$("#list-container").empty();
 	route = null;
-
 }
 
 
@@ -76,6 +74,10 @@ function displayPlace(location, delay, place) {
 		place.marker = marker;
 
 		addInfoWindow(marker, place);
+
+		google.maps.event.addListener(marker, 'click', function(evt) {
+			displayDirections(place);
+		});
 	}, delay);	
 }
 

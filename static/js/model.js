@@ -3,6 +3,7 @@ function Route(start, end, keyword) {
 	this.end = end;
 	this.keyword = keyword;
 	this.places = {};
+	this.waypts = [];
 }
 
 
