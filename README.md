@@ -8,4 +8,6 @@ Description of Basic Features:
 	3) "Send to Phone" button will send a link to the user's phone, allowing them to open the directions in Google Maps.
 
 Implementation:
+
+~~Strikethrough~~
 	
