@@ -278,7 +278,18 @@ function displayDirections (place) {
 			function (response) {
 				$("#list-container").empty();
 				$("#directions").empty();
-				$("#directions").append(place.name);
+				$("#directions").append("<div><h4>" + place.name + "</h4></div>");
+
+				var legs = response.routes[0].legs;
+				for (var i = 0; i < legs.length; i++) {
+
+					var steps = response.routes[0].legs[i].steps;
+					for (var j = 0; j < steps.length; j++) {
+						$("#directions").append("<div class=step-instructions>" + steps[j].instructions + "</div>");
+					}
+
+					$("#directions").append("<br>");
+				}
 			},
 			function (status) {
 				console.log(status);
