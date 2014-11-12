@@ -9,12 +9,16 @@ function findPlaces(evt) {
 
 	clearMap(route);
 	getDirections(route);
+	// TODO: Get Q to work.
+	// getDirections(route)
+	// .then(processDirections(response, route));
 }
 
 
 function getDirections(route) {
 	// Creates directions request
 	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING);
+	// var deferred = Q.defer();
 
 	directionsService.route(request, function(response, status){
 		if (status == google.maps.DirectionsStatus.OK) {
@@ -22,9 +26,17 @@ function getDirections(route) {
 			directionsDisplay.setMap(map);
 			directionsDisplay.setDirections(response);
 
+			// deferred.resolve(response);
+
 			// Calls function to break polyline into points for Places search.
 			processDirections(response, route)
 		}
+		else {
+			console.log(status);
+            // deferred.reject(status);
+		}
+
+		// return deferred.promise;
 	});
 }
 
@@ -133,8 +145,8 @@ function processPlaces(results, status, route) {
 			var name = results[j].name;
 			var lat = results[j].geometry.location.k;
 			var lng = results[j].geometry.location.B; 
-			var location = results[j].geometry.location
-			var latlng = new google.maps.LatLng(lat, lng)
+			var location = results[j].geometry.location;
+			var latlng = new google.maps.LatLng(lat, lng);
 
 			route.places[latlng] = {};
 			// allPlaces[latlng] = {};
@@ -263,7 +275,7 @@ function displayTopTen (route, sortedPlaces) {
 		displayPlace(place.location, i * 200, place);
 		var durationAdded = Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60);
 
-		if (durationAdded == 0) {
+		if (durationAdded <= 0) {
 			$("#list-container").append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
 			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
 		}

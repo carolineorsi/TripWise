@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Test</title>
+		<title>OnTheWay</title>
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="/static/css/style.css"/>
 	</head>
@@ -16,11 +16,17 @@
 					
 					<label for="keyword">Keyword</label>
 					<input type="text" id="keyword" class="form-control" value="Sushi"><br>
+					
+<!-- 					TODO: Add open now feature:
+					<input type="checkbox" id="opennow">
+					<label for="opennow">Open Now</label>  -->
+
 					<button class="btn btn-default" type="submit">Go!</button>
 				</form>
 			</div>
 
 			<div id="list-container">
+				<div id="results" class="hidden"><h4>Results</h4></div>
         	</div>
 		</div>
 
@@ -32,7 +38,7 @@
         <div id="map-container"></div>
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdYX2uSHJsvjQhI2eJo-6peidlfFlMvIs&libraries=places"></script>
-		<script src="/static/js/jquery-1.11.0.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="/static/js/json2.js"></script>
 		<script src="/static/js/initialize-map.js"></script>
 		<script src="/static/js/directions.js"></script>

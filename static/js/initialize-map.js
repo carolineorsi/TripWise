@@ -80,7 +80,7 @@ function displayPlace(location, delay, place) {
 }
 
 function addInfoWindow (marker, place) {
-	var contentString = place.name;
+	var contentString = place.name + place.address;
 	var infoWindow = new google.maps.InfoWindow({
 		content: contentString
 	});

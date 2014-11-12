@@ -18,7 +18,7 @@ function Place(name, id, lat, lng, location) {
 function distanceMatrixRequest(origins, destinations, travelMode) {
 	this.origins = origins;
 	this.destinations = destinations;
-	this.travelMode = travelMode
+	this.travelMode = travelMode;
 }
 
 
@@ -26,7 +26,8 @@ function placesRequest(location, radius, keyword) {
 	this.location = location;
 	this.radius = radius;
 	this.rankby = 'distance';
-	this.keyword = keyword
+	this.keyword = keyword;
+	// this.openNow = document.getElementById('opennow').checked;
 }
 
 

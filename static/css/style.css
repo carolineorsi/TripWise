@@ -17,13 +17,31 @@ html, body, #map-container {
 
 .form-group {
 	line-height: 10px;
+	margin-bottom: 20px;
 }
 
 .list-item {
 	padding: 5px;
+	/*border-top: 2px solid #EEE;*/
+}
+
+#list-container .list-item + .list-item {
 	border-top: 2px solid #EEE;
 }
 
 .list-item:hover {
 	background-color: #EEE;
+}
+
+.btn {
+	float: right;
+}
+
+#results {
+	padding: 1px 5px 1px 5px;
+	background-color: lightblue;
+}
+
+.hidden {
+	display: none;
 }
