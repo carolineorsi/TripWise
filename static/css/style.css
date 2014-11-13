@@ -8,13 +8,15 @@ html, body, #map-container {
 	position: absolute;
 	left: 20px;
 	top: 3%;
-	display: inline-block;
+	/*display: inline-block;*/
 	z-index: 10;
 	background-color: white;
 	padding: 10px;
 	width: 18%;
 	max-height: 94%; 
 	overflow-y: scroll;
+	box-shadow: 5px 5px 5px #888;
+	border-radius: 10px;
 }
 
 .form-group {
@@ -24,11 +26,6 @@ html, body, #map-container {
 
 .list-item {
 	padding: 5px;
-	/*border-top: 2px solid #EEE;*/
-}
-
-.list-container {
-	/*overflow-y: scroll;*/
 }
 
 #list-container .list-item + .list-item {
@@ -43,11 +40,18 @@ html, body, #map-container {
 	float: right;
 }
 
-#results {
-	padding: 1px 5px 1px 5px;
-	background-color: lightblue;
+#find-more {
+	display: none;
 }
 
 .hidden {
 	display: none;
 }
+
+.waypoint {
+	color: blue;
+}
+
+/*#directions {
+	margin-top: 40px;
+}*/

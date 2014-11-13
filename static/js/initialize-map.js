@@ -10,6 +10,10 @@ $(document).ready(function () {
 	$("#directions-form").submit(function() {
 		findPlaces()
 	});
+
+	$("#get-more-results").on('click', function() {
+		console.log("button clicked");
+	});
 });
 
 

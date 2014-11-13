@@ -88,12 +88,15 @@ function searchPlaces(searchPoints, radius, route) {
 		// displayPoint(searchPoints[i], radius);
 
 		placesService.nearbySearch(request, function(results, status) {
-
-			processPlaces(results, status, route);
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				processPlaces(results);
+			}
+			else {
+				// TODO: Handle errors
+			}
 
 			counter++;
 			if (counter >= numSearches) {
-				// console.log(Object.keys(route.places).length);
 				getAddedDistance(route);
 			}
 		});
@@ -101,42 +104,40 @@ function searchPlaces(searchPoints, radius, route) {
 }
 
 
-function callPlaces(request, route, counter) {
-	var placesService = new google.maps.places.PlacesService(map);
-	placesService.nearbySearch(request, function(results, status) {
-		if (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
-			console.log("retry");
-			setTimeout(function() {
-				callPlaces(request, route)
-			}, 1000);
-		}
-		else {
-			processPlaces(results, status, route);
-			counter--;
-			return counter;
-		}
-	})
-}
+// function callPlaces(request, route, counter) {
+// 	var placesService = new google.maps.places.PlacesService(map);
+// 	placesService.nearbySearch(request, function(results, status) {
+// 		if (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
+// 			console.log("retry");
+// 			setTimeout(function() {
+// 				callPlaces(request, route)
+// 			}, 1000);
+// 		}
+// 		else {
+// 			processPlaces(results, status, route);
+// 			counter--;
+// 			return counter;
+// 		}
+// 	})
+// }
 
 
-function processPlaces(results, status, route) {
+function processPlaces(results) {
 	// For each place return, create new Place object and add to allPlaces
-	if (status == google.maps.places.PlacesServiceStatus.OK) {
-		for (var j = 0; j < results.length; j++) {
-			
-			var placeID = results[j].place_id;
-			var name = results[j].name;
-			var lat = results[j].geometry.location.k;
-			var lng = results[j].geometry.location.B; 
-			var location = results[j].geometry.location;
-			var latlng = new google.maps.LatLng(lat, lng);
+	for (var j = 0; j < results.length; j++) {
+		
+		var placeID = results[j].place_id;
+		var name = results[j].name;
+		var lat = results[j].geometry.location.k;
+		var lng = results[j].geometry.location.B; 
+		var location = results[j].geometry.location;
+		var latlng = new google.maps.LatLng(lat, lng);
 
-			route.places[latlng] = {};
-			// allPlaces[latlng] = {};
-			route.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
+		route.places[latlng] = {};
+		// allPlaces[latlng] = {};
+		route.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
 
-			// displayPlace(results[j].geometry.location);
-		}
+		// displayPlace(results[j].geometry.location);
 	}
 }
 
@@ -267,6 +268,7 @@ function displayTopTen (route, sortedPlaces) {
 			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
 		}
 	}
+	$("#find-more").show();
 }
 
 function displayDirections (place) {
@@ -278,7 +280,9 @@ function displayDirections (place) {
 			function (response) {
 				$("#list-container").empty();
 				$("#directions").empty();
-				$("#directions").append("<div><h4>" + place.name + "</h4></div>");
+				$("#find-more").hide();
+				$("#directions").append("<h4>Directions</h4>");
+				$("#directions").append("<div class='waypoint'><h5>Start: " + route.start + "</h5></div>");
 
 				var legs = response.routes[0].legs;
 				for (var i = 0; i < legs.length; i++) {
@@ -288,8 +292,9 @@ function displayDirections (place) {
 						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
 					}
 
-					$("#directions").append("<br>");
+					$("#directions").append("<div class='waypoint'><h5>" + " " +"</h5></div>");
 				}
+				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
 			},
 			function (status) {
 				console.log(status);
