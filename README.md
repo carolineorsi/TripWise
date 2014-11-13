@@ -44,3 +44,4 @@ The app will take input from the user (starting point, ending point, and a keywo
 - Draggable routes, so that user can specify route preference.
 - Allow user to specify mode of transportation (walking, biking, driving)
 - Add "open now" checkbox
+	
