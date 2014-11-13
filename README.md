@@ -23,5 +23,24 @@ The app will take input from the user (starting point, ending point, and a keywo
   - For each of top ten ranked places, add a marker to the google map and a div element in the control bar with the place details
   - Place details shown will include the place name and amount of time added to the initial route (calculated by subtracting the initial route duration from the total duration)
   - Create info window for each marker that contains business details. Set to appear on a mouse hover.
-5. 
+5. Update control bar details when a place is clicked, either in the control bar list or on the map
+	- When clicked, create a waypoint object containing the place location
+	- Send new Google Directions request using same origin and destinations and adding the waypoint
+	- Update map to show new route
+	- Empty div item containing list of places
+	- In place of list of places, show a div with step-by-step route directions with the new route
+6. Add "Send to Phone" button
+	- When route is updated, add a Send to Phone button that makes an AJAX call to Flask
+	- Data to send in GET request: route information, user's phone number
+	- Write Python script using Twilio API to send a URL to user's phone number with a link to the route
+	- Format the URL to open directly in Google Maps App on phone
+
+####Additional Features to Add:
+- Autocomplete of input fields
+- Geolocation to allow user to input current location as starting point
+- User login feature to allow user to save routes
+- Multiple waypoint feature
+- Draggable routes, so that user can specify route preference.
+- Allow user to specify mode of transportation (walking, biking, driving)
+- Add "open now" checkbox
 	
