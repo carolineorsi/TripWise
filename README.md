@@ -18,7 +18,7 @@ The app will take input from the user (starting point, ending point, and a keywo
 3. ~~Remove duplicates in places list and rank by added duration of overall route~~
   - ~~Iterate through the place lists returned from each Place request and add places to object within route object, using the unique place id as a key~~
   - Make two Distance Matrix requests, 1) using the initial starting point as origin and all places as destinations, and 2) using all places as origins and the initial ending point as a destination NOTE: GOOGLE QUERY LIMITS REQUESTS TO 25 PLACES PER REQUEST. NEED TO OPTIMIZE REQUESTS.
-  ~~- Sum returned durations and distances and rank from low to high~~
+  - ~~Sum returned durations and distances and rank from low to high~~
 4. On website, show the top ten closest locations on the map and in list form
   - ~~For each of top ten ranked places, add a marker to the google map and a div element in the control bar with the place details~~
   - ~~Place details shown will include the place name and amount of time added to the initial route (calculated by subtracting the initial route duration from the total duration)~~
