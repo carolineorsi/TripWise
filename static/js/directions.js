@@ -285,7 +285,7 @@ function displayDirections (place) {
 
 					var steps = response.routes[0].legs[i].steps;
 					for (var j = 0; j < steps.length; j++) {
-						$("#directions").append("<div class=step-instructions>" + steps[j].instructions + "</div>");
+						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
 					}
 
 					$("#directions").append("<br>");
