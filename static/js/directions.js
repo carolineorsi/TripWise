@@ -3,80 +3,31 @@ function findPlaces(evt) {
 
 	route = new Route(
 		document.getElementById('start').value,
-		document.getElementById('end').value,
+		document.getElementById('end').value
+		// document.getElementById('keyword').value
+	);
+
+	search = new Search(
 		document.getElementById('keyword').value
 	);
 
 	clearMap(route);
 
-	getDirections(route)
+	route.getDirections()
 		.then(
 			function (response) {
-				return pointifyPolyline(response, route);
-			},
-			function (status) {
-				console.log(status);
+				route.getPolyline(response);
+				return search.getSearchPoints(route);
 			}
 		)
-		.then(function (searchCriteria) {
-				searchPoints = searchCriteria[0];
-				radius = searchCriteria[1];
-				searchPlaces(searchPoints, radius, route);
+		.then(function () {
+				searchPlaces(search.searchPoints, search.radius);
 			}
 		);
 
 }
 
-
-function getDirections(route) {
-	// Creates directions request
-	var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING, route.waypoints);
-	var deferred = Q.defer();
-
-	directionsService.route(request, function(response, status){
-		if (status == google.maps.DirectionsStatus.OK) {
-
-			// Displays route on map.
-			directionsDisplay.setMap(map);
-			directionsDisplay.setDirections(response);
-
-			deferred.resolve(response);
-		}
-		else {
-			console.log(status);
-            deferred.reject(status);
-		}
-	});
-	return deferred.promise;
-}
-
-
-function pointifyPolyline(directions, route) {
-	var NUMPOINTS = 10;
-
-	// Decodes directions polyline and identifies search points and radius
-	route['polyline'] = google.maps.geometry.encoding.decodePath(directions.routes[0].overview_polyline);
-	route['initialDuration'] = directions.routes[0].legs[0].duration.value;
-	route['initialDistance'] = directions.routes[0].legs[0].distance.value;
-
-	pointsInPolyline = route.polyline.length;
-	increment = Math.ceil(pointsInPolyline / NUMPOINTS);
-
-	var radius = route.initialDistance / NUMPOINTS;
-	if (radius > 50000) {
-		radius = 50000;
-	}
-
-	searchPoints = [];
-	for (i = 0; i < pointsInPolyline; i = i + increment) {
-		searchPoints.push(route.polyline[i]);
-	}
-
-	return [searchPoints, radius];
-}
-
-
-function searchPlaces(searchPoints, radius, route) {
+function searchPlaces(searchPoints, radius) {
 	var placesService = new google.maps.places.PlacesService(map);
 	var numSearches = searchPoints.length;
 	var counter = 0;
@@ -84,7 +35,7 @@ function searchPlaces(searchPoints, radius, route) {
 	// Find places for each search point. When the increment variable
 	// exceeds the number of search points, end the loop.
 	for (var i = 0; i < numSearches; i++){
-		var request = new placesRequest(searchPoints[i], radius, route.keyword);
+		var request = new placesRequest(searchPoints[i], radius, search.keyword);
 		// displayPoint(searchPoints[i], radius);
 
 		placesService.nearbySearch(request, function(results, status) {
@@ -134,10 +85,10 @@ function processPlaces(results, searchPoint) {
 		var location = results[j].geometry.location;
 		var latlng = new google.maps.LatLng(lat, lng);
 
-		route.places[latlng] = {};
-		route.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
+		search.places[latlng] = {};
+		search.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
 
-		rank(route.places[latlng]["place"], searchPoint);
+		rank(search.places[latlng]["place"], searchPoint);
 
 		// displayPlace(results[j].geometry.location);
 	}
@@ -173,7 +124,7 @@ function deg2rad(deg) {
 
 function buildPlaceList(route) {
 	placeList = [];
-	$.each(route.places, function(latlng, Place) {
+	$.each(search.places, function(latlng, Place) {
 		placeList.push([Place.place.rank, latlng]);
 		// placeList.push(latlng);
 	});
@@ -193,9 +144,9 @@ function getAddedDistance() {
 	
 	// placeList = buildPlaceList(route);
 
-	route.placeList = [];
-	$.each(route.places, function(latlng, Place) {
-		route.placeList.push(latlng);
+	search.placeList = [];
+	$.each(search.places, function(latlng, Place) {
+		search.placeList.push(latlng);
 	});
 
 	// requestList = placeList.slice(0,25);
@@ -216,8 +167,8 @@ function buildRequestList() {
 
 	requestList = [];
 	for (var i = 0; i < 25; i++) {
-		var index = Math.floor(Math.random() * route.placeList.length); // Picks random item from list
-		requestList.push(route.placeList.splice(index, 1)[0]); // Removes from list and adds to request list
+		var index = Math.floor(Math.random() * search.placeList.length); // Picks random item from list
+		requestList.push(search.placeList.splice(index, 1)[0]); // Removes from list and adds to request list
 	}
 
 	return requestList
@@ -290,8 +241,8 @@ function processDistancesFromStart (response, status, route, request) {
 		for (var i = 0; i < request.destinations.length; i++) {
 			var distance = response.rows[0].elements[i].distance.value;
 			var duration = response.rows[0].elements[i].duration.value;
-			route.places[request.destinations[i]]['duration'] = duration;
-			route.places[request.destinations[i]]['distance'] = distance;
+			search.places[request.destinations[i]]['duration'] = duration;
+			search.places[request.destinations[i]]['distance'] = distance;
 		}
 	}
 }
@@ -302,8 +253,8 @@ function processDistancesToEnd (response, status, route, request) {
 		for (var i = 0; i < response.rows.length; i++) {
 			var distance = response.rows[i].elements[0].distance.value;
 			var duration = response.rows[i].elements[0].duration.value;
-			route.places[request.origins[i]]['duration'] = route.places[request.origins[i]]['duration'] + duration;
-			route.places[request.origins[i]]['distance'] = route.places[request.origins[i]]['distance'] + distance;
+			search.places[request.origins[i]]['duration'] = search.places[request.origins[i]]['duration'] + duration;
+			search.places[request.origins[i]]['distance'] = search.places[request.origins[i]]['distance'] + distance;
 		}
 	}
 }
@@ -312,7 +263,7 @@ function processDistancesToEnd (response, status, route, request) {
 function returnTopTen (route, requestList) {
 	var sortedPlaces = [];
 	for (var i = 0; i < requestList.length; i++) {
-		sortedPlaces.push([route.places[requestList[i]].duration, route.places[requestList[i]].place.location, requestList[i]]);
+		sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location, requestList[i]]);
 	}
 	sortedPlaces.sort();
 	displayTopTen(route, sortedPlaces);
@@ -331,7 +282,7 @@ function displayTopTen (route, sortedPlaces) {
 
 	for (var i = 0; i < maxResult; i++) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
-		place = route.places[sortedPlaces[i][2]].place;
+		place = search.places[sortedPlaces[i][2]].place;
 		displayPlace(place.location, i * 200, place);
 		var durationAdded = Math.ceil((sortedPlaces[i][0] - route.initialDuration) / 60);
 

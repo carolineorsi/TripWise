@@ -12,7 +12,7 @@ $(document).ready(function () {
 	});
 
 	$("#get-more-results").on('click', function() {
-		console.log("button clicked");
+		callDistanceMatrix(buildRequestList());
 	});
 });
 
