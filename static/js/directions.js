@@ -99,36 +99,10 @@ function deg2rad(deg) {
 	return deg * (Math.PI/180)
 }
 
-function buildPlaceList(route) {
-	$.each(search.places, function(latlng, Place) {
-		search.placeList.push([Place.place.rank, latlng]);
-		// placeList.push(latlng);
-	});
-
-	search.placeList.sort();
-
-	console.log("got here");
-	for (var i = 0; i < search.placeList.length; i++) {
-		console.log(search.placeList[i][0]);
-	}
-
-	
-	var newPlaceList = [];
-	for (var i = 0; i < search.placeList.length; i++) {
-		newPlaceList.push(search.placeList[i][1]);
-	}
-	
-	return newPlaceList;
-}
-
 
 function getAddedDistance() {
-	
-	// placeList = buildPlaceList(route);
-
 	search.placeList = [];
 	$.each(search.places, function(latlng, Place) {
-		// search.placeList.push(latlng);
 		search.placeList.push(Place.place);
 	});
 
@@ -141,21 +115,16 @@ function getAddedDistance() {
 		search.unreturnedPlaces.push(new google.maps.LatLng(search.placeList[i].location.k, search.placeList[i].location.B));
 	}
 
-	buildRequestList();
+	callDistanceMatrix();
 }
 
 
-function buildRequestList() {
-
-	console.log(search.unreturnedPlaces.length);
+function callDistanceMatrix() {
+	// console.log(search.unreturnedPlaces.length);
 	requestList = search.unreturnedPlaces.splice(0,10);
-	console.log(search.unreturnedPlaces.length);
-
-	callDistanceMatrix(requestList);
-}
+	// console.log(search.unreturnedPlaces.length);
 
 
-function callDistanceMatrix(requestList) {
 	var distanceAPI = new google.maps.DistanceMatrixService();
 
 	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
@@ -174,47 +143,6 @@ function callDistanceMatrix(requestList) {
 		}
 	});
 }
-
-// function limitRequest (placeListCopy, numRequests, counter, route, service) {
-// 	// Limits requests to Distance Matrix to 25 items per API quotas
-// 	var requestList = [];
-// 	if (placeListCopy.length > 25) {
-// 		// for (var j = 0; j < 25 || placeList.length == 0; j++) {
-// 		for (var j = 0; j < 25; j++) {				
-// 			var item = placeListCopy.pop();
-// 			requestList.push(item);
-// 		}
-// 	}
-// 	else {
-// 		requestList = placeListCopy;
-// 	}
-
-// 	console.log("requestList: ", requestList.length);
-
-// 	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
-// 	var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
-
-// 	service.getDistanceMatrix(requestStart, 
-// 		function(response, status) {
-// 			processDistancesFromStart(response, status, route, requestStart);
-			
-// 			service.getDistanceMatrix(requestEnd,
-// 				function(response, status) {
-// 					processDistancesToEnd(response, status, route, requestEnd);
-
-// 					counter++;
-// 					if (counter == numRequests) {
-// 						returnTopTen(route, placeList);
-// 					}
-// 					else {
-// 						setTimeout(function() {
-// 							limitRequest(placeListCopy, numRequests, counter, route, service)
-// 						}, 500);
-// 					}
-// 				})
-// 		}
-// 	);
-// }
 
 
 function processDistancesFromStart (response, requestList) {
@@ -238,6 +166,7 @@ function processDistancesToEnd (response, requestList) {
 
 
 function returnTopTen (route, requestList) {
+	search.sortedPlaces = [];
 	for (var i = 0; i < requestList.length; i++) {
 		search.sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location, requestList[i]]);
 	}

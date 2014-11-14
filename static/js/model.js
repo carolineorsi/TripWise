@@ -48,10 +48,11 @@ function Place(name, id, lat, lng, location) {
 function Search(keyword) {
 	this.keyword = keyword;		// User's search keyword
 	this.places = {}; 			// Contains Place objects
-	this.rankedPlaceList = [];  // List of places, sorted by rank
+	this.placeList = [];  		// List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
 	this.radius = null;
 	this.sortedPlaces = [];
+	this.unreturnedPlaces = []; // List of latlng objects, sorted by rank, that have not yet been returned to the user
 
 	this.getSearchPoints = function (route) {
 		var NUMPOINTS = 10;
