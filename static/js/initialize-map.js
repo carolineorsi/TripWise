@@ -12,7 +12,7 @@ $(document).ready(function () {
 	});
 
 	$("#get-more-results").on('click', function() {
-		callDistanceMatrix(buildRequestList());
+		buildRequestList();
 	});
 });
 
@@ -35,14 +35,14 @@ function initializeMap() {
 }
 
 
-function clearMap(route){
+function clearMap(){
 	directionsDisplay.setMap(null);
 	for (var i = 0; i < markersArray.length; i++) {
 		markersArray[i].setMap(null);
 	}
 	markersArray.length = 0;
 	$("#list-container").empty();
-	route = null;
+	search = null;
 }
 
 

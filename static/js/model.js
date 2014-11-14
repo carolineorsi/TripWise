@@ -51,6 +51,7 @@ function Search(keyword) {
 	this.rankedPlaceList = [];  // List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
 	this.radius = null;
+	this.sortedPlaces = [];
 
 	this.getSearchPoints = function (route) {
 		var NUMPOINTS = 10;
@@ -62,10 +63,37 @@ function Search(keyword) {
 		if (this.radius > 50000) {
 			this.radius = 50000;
 		}
-		
+
 		this.searchPoints = [];
 		for (i = 0; i < pointsInPolyline; i = i + increment) {
 			this.searchPoints.push(route.polyline[i]);
+		}
+	};
+
+	this.getPlaces = function () {
+		var placesService = new google.maps.places.PlacesService(map);
+		var numSearches = this.searchPoints.length;
+		var counter = 0;
+
+		// Find places for each search point. When the increment variable
+		// exceeds the number of search points, end the loop.
+		for (var i = 0; i < numSearches; i++){
+			var request = new placesRequest(this.searchPoints[i], this.radius, this.keyword);
+			// displayPoint(this.searchPoints[i], this.radius);
+
+			placesService.nearbySearch(request, function(results, status) {
+				if (status == google.maps.places.PlacesServiceStatus.OK) {
+					processPlaces(results, request.location);  // This doesn't work because request.location only sends last point.
+				}
+				else {
+					// TODO: handle error.
+				}
+
+				counter++;
+				if (counter >= numSearches) {
+					getAddedDistance(route);
+				}
+			});
 		}
 	}
 }
