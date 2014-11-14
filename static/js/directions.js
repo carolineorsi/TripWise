@@ -168,11 +168,11 @@ function processDistancesToEnd (response, requestList) {
 function returnTopTen (route, requestList) {
 	search.sortedPlaces = [];
 	for (var i = 0; i < requestList.length; i++) {
-		search.sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location, requestList[i]]);
+		search.sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location]);
 	}
-	search.sortedPlaces.sort();
-
-	// TODO: Need to fix the sorting. Sorts alphabetically instead of numerically.
+	search.sortedPlaces.sort(function(a, b) {
+		return a[0] - b[0];
+	});
 
 	displayTopTen();
 }
@@ -190,7 +190,7 @@ function displayTopTen () {
 
 	for (var i = 0; i < maxResult; i++) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
-		place = search.places[search.sortedPlaces[i][2]].place;
+		place = search.places[search.sortedPlaces[i][1]].place;
 		displayPlace(place.location, i * 200, place);
 		var durationAdded = Math.ceil((search.sortedPlaces[i][0] - route.initialDuration) / 60);
 
