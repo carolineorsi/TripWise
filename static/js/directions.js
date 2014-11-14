@@ -185,6 +185,11 @@ function returnTopTen (route, requestList) {
 
 
 function displayTopTen () {
+	// if (search.sortedPlaces.length == 0) {
+	// 	$("list-container").append("<div>Nothing found!</div>");
+	// 	$("#find-more").hide();
+	// }
+	// else 
 	if (search.sortedPlaces.length < 10) {
 		var maxResult = search.sortedPlaces.length;
 		$("#find-more").hide();
