@@ -1,13 +1,14 @@
-function Route(start, end) {
+function Route(start, end, travelMode) {
 	this.start = start;
 	this.end = end;
+	this.travelMode = travelMode;
 	this.waypoints = [];
 	this.polyline = [];
 	this.initialDuration = null;
 	this.initialDistance = null;
 
 	this.getDirections = function () {
-		var request = new directionsRequest(route.start, route.end, google.maps.TravelMode.DRIVING, route.waypoints);
+		var request = new directionsRequest(route.start, route.end, route.waypoints);
 		var deferred = Q.defer();
 
 		directionsService.route(request, function(response, status){
@@ -45,13 +46,13 @@ function Place(name, id, lat, lng, location) {
 	this.rank = null;
 }
 
-function Search(keyword) {
+function Search(keyword, opennow) {
 	this.keyword = keyword;		// User's search keyword
 	this.places = {}; 			// Contains Place objects
 	this.placeList = [];  		// List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
-	this.radius = null;
-	this.sortedPlaces = [];
+	this.radius = null;			// Radius of Places search
+	this.sortedPlaces = [];		// List of sorted places returned from distance matrix request
 	this.unreturnedPlaces = []; // List of latlng objects, sorted by rank, that have not yet been returned to the user
 
 	this.getSearchPoints = function (route) {
@@ -84,7 +85,7 @@ function Search(keyword) {
 
 			placesService.nearbySearch(request, function(results, status) {
 				if (status == google.maps.places.PlacesServiceStatus.OK) {
-					processPlaces(results, request.location);  // This doesn't work because request.location only sends last point.
+					processPlaces(results); 
 				}
 				else {
 					// TODO: handle error.
@@ -100,10 +101,10 @@ function Search(keyword) {
 }
 
 
-function distanceMatrixRequest(origins, destinations, travelMode) {
+function distanceMatrixRequest(origins, destinations) {
 	this.origins = origins;
 	this.destinations = destinations;
-	this.travelMode = travelMode;
+	this.travelMode = route.travelMode;
 }
 
 
@@ -116,10 +117,10 @@ function placesRequest(location, radius, keyword) {
 }
 
 
-function directionsRequest(origin, destination, travelMode, waypoints) {
+function directionsRequest(origin, destination, waypoints) {
 	this.origin = origin;
 	this.destination = destination;
-	this.travelMode = travelMode;
+	this.travelMode = route.travelMode;
 	this.waypoints = waypoints;
 }
 

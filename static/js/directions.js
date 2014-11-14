@@ -2,10 +2,18 @@ function findPlaces(evt) {
 	event.preventDefault();
 	clearMap();
 
+
+	if (document.getElementById('driving').checked) {
+		var travelMode = google.maps.TravelMode.DRIVING;
+	}
+	else if (document.getElementById('walking').checked) {
+		var travelMode = google.maps.TravelMode.WALKING;
+	}
+
 	route = new Route(
 		document.getElementById('start').value,
-		document.getElementById('end').value
-		// document.getElementById('keyword').value
+		document.getElementById('end').value,
+		travelMode
 	);
 
 	search = new Search(
@@ -43,7 +51,7 @@ function findPlaces(evt) {
 // 	})
 // }
 
-function processPlaces(results, searchPoint) {
+function processPlaces(results) {
 	// For each place return, create new Place object and add to allPlaces
 	for (var j = 0; j < results.length; j++) {
 		
@@ -57,7 +65,7 @@ function processPlaces(results, searchPoint) {
 		search.places[latlng] = {};
 		search.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
 
-		rank(search.places[latlng]["place"], searchPoint);
+		rank(search.places[latlng]["place"]);
 
 		// displayPlace(results[j].geometry.location);
 	}
@@ -83,8 +91,9 @@ function rank(place) {
 
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-	var R = 6371; // Radius of the earth in km
-	var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	// Taken from http://stackoverflow.com/questions/27928/how-do-i-calculate-distance-between-two-latitude-longitude-points
+	var R = 6371; 					// Radius of the earth in km
+	var dLat = deg2rad(lat2-lat1);  
 	var dLon = deg2rad(lon2-lon1); 
 	var a = 
 		Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -120,15 +129,12 @@ function getAddedDistance() {
 
 
 function callDistanceMatrix() {
-	// console.log(search.unreturnedPlaces.length);
 	requestList = search.unreturnedPlaces.splice(0,10);
-	// console.log(search.unreturnedPlaces.length);
-
 
 	var distanceAPI = new google.maps.DistanceMatrixService();
 
-	var requestStart = new distanceMatrixRequest([route.start], requestList, google.maps.TravelMode.DRIVING);
-	var requestEnd = new distanceMatrixRequest(requestList, [route.end], google.maps.TravelMode.DRIVING);
+	var requestStart = new distanceMatrixRequest([route.start], requestList);
+	var requestEnd = new distanceMatrixRequest(requestList, [route.end]);
 
 	distanceAPI.getDistanceMatrix(requestStart, function(response, status) {
 		if (status == google.maps.DistanceMatrixStatus.OK) {
