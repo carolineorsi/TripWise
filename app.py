@@ -17,8 +17,13 @@ def index():
 @app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
     message = request.args.get('message')
-    phone.send_message(message)
-    return message
+    saddr = request.args.get('start')
+    daddr = request.args.get('destination')
+    directionsmode = request.args.get('directionsmode')
+
+    url = phone.build_url(saddr, daddr, directionsmode)
+    phone.send_message(message, url)
+    return url
 
 
 # @app.route("/getplaces", methods=["GET"])

@@ -274,7 +274,10 @@ function displayDirections (place) {
 
 function sendMessage() {
 	$.get("/send_to_phone", 
-		{'message' : 'This is your test message from the website!'},
+		{'start' : route.start,
+		'destination' : route.end,
+		'directionsmode' : route.travelMode,
+		'message' : 'This is your test message from the website!'},
 		function(response) {
 			console.log(response);
 		}
