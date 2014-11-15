@@ -219,14 +219,18 @@ function displayTopTen () {
 
 		$("#"+place.id)
 			.mouseover(function () {
-				$(this).css({"background-color": "blue"});
-				place.marker.setAnimation(google.maps.Animation.BOUNCE);
-				// toggleIcon(place.marker);
+				if (place.marker) {
+					$(this).css({"background-color": "blue"});
+					place.marker.setAnimation(google.maps.Animation.BOUNCE);
+					// toggleIcon(place.marker);
+				}
 			})
 			.mouseout(function () {
-				$(this).css({"background-color": "transparent"});
-				place.marker.setAnimation(null);
-				// toggleIcon(place.marker);
+				if (place.marker) {
+					$(this).css({"background-color": "transparent"});
+					place.marker.setAnimation(null);
+					// toggleIcon(place.marker);
+				}
 			});
 	}
 	// setTimeout(function () {
