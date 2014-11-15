@@ -93,7 +93,14 @@ function Search(keyword, opennow) {
 
 				counter++;
 				if (counter >= numSearches) {
-					getAddedDistance(route);
+					if (Object.keys(search.places).length == 0) {
+						$("#list-container")
+							.append("<strong>There are no places that match your search.</strong>")
+							.addClass("text-alert");
+					}
+					else {
+						getAddedDistance(route);
+					}
 				}
 			});
 		}

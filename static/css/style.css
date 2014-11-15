@@ -32,6 +32,12 @@ html, body, #map-container {
 	border-top: 2px solid #EEE;
 }
 
+.text-alert {
+	background-color: #EEE;
+	padding: 10px 0px 10px 0px;
+	text-align: center;
+}
+
 .list-item:hover {
 	background-color: #EEE;
 }

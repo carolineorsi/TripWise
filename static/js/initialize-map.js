@@ -47,7 +47,7 @@ function clearMap(){
 		markersArray[i].setMap(null);
 	}
 	markersArray.length = 0;
-	$("#list-container").empty();
+	$("#list-container").empty().removeClass("text-alert");
 	search = null;
 
 	$("#find-more").hide();
