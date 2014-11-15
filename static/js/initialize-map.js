@@ -89,16 +89,22 @@ function displayPlace(location, delay, place) {
 			displayDirections(place);
 		});
 
-		$("#"+place.id)
+		handleListHover(place, marker);
+	}, delay);
+}
+
+function handleListHover(place, marker) {
+	$("#"+place.id)
 		.mouseenter(function () {
 			// marker.setAnimation(google.maps.Animation.BOUNCE);
 			toggleIcon(marker);
+			$(this).css({"background-color": "#EEE"});
 		})
 		.mouseleave(function () {
 			// marker.setAnimation(null);
 			toggleIcon(marker);
+			$(this).css({"background-color": "transparent"});
 		});
-	}, delay);
 }
 
 function addInfoWindow (marker, place) {

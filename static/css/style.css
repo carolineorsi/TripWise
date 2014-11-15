@@ -38,9 +38,9 @@ html, body, #map-container {
 	text-align: center;
 }
 
-.list-item:hover {
+/*.list-item:hover {
 	background-color: #EEE;
-}
+}*/
 
 .btn {
 	float: right;
