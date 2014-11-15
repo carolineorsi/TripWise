@@ -2,6 +2,10 @@ $(document).ready(function () {
 
 	initializeMap();
 
+	$("#geolocation").on('click', function() {
+		getLocation();
+	});
+
 	// Call jQuery Geocomplete to add autocomplete to start and end fields
 	$("#start, #end").geocomplete({details: "form"});
 
@@ -21,6 +25,26 @@ $(document).ready(function () {
 		clearMap();
 	});
 });
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(setAsStart);
+    } else { 
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function setAsStart(position) {
+	var geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng(
+		position.coords.latitude,
+		position.coords.longitude);
+	geocoder.geocode( 
+		{'latLng' : latlng}, 
+		function (response, status) {
+			document.getElementById("start").value = (response[0].formatted_address);
+		});
+}
 
 
 function initializeMap() {
