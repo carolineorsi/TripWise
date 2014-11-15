@@ -43,7 +43,7 @@ The app will take input from the user (starting point, ending point, and a keywo
 	- Format the URL to open directly in Google Maps App on phone
 
 ####Additional Features to Add:
-- Autocomplete of input fields
+- ~~Autocomplete of input fields~~
 - Geolocation to allow user to input current location as starting point
 - User login feature to allow user to save routes
 - Multiple waypoint feature

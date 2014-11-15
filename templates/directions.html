@@ -12,24 +12,31 @@
 				<form id="directions-form">
 					<label for="start">Start</label>
 					<input type="text" id="start" class="form-control" value="3896 19th St, San Francisco, CA"><br>
+					<!-- <input type="text" id="start" class="form-control"><br> -->
 					
 					<label for="end">End</label>
+					<!-- <input type="text" id="end" class="form-control"><br> -->
 					<input type="text" id="end" class="form-control" value="683 Sutter St, San Francisco, CA"><br>
 					
 					<label for="keyword">Keyword</label>
 					<input type="text" id="keyword" class="form-control" value="Sushi"><br>
+					<!-- <input type="text" id="keyword" class="form-control"><br> -->
 					
-					<input type="checkbox" id="opennow">
-					<label for="opennow">Open Now</label> <br>
+					<div id="checkbox"><input type="checkbox" id="opennow">
+						<label for="opennow">Open Now</label>
+					</div>
 
 					<input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
-					<label for="opennow">Drive</label>
+					<label for="opennow" class="travel-mode">Drive</label>
+
+					<input type="radio" name="travel-mode" class="travel-mode" id="biking">
+					<label for="opennow" class="travel-mode">Bike</label>
 
 					<input type="radio" name="travel-mode" class="travel-mode" id="walking">
-					<label for="opennow">Walk</label>
+					<label for="opennow" class="travel-mode">Walk</label>
 
 					<!-- TODO: Make clear button do something! -->
-					<button class="btn btn-default" type="reset">Clear Map</button>
+					<button class="btn btn-default" type="reset" id="reset">Clear Map</button>
 					<button class="btn btn-default" type="submit">Go!</button>
 				</form>
 			</div>
@@ -56,5 +63,6 @@
 		<script src="/static/js/directions.js"></script>
 		<script src="/static/js/model.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
+		<script src="/static/js/jquery.geocomplete.js"></script> <!-- Include jQuery Geocomplete plugin. -->
 	</body>
 </html>

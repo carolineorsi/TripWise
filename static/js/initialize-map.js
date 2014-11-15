@@ -2,10 +2,12 @@ $(document).ready(function () {
 
 	initializeMap();
 
+	// Call jQuery Geocomplete to add autocomplete to start and end fields
+	$("#start, #end").geocomplete({details: "form"});
+
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer();
 	markersArray = [];
-	counter = null;
 
 	$("#directions-form").submit(function() {
 		findPlaces()
@@ -13,6 +15,10 @@ $(document).ready(function () {
 
 	$("#get-more-results").on('click', function() {
 		callDistanceMatrix();
+	});
+
+	$("#reset").on('click', function() {
+		clearMap();
 	});
 });
 
@@ -43,6 +49,8 @@ function clearMap(){
 	markersArray.length = 0;
 	$("#list-container").empty();
 	search = null;
+
+	$("#find-more").hide();
 }
 
 
@@ -62,9 +70,7 @@ function displayPoint(point, radius) {
 
 
 function displayPlace(location, delay, place) {
-	// Displays marker on map for purposes of testing
 	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|4D70B8";
-	// active = "//maps.google.com/mapfiles/kml/paddle/blu-blank.png";
 	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|1F2D4A";
 
 	setTimeout ( function() {
@@ -90,13 +96,17 @@ function addInfoWindow (marker, place) {
 	var infoWindow = new google.maps.InfoWindow({
 		content: contentString
 	});
+
 	google.maps.event.addListener(marker, 'mouseover', function(evt) {
 		infoWindow.open(map, marker);
 		toggleIcon(marker);
+		$("#"+place.id).css({"background-color": "#EEE"});
 	});
+
 	google.maps.event.addListener(marker, 'mouseout', function(evt) {
 		infoWindow.close(map, marker);
 		toggleIcon(marker);
+		$("#"+place.id).css({"background-color": "transparent"});
 	});
 }
 

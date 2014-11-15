@@ -9,6 +9,9 @@ function findPlaces(evt) {
 	else if (document.getElementById('walking').checked) {
 		var travelMode = google.maps.TravelMode.WALKING;
 	}
+	else if (document.getElementById('biking').checked) {
+		var travelMode = google.maps.TravelMode.BICYCLING;
+	}
 
 	route = new Route(
 		document.getElementById('start').value,
@@ -206,15 +209,53 @@ function displayTopTen () {
 		var durationAdded = Math.ceil((search.sortedPlaces[i][0] - route.initialDuration) / 60);
 
 		if (durationAdded <= 0) {
-			$("#list-container").append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
-			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
+			$("#list-container")
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
 		}
 		else {
-			$("#list-container").append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
-			// $("#"+place.id).on('mouseenter', toggleIcon(place.marker)).on('mouseleave', toggleIcon(place.marker));
+			$("#list-container")
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
 		}
+
+		$("#"+place.id)
+			.mouseover(function () {
+				$(this).css({"background-color": "blue"});
+				place.marker.setAnimation(google.maps.Animation.BOUNCE);
+				// toggleIcon(place.marker);
+			})
+			.mouseout(function () {
+				$(this).css({"background-color": "transparent"});
+				place.marker.setAnimation(null);
+				// toggleIcon(place.marker);
+			});
 	}
+	// setTimeout(function () {
+	// 	setAnimation();
+	// }, 2000);
 }
+
+// function setAnimation () {
+// 	var placeslength = search.placeList.length;
+
+// 	for (i = 0; i < placeslength; i++) {
+
+// 		if (search.placeList[i].marker) {
+// 			var marker = search.placeList[i].marker;
+// 			$("#"+search.placeList[i].id)
+// 				.mouseover(function () {
+// 					$(this).css({"background-color": "blue"});
+// 					console.log(marker);
+// 					marker.setAnimation(google.maps.Animation.BOUNCE);
+// 					// toggleIcon(place.marker);
+// 				})
+// 				.mouseout(function () {
+// 					$(this).css({"background-color": "transparent"});
+// 					marker.setAnimation(null);
+// 					// toggleIcon(place.marker);
+// 				});
+// 		}
+// 	}
+// }
 
 function displayDirections (place) {
 	var waypoint = new Waypoint(place.location)

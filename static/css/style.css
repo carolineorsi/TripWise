@@ -53,6 +53,11 @@ html, body, #map-container {
 	color: blue;
 }
 
+.travel-mode {
+	padding-right: 3px;
+}
+
+
 /*#directions {
 	margin-top: 40px;
 }*/
