@@ -70,8 +70,8 @@ function displayPoint(point, radius) {
 
 
 function displayPlace(location, delay, place) {
-	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|4D70B8";
-	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|1F2D4A";
+	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|8AB8E6";
+	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|2E3D4C";
 
 	setTimeout ( function() {
 		var marker = new google.maps.Marker({
@@ -88,7 +88,17 @@ function displayPlace(location, delay, place) {
 		google.maps.event.addListener(marker, 'click', function(evt) {
 			displayDirections(place);
 		});
-	}, delay);	
+
+		$("#"+place.id)
+		.mouseenter(function () {
+			// marker.setAnimation(google.maps.Animation.BOUNCE);
+			toggleIcon(marker);
+		})
+		.mouseleave(function () {
+			// marker.setAnimation(null);
+			toggleIcon(marker);
+		});
+	}, delay);
 }
 
 function addInfoWindow (marker, place) {

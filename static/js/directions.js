@@ -205,7 +205,6 @@ function displayTopTen () {
 	for (var i = 0; i < maxResult; i++) {
 	// for (var i = 0; i < sortedPlaces.length; i++) {
 		place = search.places[search.sortedPlaces[i][1]].place;
-		displayPlace(place.location, i * 200, place);
 		var durationAdded = Math.ceil((search.sortedPlaces[i][0] - route.initialDuration) / 60);
 
 		if (durationAdded <= 0) {
@@ -217,49 +216,10 @@ function displayTopTen () {
 				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
 		}
 
-		$("#"+place.id)
-			.mouseover(function () {
-				if (place.marker) {
-					$(this).css({"background-color": "blue"});
-					place.marker.setAnimation(google.maps.Animation.BOUNCE);
-					// toggleIcon(place.marker);
-				}
-			})
-			.mouseout(function () {
-				if (place.marker) {
-					$(this).css({"background-color": "transparent"});
-					place.marker.setAnimation(null);
-					// toggleIcon(place.marker);
-				}
-			});
+		displayPlace(place.location, i * 200, place);
+
 	}
-	// setTimeout(function () {
-	// 	setAnimation();
-	// }, 2000);
 }
-
-// function setAnimation () {
-// 	var placeslength = search.placeList.length;
-
-// 	for (i = 0; i < placeslength; i++) {
-
-// 		if (search.placeList[i].marker) {
-// 			var marker = search.placeList[i].marker;
-// 			$("#"+search.placeList[i].id)
-// 				.mouseover(function () {
-// 					$(this).css({"background-color": "blue"});
-// 					console.log(marker);
-// 					marker.setAnimation(google.maps.Animation.BOUNCE);
-// 					// toggleIcon(place.marker);
-// 				})
-// 				.mouseout(function () {
-// 					$(this).css({"background-color": "transparent"});
-// 					marker.setAnimation(null);
-// 					// toggleIcon(place.marker);
-// 				});
-// 		}
-// 	}
-// }
 
 function displayDirections (place) {
 	var waypoint = new Waypoint(place.location)
