@@ -14,34 +14,35 @@ def index():
     return render_template("directions.html")
 
 
-@app.route("/send_to_phone", methods=["POST"])
+@app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
-    phone.send_message()
-    return "got here"
+    message = request.args.get('message')
+    phone.send_message(message)
+    return message
 
 
-@app.route("/getplaces", methods=["GET"])
-def get_places():
-    start = request.args.get('start')
-    end = request.args.get('end')
-    keyword = request.args.get('keyword')
-    radius = request.args.get('radius')
-    initial_duration = request.args.get('initialDuration')
-    initial_distance = request.args.get('initialDistance')
+# @app.route("/getplaces", methods=["GET"])
+# def get_places():
+#     start = request.args.get('start')
+#     end = request.args.get('end')
+#     keyword = request.args.get('keyword')
+#     radius = request.args.get('radius')
+#     initial_duration = request.args.get('initialDuration')
+#     initial_distance = request.args.get('initialDistance')
 
-    raw_polyline = request.args.get('polyline')
-    polyline = map_data.optimize_polyline(raw_polyline)
+#     raw_polyline = request.args.get('polyline')
+#     polyline = map_data.optimize_polyline(raw_polyline)
 
-    route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
+#     route = model.Route(start, end, keyword, float(radius), polyline, int(initial_duration), int(initial_distance))
     
-    route.get_places()
-    map_data.calculate_added_distance(route)
-    top_ten = map_data.return_top_ten(route)
+#     route.get_places()
+#     map_data.calculate_added_distance(route)
+#     top_ten = map_data.return_top_ten(route)
 
-    for item in top_ten:
-        print item['place'].name, "-", ((item['duration'] - route.initial_duration) / 60), "mins added to trip"
+#     for item in top_ten:
+#         print item['place'].name, "-", ((item['duration'] - route.initial_duration) / 60), "mins added to trip"
 
-    return "worked"
+#     return "worked"
 
 
 

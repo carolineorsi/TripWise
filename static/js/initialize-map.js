@@ -30,10 +30,8 @@ $(document).ready(function () {
 	});
 
 	$("#send-button").on('click', function() {
-		$.post("/send_to_phone", "test", function(response) {
-			console.log(response);
-		})
-	})
+		sendMessage()
+	});
 });
 
 function getLocation() {

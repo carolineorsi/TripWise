@@ -272,6 +272,15 @@ function displayDirections (place) {
 		);
 }
 
+function sendMessage() {
+	$.get("/send_to_phone", 
+		{'message' : 'This is your test message from the website!'},
+		function(response) {
+			console.log(response);
+		}
+	);
+}
+
 // AJAX CALL TO MY SERVER-SIDE SCRIPTS
 // function ajaxCall(route, radius) {
 // 			var polylineArray = [];
