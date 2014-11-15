@@ -21,7 +21,7 @@ html, body, #map-container {
 
 .form-group {
 	line-height: 10px;
-	margin-bottom: 20px;
+	/*margin-bottom: 20px;*/
 }
 
 .list-item {
@@ -62,6 +62,10 @@ html, body, #map-container {
 
 .travel-mode {
 	padding-right: 3px;
+}
+
+#send-to-phone {
+	display: none;
 }
 
 

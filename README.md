@@ -48,5 +48,6 @@ The app will take input from the user (starting point, ending point, and a keywo
 - User login feature to allow user to save routes
 - Multiple waypoint feature
 - Draggable routes, so that user can specify route preference.
+- Ratings for business, and possibly a way to sort by rating or color markers based on rating.
 - ~~Allow user to specify mode of transportation (walking, driving)~~
 - ~~Add "open now" checkbox~~

@@ -25,11 +25,15 @@ $(document).ready(function () {
 		callDistanceMatrix();
 	});
 
-	// When "Clear Map" button clicked, clears search form, map, route and
-	// search objects, results list and directions.
 	$("#reset").on('click', function() {
 		clearMap();
 	});
+
+	$("#send-button").on('click', function() {
+		$.post("/send_to_phone", "test", function(response) {
+			console.log(response);
+		})
+	})
 });
 
 function getLocation() {

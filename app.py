@@ -3,8 +3,7 @@ import jinja2
 import os
 import model
 import map_data
-import urllib2
-# import test
+import phone
 
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
@@ -13,6 +12,13 @@ app.secret_key = 'kbegw*^6^Fhjkh'
 def index():
     """This is the 'cover' page of the site"""
     return render_template("directions.html")
+
+
+@app.route("/send_to_phone", methods=["POST"])
+def send_to_phone():
+    phone.send_message()
+    return "got here"
+
 
 @app.route("/getplaces", methods=["GET"])
 def get_places():

@@ -263,6 +263,8 @@ function displayDirections (place) {
 					$("#directions").append("<div class='waypoint'><h5>" + " " +"</h5></div>");
 				}
 				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
+
+				$("#send-to-phone").show();
 			},
 			function (status) {
 				console.log(status);
