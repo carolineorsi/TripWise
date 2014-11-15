@@ -2,27 +2,19 @@ function findPlaces(evt) {
 	event.preventDefault();
 	clearMap();
 
-
-	if (document.getElementById('driving').checked) {
-		var travelMode = google.maps.TravelMode.DRIVING;
-	}
-	else if (document.getElementById('walking').checked) {
-		var travelMode = google.maps.TravelMode.WALKING;
-	}
-	else if (document.getElementById('biking').checked) {
-		var travelMode = google.maps.TravelMode.BICYCLING;
-	}
-
+	// Create route object based on user's input.
 	route = new Route(
 		document.getElementById('start').value,
 		document.getElementById('end').value,
-		travelMode
+		checkTravelMode()
 	);
 
+	// Create search object based on user's input.
 	search = new Search(
 		document.getElementById('keyword').value
 	);
 
+	// Get initial directions and use returned value to find Places.
 	route.getDirections()
 		.then(
 			function (response) {
@@ -35,6 +27,19 @@ function findPlaces(evt) {
 			}
 		);
 
+}
+
+function checkTravelMode() {
+	// Checks form radio buttons to set travel mode.
+	if (document.getElementById('driving').checked) {
+		return google.maps.TravelMode.DRIVING;
+	}
+	else if (document.getElementById('walking').checked) {
+		return google.maps.TravelMode.WALKING;
+	}
+	else if (document.getElementById('biking').checked) {
+		return google.maps.TravelMode.BICYCLING;
+	}
 }
 
 // function callPlaces(request, route, counter) {
@@ -76,6 +81,8 @@ function processPlaces(results) {
 
 
 function rank(place) {
+	// Rank place based on direct distance from route polyline. Uses
+	// getDistanceFromLatLonInKm to calculate distance.
 	place.rank = 1000;
 	var polylineLength = route.polyline.length;
 	
@@ -113,6 +120,9 @@ function deg2rad(deg) {
 
 
 function getAddedDistance() {
+	// Create complete place list and sort by rank. Use sorted list to populated
+	// the unreturned places list, which tracks which places have already been 
+	// shown to user (displayed on map and results list).
 	search.placeList = [];
 	$.each(search.places, function(latlng, Place) {
 		search.placeList.push(Place.place);
@@ -132,6 +142,10 @@ function getAddedDistance() {
 
 
 function callDistanceMatrix() {
+	// Distance matrix request to calculate the time and distance
+	// of each place from the start and to the end points. These values are
+	// used to calculate the added time the new waypoint adds to the user's 
+	// original route.
 	requestList = search.unreturnedPlaces.splice(0,10);
 
 	var distanceAPI = new google.maps.DistanceMatrixService();
@@ -155,6 +169,7 @@ function callDistanceMatrix() {
 
 
 function processDistancesFromStart (response, requestList) {
+	// Stores distance and duration from start point in places object.
 	for (var i = 0; i < requestList.length; i++) {
 		var distance = response.rows[0].elements[i].distance.value;
 		var duration = response.rows[0].elements[i].duration.value;
@@ -165,6 +180,9 @@ function processDistancesFromStart (response, requestList) {
 
 
 function processDistancesToEnd (response, requestList) {
+	// Adds distance and duration to end point to distance and duration from 
+	// start point, getting the total route distance and duration. This is used
+	// to compare new route with waypoint from the user's original route.
 	for (var i = 0; i < response.rows.length; i++) {
 		var distance = response.rows[i].elements[0].distance.value;
 		var duration = response.rows[i].elements[0].duration.value;
@@ -175,6 +193,7 @@ function processDistancesToEnd (response, requestList) {
 
 
 function returnTopTen (route, requestList) {
+	// Sorts results returned from distance matrix request.
 	search.sortedPlaces = [];
 	for (var i = 0; i < requestList.length; i++) {
 		search.sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location]);
@@ -188,11 +207,8 @@ function returnTopTen (route, requestList) {
 
 
 function displayTopTen () {
-	// if (search.sortedPlaces.length == 0) {
-	// 	$("list-container").append("<div>Nothing found!</div>");
-	// 	$("#find-more").hide();
-	// }
-	// else 
+	// Checks if there are fewer than 10 results remaining. If so, removes
+	// "Get More Results" button from results div.
 	if (search.sortedPlaces.length < 10) {
 		var maxResult = search.sortedPlaces.length;
 		$("#find-more").hide();
@@ -202,8 +218,8 @@ function displayTopTen () {
 		$("#find-more").show();
 	}
 
+	// For each of ten places, display in results div and add to map.
 	for (var i = 0; i < maxResult; i++) {
-	// for (var i = 0; i < sortedPlaces.length; i++) {
 		place = search.places[search.sortedPlaces[i][1]].place;
 		var durationAdded = Math.ceil((search.sortedPlaces[i][0] - route.initialDuration) / 60);
 
@@ -222,6 +238,8 @@ function displayTopTen () {
 }
 
 function displayDirections (place) {
+	// When a marker is clicked, this function is called to add the point as a
+	// waypoint and show new directions in the control bar.
 	var waypoint = new Waypoint(place.location)
 	route.waypoints.push(waypoint);
 

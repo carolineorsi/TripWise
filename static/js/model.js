@@ -1,13 +1,14 @@
 function Route(start, end, travelMode) {
-	this.start = start;
-	this.end = end;
-	this.travelMode = travelMode;
-	this.waypoints = [];
-	this.polyline = [];
-	this.initialDuration = null;
-	this.initialDistance = null;
+	this.start = start;  			// User's starting point
+	this.end = end;					// User's ending point
+	this.travelMode = travelMode;	// User's travel mode
+	this.waypoints = [];			// Waypoints along route; populated when user chooses a Place
+	this.polyline = [];				// Array of latlngs that comprise the route polyline
+	this.initialDuration = null;	// Initial route duration
+	this.initialDistance = null;	// Initial route distance
 
 	this.getDirections = function () {
+		// Build and send directions request 
 		var request = new directionsRequest(route.start, route.end, route.waypoints);
 		var deferred = Q.defer();
 
@@ -38,12 +39,12 @@ function Route(start, end, travelMode) {
 
 
 function Place(name, id, lat, lng, location) {
-	this.name = name;
-	this.id = id;
+	this.name = name;			// Place name from Places response
+	this.id = id;				// Unique place ID
 	this.lat = lat;
 	this.lng = lng;
-	this.location = location;
-	this.rank = null;
+	this.location = location;	// Google latlng object
+	this.rank = null;			// Rank based on distance from route
 }
 
 function Search(keyword, opennow) {
@@ -56,6 +57,7 @@ function Search(keyword, opennow) {
 	this.unreturnedPlaces = []; // List of latlng objects, sorted by rank, that have not yet been returned to the user
 
 	this.getSearchPoints = function (route) {
+		// Identifies 10 points along polyline for Places search, stored in search object
 		var NUMPOINTS = 10;
 
 		pointsInPolyline = route.polyline.length;
@@ -88,11 +90,13 @@ function Search(keyword, opennow) {
 					processPlaces(results); 
 				}
 				else {
-					// TODO: handle error.
+					console.log(status);
 				}
 
+				// Counter tracks whether all Places requests have returned.
 				counter++;
 				if (counter >= numSearches) {
+					// Checks if there are search results:
 					if (Object.keys(search.places).length == 0) {
 						$("#list-container")
 							.append("<strong>There are no places that match your search.</strong>")
@@ -109,6 +113,7 @@ function Search(keyword, opennow) {
 
 
 function distanceMatrixRequest(origins, destinations) {
+	// Build distance matrix API request
 	this.origins = origins;
 	this.destinations = destinations;
 	this.travelMode = route.travelMode;
@@ -116,6 +121,7 @@ function distanceMatrixRequest(origins, destinations) {
 
 
 function placesRequest(location, radius, keyword) {
+	// Build places API request
 	this.location = location;
 	this.radius = radius;
 	this.rankby = 'distance';
@@ -125,6 +131,7 @@ function placesRequest(location, radius, keyword) {
 
 
 function directionsRequest(origin, destination, waypoints) {
+	// Build directions API request
 	this.origin = origin;
 	this.destination = destination;
 	this.travelMode = route.travelMode;
@@ -133,6 +140,7 @@ function directionsRequest(origin, destination, waypoints) {
 
 
 function Waypoint(location) {
+	// Waypoint object; created when user chooses a Place
 	this.location = location;
-	stopover = true;
+	this.stopover = true;
 }
