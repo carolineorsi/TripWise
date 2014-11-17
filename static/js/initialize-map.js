@@ -157,32 +157,63 @@ function handleListHover(place, marker) {
 function addInfoWindow (marker, place) {
 	// Create infowindow and open on marker hover.
 
+	// google.maps.event.addListener(marker, 'mouseover', function(evt) {
+	// 	getPlaceDetails(place)
+	// 	.then(
+	// 		function(response) {
+	// 			// if (place.website) {
+	// 			// 	var contentString = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
+	// 			// }
+	// 			// else {
+	// 			// 	var contentString = place.name  + "<br>" + place.phone + "<br>" + place.address;
+	// 			// }
+
+	// 			var contentString = "<div id=" + place.id + "></div>";
+
+	// 			var infoWindow = new google.maps.InfoWindow(
+	// 				{ content: contentString });
+
+	// 			infoWindow.open(map, marker);
+	// 			marker.setIcon(active);
+	// 			$("#"+place.id).css({"background-color": "#EEE"});
+			
+	// 			google.maps.event.addListener(marker, 'mouseout', function(evt) {
+	// 				infoWindow.close(map, marker);
+	// 				marker.setIcon(inactive);
+	// 				$("#"+place.id).css({"background-color": "transparent"});
+	// 			});			
+	// 		}
+	// 	);
+	// });
+
+	var infoWindow = new google.maps.InfoWindow(
+		{ content: null });
+
 	google.maps.event.addListener(marker, 'mouseover', function(evt) {
+		infoWindow.open(map, marker);
+		marker.setIcon(active);
+		$("#"+place.id).css({"background-color": "#EEE"});
+
 		getPlaceDetails(place)
 		.then(
 			function(response) {
 				if (place.website) {
-					var contentString = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
+					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
 				}
 				else {
-					var contentString = place.name  + "<br>" + place.phone + "<br>" + place.address;
+					var content = place.name  + "<br>" + place.phone + "<br>" + place.address;
 				}
 
-				var infoWindow = new google.maps.InfoWindow(
-					{ content: contentString });
-
-				infoWindow.open(map, marker);
-				marker.setIcon(active);
-				$("#"+place.id).css({"background-color": "#EEE"});
-			
-				google.maps.event.addListener(marker, 'mouseout', function(evt) {
-					infoWindow.close(map, marker);
-					marker.setIcon(inactive);
-					$("#"+place.id).css({"background-color": "transparent"});
-				});			
+				infoWindow.setContent(content);
 			}
 		);
 	});
+
+	google.maps.event.addListener(marker, 'mouseout', function(evt) {
+		infoWindow.close(map, marker);
+		marker.setIcon(inactive);
+		$("#"+place.id).css({"background-color": "transparent"});
+	});			
 }
 
 
