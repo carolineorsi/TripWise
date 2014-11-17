@@ -144,42 +144,40 @@ function handleListHover(place, marker) {
 	$("#"+place.id)
 		.mouseenter(function () {
 			// marker.setAnimation(google.maps.Animation.BOUNCE);
-			toggleIcon(marker);
+			marker.setIcon(active);
 			$(this).css({"background-color": "#EEE"});
 		})
 		.mouseleave(function () {
 			// marker.setAnimation(null);
-			toggleIcon(marker);
+			marker.setIcon(inactive);
 			$(this).css({"background-color": "transparent"});
 		});
 }
 
 function addInfoWindow (marker, place) {
 	// Create infowindow and open on marker hover.
-	// var contentString = place.name;
-	// var infoWindow = new google.maps.InfoWindow({
-	// 	content: contentString
-	// });
 
 	google.maps.event.addListener(marker, 'mouseover', function(evt) {
 		getPlaceDetails(place)
 		.then(
 			function(response) {
-				var contentString = setPopupContents(response);
-				console.log(response);
+				if (place.website) {
+					var contentString = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
+				}
+				else {
+					var contentString = place.name  + "<br>" + place.phone + "<br>" + place.address;
+				}
 
 				var infoWindow = new google.maps.InfoWindow(
-					{
-						content: contentString
-					});
+					{ content: contentString });
 
 				infoWindow.open(map, marker);
-				toggleIcon(marker);
+				marker.setIcon(active);
 				$("#"+place.id).css({"background-color": "#EEE"});
 			
 				google.maps.event.addListener(marker, 'mouseout', function(evt) {
 					infoWindow.close(map, marker);
-					toggleIcon(marker);
+					marker.setIcon(inactive);
 					$("#"+place.id).css({"background-color": "transparent"});
 				});			
 			}
@@ -197,6 +195,12 @@ function getPlaceDetails (place) {
 
 	detailService.getDetails(request, function(response, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			place.address = response.formatted_address;
+			place.phone = response.formatted_phone_number;
+			if (response.website) {
+				place.website = response.website;
+			}
+
 			deferred.resolve(response);
 		}
 	})
@@ -204,23 +208,3 @@ function getPlaceDetails (place) {
 	return deferred.promise;
 }
 
-
-function setPopupContents(placeDetails) {
-	var name = placeDetails.name;
-	var address = placeDetails.formatted_address;
-	var contentString = name + "<br>" + address;
-
-	return contentString;
-
-}
-
-
-function toggleIcon (marker) {
-	// Change marker icon (highlight effect)
-	if (marker.icon == inactive) {
-		marker.setIcon(active);
-	}
-	else {
-		marker.setIcon(inactive);
-	}
-}

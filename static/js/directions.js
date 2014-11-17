@@ -232,7 +232,7 @@ function displayTopTen () {
 				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
 		}
 
-		displayPlace(place.location, i * 200, place);
+		displayPlace(place.location, i * 100, place);
 
 	}
 }
