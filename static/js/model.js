@@ -7,7 +7,7 @@ function Route(start, end, travelMode) {
 	this.initialDuration = null;	// Initial route duration
 	this.initialDistance = null;	// Initial route distance
 
-	this.getDirections = function () {
+	this.getDirections = function getDirections() {
 		// Build and send directions request 
 		var request = new directionsRequest(route.start, route.end, route.waypoints);
 		var deferred = Q.defer();
@@ -29,7 +29,7 @@ function Route(start, end, travelMode) {
 		return deferred.promise;
 	};
 
-	this.getPolyline = function (directions) {
+	this.getPolyline = function getPolyline(directions) {
 		// Decodes directions polyline and identifies search points and radius
 		this.polyline = google.maps.geometry.encoding.decodePath(directions.routes[0].overview_polyline);
 		this.initialDuration = directions.routes[0].legs[0].duration.value;
@@ -87,6 +87,7 @@ function Search(keyword, opennow) {
 
 			placesService.nearbySearch(request, function(results, status) {
 				if (status == google.maps.places.PlacesServiceStatus.OK) {
+					// console.log(results);
 					processPlaces(results); 
 				}
 				else {
@@ -124,7 +125,7 @@ function placesRequest(location, radius, keyword) {
 	// Build places API request
 	this.location = location;
 	this.radius = radius;
-	this.rankby = 'distance';
+	this.rankby = google.maps.places.RankBy.PROMINENCE;
 	this.keyword = keyword;
 	this.openNow = document.getElementById('opennow').checked;
 }
@@ -144,3 +145,4 @@ function Waypoint(location) {
 	this.location = location;
 	this.stopover = true;
 }
+

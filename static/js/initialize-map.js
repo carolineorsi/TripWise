@@ -88,7 +88,7 @@ function clearMap(){
 	markersArray.length = 0;
 	$("#list-container").empty().removeClass("text-alert");
 	$("#directions").empty().removeClass("text-alert");
-	search = null;
+	search = null; // TODO: change this to create new instance of search instead (maybe store search objects in array?)
 
 	$("#find-more").hide();
 }
@@ -156,23 +156,64 @@ function handleListHover(place, marker) {
 
 function addInfoWindow (marker, place) {
 	// Create infowindow and open on marker hover.
-	var contentString = place.name;
-	var infoWindow = new google.maps.InfoWindow({
-		content: contentString
-	});
+	// var contentString = place.name;
+	// var infoWindow = new google.maps.InfoWindow({
+	// 	content: contentString
+	// });
 
 	google.maps.event.addListener(marker, 'mouseover', function(evt) {
-		infoWindow.open(map, marker);
-		toggleIcon(marker);
-		$("#"+place.id).css({"background-color": "#EEE"});
-	});
+		getPlaceDetails(place)
+		.then(
+			function(response) {
+				var contentString = setPopupContents(response);
+				console.log(response);
 
-	google.maps.event.addListener(marker, 'mouseout', function(evt) {
-		infoWindow.close(map, marker);
-		toggleIcon(marker);
-		$("#"+place.id).css({"background-color": "transparent"});
+				var infoWindow = new google.maps.InfoWindow(
+					{
+						content: contentString
+					});
+
+				infoWindow.open(map, marker);
+				toggleIcon(marker);
+				$("#"+place.id).css({"background-color": "#EEE"});
+			
+				google.maps.event.addListener(marker, 'mouseout', function(evt) {
+					infoWindow.close(map, marker);
+					toggleIcon(marker);
+					$("#"+place.id).css({"background-color": "transparent"});
+				});			
+			}
+		);
 	});
 }
+
+
+function getPlaceDetails (place) {
+	var deferred = Q.defer();
+	var detailService = new google.maps.places.PlacesService(map);
+	var request = {
+		placeId: place.id
+	};
+
+	detailService.getDetails(request, function(response, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			deferred.resolve(response);
+		}
+	})
+
+	return deferred.promise;
+}
+
+
+function setPopupContents(placeDetails) {
+	var name = placeDetails.name;
+	var address = placeDetails.formatted_address;
+	var contentString = name + "<br>" + address;
+
+	return contentString;
+
+}
+
 
 function toggleIcon (marker) {
 	// Change marker icon (highlight effect)

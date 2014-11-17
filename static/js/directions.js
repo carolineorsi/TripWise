@@ -273,6 +273,7 @@ function displayDirections (place) {
 }
 
 function sendMessage() {
+	// TODO: send waypoints to create link to/from waypoints instead of route start and end.
 	$.get("/send_to_phone", 
 		{'start' : route.start,
 		'destination' : route.end,
