@@ -70,8 +70,15 @@ function processPlaces(results) {
 		var location = results[j].geometry.location;
 		var latlng = new google.maps.LatLng(lat, lng);
 
+		if (results[j].rating) {
+			var rating = results[j].rating;
+		}
+		else {
+			var rating = null;
+		}
+
 		search.places[latlng] = {};
-		search.places[latlng]["place"] = new Place(name, placeID, lat, lng, location);
+		search.places[latlng]["place"] = new Place(name, placeID, lat, lng, location, rating);
 
 		rank(search.places[latlng]["place"]);
 
@@ -225,7 +232,7 @@ function displayTopTen () {
 
 		if (durationAdded <= 0) {
 			$("#list-container")
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em><div class='detail-dropdown' id='details-" + place.id + "'></div></div>");
 		}
 		else {
 			$("#list-container")

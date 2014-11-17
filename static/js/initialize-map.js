@@ -128,7 +128,23 @@ function displayPlace(location, delay, place) {
 		place.marker = marker;
 
 		// Add info window to each marker.
-		addInfoWindow(marker, place);
+		addInfoWindow(place);
+
+		google.maps.event.addListener(marker, 'mouseover', function(evt) {
+			place.infoWindow.open(map, marker);
+			marker.setIcon(active);
+			$("#"+place.id).css({"background-color": "#EEE"});
+
+			if (!place.address) {
+				populatePlaceDetails(place);
+			}
+		});
+
+		google.maps.event.addListener(marker, 'mouseout', function(evt) {
+			place.infoWindow.close(map, marker);
+			marker.setIcon(inactive);
+			$("#"+place.id).css({"background-color": "transparent"});
+		});			
 
 		// When marker clicked, directions are updated with marker location/place as waypoint
 		google.maps.event.addListener(marker, 'click', function(evt) {
@@ -146,74 +162,77 @@ function handleListHover(place, marker) {
 			// marker.setAnimation(google.maps.Animation.BOUNCE);
 			marker.setIcon(active);
 			$(this).css({"background-color": "#EEE"});
+
+			if (!place.address) {
+				populatePlaceDetails(place);
+			}
+
+			place.infoWindow.open(map, marker);
 		})
 		.mouseleave(function () {
 			// marker.setAnimation(null);
 			marker.setIcon(inactive);
 			$(this).css({"background-color": "transparent"});
+			$("#details-"+place.id).hide();
+			place.infoWindow.close(map, marker);
+		})
+		.click(function() {
+			displayDirections(place);
 		});
 }
 
-function addInfoWindow (marker, place) {
+function populatePlaceDetails(place) {
+	getPlaceDetails(place)
+		.then(
+			function(response) {
+				if (place.website) {
+					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address + "<br>Business rating: " + place.rating;
+				}
+				else {
+					var content = place.name  + "<br>" + place.phone + "<br>" + place.address + "<br>Business rating: " + place.rating;
+				}
+
+				place.infoWindow.setContent(content);
+			}
+		);
+}
+
+function addInfoWindow (place) {
 	// Create infowindow and open on marker hover.
+	place.infoWindow = new google.maps.InfoWindow(
+		{ content: "" });
+
+
+	// var infoWindow = new google.maps.InfoWindow(
+	// 	{ content: null });
+
+	// place.infoWindow = infoWindow;
 
 	// google.maps.event.addListener(marker, 'mouseover', function(evt) {
+	// 	infoWindow.open(map, marker);
+	// 	marker.setIcon(active);
+	// 	$("#"+place.id).css({"background-color": "#EEE"});
+
 	// 	getPlaceDetails(place)
 	// 	.then(
 	// 		function(response) {
-	// 			// if (place.website) {
-	// 			// 	var contentString = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
-	// 			// }
-	// 			// else {
-	// 			// 	var contentString = place.name  + "<br>" + place.phone + "<br>" + place.address;
-	// 			// }
+	// 			if (place.website) {
+	// 				var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
+	// 			}
+	// 			else {
+	// 				var content = place.name  + "<br>" + place.phone + "<br>" + place.address;
+	// 			}
 
-	// 			var contentString = "<div id=" + place.id + "></div>";
-
-	// 			var infoWindow = new google.maps.InfoWindow(
-	// 				{ content: contentString });
-
-	// 			infoWindow.open(map, marker);
-	// 			marker.setIcon(active);
-	// 			$("#"+place.id).css({"background-color": "#EEE"});
-			
-	// 			google.maps.event.addListener(marker, 'mouseout', function(evt) {
-	// 				infoWindow.close(map, marker);
-	// 				marker.setIcon(inactive);
-	// 				$("#"+place.id).css({"background-color": "transparent"});
-	// 			});			
+	// 			infoWindow.setContent(content);
 	// 		}
 	// 	);
 	// });
 
-	var infoWindow = new google.maps.InfoWindow(
-		{ content: null });
-
-	google.maps.event.addListener(marker, 'mouseover', function(evt) {
-		infoWindow.open(map, marker);
-		marker.setIcon(active);
-		$("#"+place.id).css({"background-color": "#EEE"});
-
-		getPlaceDetails(place)
-		.then(
-			function(response) {
-				if (place.website) {
-					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
-				}
-				else {
-					var content = place.name  + "<br>" + place.phone + "<br>" + place.address;
-				}
-
-				infoWindow.setContent(content);
-			}
-		);
-	});
-
-	google.maps.event.addListener(marker, 'mouseout', function(evt) {
-		infoWindow.close(map, marker);
-		marker.setIcon(inactive);
-		$("#"+place.id).css({"background-color": "transparent"});
-	});			
+	// google.maps.event.addListener(marker, 'mouseout', function(evt) {
+	// 	infoWindow.close(map, marker);
+	// 	marker.setIcon(inactive);
+	// 	$("#"+place.id).css({"background-color": "transparent"});
+	// });			
 }
 
 

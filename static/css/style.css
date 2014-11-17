@@ -68,6 +68,12 @@ html, body, #map-container {
 	display: none;
 }
 
+.detail-dropdown {
+	color: lightblue;
+	font-size: 0.8em;
+	/*float: right;*/
+}
+
 
 /*#directions {
 	margin-top: 40px;

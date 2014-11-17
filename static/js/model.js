@@ -38,13 +38,14 @@ function Route(start, end, travelMode) {
 }
 
 
-function Place(name, id, lat, lng, location) {
+function Place(name, id, lat, lng, location, rating) {
 	this.name = name;			// Place name from Places response
 	this.id = id;				// Unique place ID
 	this.lat = lat;
 	this.lng = lng;
 	this.location = location;	// Google latlng object
 	this.rank = null;			// Rank based on distance from route
+	this.rating = rating;
 }
 
 function Search(keyword, opennow) {
