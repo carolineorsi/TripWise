@@ -30,11 +30,13 @@ The app will take input from the user (starting point, ending point, and a keywo
   - ~~If no results found, show appropriate message in list container.~~
 
 5. Update control bar details when a place is clicked, either in the control bar list or on the map
-	- When clicked, create a waypoint object containing the place location NOTE: SO FAR ONLY WORKS WHEN CLICKING ON MARKER
+	- ~~When clicked, create a waypoint object containing the place location~~
 	- ~~Send new Google Directions request using same origin and destinations and adding the waypoint~~
-	- Update map to show new route
-	- Empty div item containing list of places
-	- In place of list of places, show a div with step-by-step route directions with the new route
+	- Update map to show new route 
+    - UPDATE: ROUTE UPDATES, BUT NEED TO DEAL WITH MARKERS.
+	- ~~Empty div item containing list of places~~
+	- In place of list of places, show a div with step-by-step route directions with the new route 
+    - UPDATE: NEED TO FORMAT DIRECTIONS
 
 6. Add "Send to Phone" button
 	- When route is updated, add a Send to Phone button that makes an AJAX call to Flask

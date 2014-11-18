@@ -21,7 +21,7 @@ html, body, #map-container {
 
 .form-group {
 	line-height: 10px;
-	/*margin-bottom: 20px;*/
+	margin-bottom: 50px;
 }
 
 .list-item {
@@ -38,13 +38,7 @@ html, body, #map-container {
 	text-align: center;
 }
 
-/*.list-item:hover {
-	background-color: #EEE;
-}*/
-
-.btn {
-	/*float: right;*/
-	margin-right: 10px;
+#submit-buttons .btn {
 	margin-top: 10px;
 }
 
@@ -68,13 +62,32 @@ html, body, #map-container {
 	display: none;
 }
 
+.place-desc {
+	display: inline-block;
+}
+
 .detail-dropdown {
 	color: lightblue;
 	font-size: 0.8em;
 	/*float: right;*/
 }
 
+.select-button {
+	display: inline-block;
+	top: 15px;
+	bottom: 15px;
+	float: right;
+	vertical-align: middle;
+	margin: 6.5px 0px 0px 0px;
+	font-size: 12px;
+	padding: 4px 9px;
+	display: none;
+}
 
-/*#directions {
-	margin-top: 40px;
-}*/
+#submit-buttons {
+	float: right;
+}
+
+#get-more-results {
+	float: right;
+}

@@ -74,7 +74,7 @@ function processPlaces(results) {
 			var rating = results[j].rating;
 		}
 		else {
-			var rating = null;
+			var rating = "Unrated";
 		}
 
 		search.places[latlng] = {};
@@ -232,10 +232,12 @@ function displayTopTen () {
 
 		if (durationAdded <= 0) {
 			$("#list-container")
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em><div class='detail-dropdown' id='details-" + place.id + "'></div></div>");
+				// .append("<div class='list-item' id='" + place.id + "'><div class='place-desc'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div><button class='btn btn-default select-button' type='button'>Add</button></div>");
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
 		}
 		else {
 			$("#list-container")
+				// .append("<div class='list-item' id='" + place.id + "'><div class='place-desc'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div><button class='btn btn-default select-button' type='button'>Add</button></div>");
 				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
 		}
 

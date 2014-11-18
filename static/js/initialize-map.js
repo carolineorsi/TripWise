@@ -168,6 +168,7 @@ function handleListHover(place, marker) {
 			}
 
 			place.infoWindow.open(map, marker);
+			// $("#"+place.id+" .select-button").show();
 		})
 		.mouseleave(function () {
 			// marker.setAnimation(null);
@@ -175,6 +176,7 @@ function handleListHover(place, marker) {
 			$(this).css({"background-color": "transparent"});
 			$("#details-"+place.id).hide();
 			place.infoWindow.close(map, marker);
+			// $("#"+place.id+" .select-button").hide();
 		})
 		.click(function() {
 			displayDirections(place);
@@ -200,39 +202,7 @@ function populatePlaceDetails(place) {
 function addInfoWindow (place) {
 	// Create infowindow and open on marker hover.
 	place.infoWindow = new google.maps.InfoWindow(
-		{ content: "" });
-
-
-	// var infoWindow = new google.maps.InfoWindow(
-	// 	{ content: null });
-
-	// place.infoWindow = infoWindow;
-
-	// google.maps.event.addListener(marker, 'mouseover', function(evt) {
-	// 	infoWindow.open(map, marker);
-	// 	marker.setIcon(active);
-	// 	$("#"+place.id).css({"background-color": "#EEE"});
-
-	// 	getPlaceDetails(place)
-	// 	.then(
-	// 		function(response) {
-	// 			if (place.website) {
-	// 				var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address;
-	// 			}
-	// 			else {
-	// 				var content = place.name  + "<br>" + place.phone + "<br>" + place.address;
-	// 			}
-
-	// 			infoWindow.setContent(content);
-	// 		}
-	// 	);
-	// });
-
-	// google.maps.event.addListener(marker, 'mouseout', function(evt) {
-	// 	infoWindow.close(map, marker);
-	// 	marker.setIcon(inactive);
-	// 	$("#"+place.id).css({"background-color": "transparent"});
-	// });			
+		{ content: "" });			
 }
 
 
