@@ -11,7 +11,7 @@ $(document).ready(function () {
 
 	// Instantiate Google Directions API
 	directionsService = new google.maps.DirectionsService();
-	directionsDisplay = new google.maps.DirectionsRenderer();
+	directionsDisplay = new google.maps.DirectionsRenderer({draggable: true});
 	markersArray = [];
 
 	// When form submitted, initiates Place search
@@ -138,6 +138,9 @@ function displayPlace(location, delay, place) {
 			if (!place.address) {
 				populatePlaceDetails(place);
 			}
+
+			showStars();
+
 		});
 
 		google.maps.event.addListener(marker, 'mouseout', function(evt) {
@@ -168,6 +171,7 @@ function handleListHover(place, marker) {
 			}
 
 			place.infoWindow.open(map, marker);
+			showStars();
 			// $("#"+place.id+" .select-button").show();
 		})
 		.mouseleave(function () {
@@ -188,10 +192,10 @@ function populatePlaceDetails(place) {
 		.then(
 			function(response) {
 				if (place.website) {
-					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address + "<br>Business rating: " + place.rating;
+					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address + "<span class='stars'><span>" + place.rating + "</span></span>";
 				}
 				else {
-					var content = place.name  + "<br>" + place.phone + "<br>" + place.address + "<br>Business rating: " + place.rating;
+					var content = place.name  + "<br>" + place.phone + "<br>" + place.address + "<span class='stars'><span>" + place.rating + "</span></span>";
 				}
 
 				place.infoWindow.setContent(content);
@@ -226,5 +230,24 @@ function getPlaceDetails (place) {
 	})
 
 	return deferred.promise;
+}
+
+function showStars() {
+
+	$(".stars span")
+	.each(function() {
+		var val = parseFloat($(this).html());
+		if (val > 0 || val < 5) {
+			var size = Math.max(0, (Math.min(5, val))) * 16;
+			$(this).empty();
+			$(this).css({"width" : size, "display" : "block"});
+		}
+		else {
+			$(this).html("<strong>Unrated</strong>");
+			$(this).css({"background" : "none", "margin-left" : 16.5});
+			$(this).show();
+		}
+	});
+	$(".stars").css({"display" : "block"});
 }
 

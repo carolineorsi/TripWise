@@ -42,23 +42,6 @@ function checkTravelMode() {
 	}
 }
 
-// function callPlaces(request, route, counter) {
-// 	var placesService = new google.maps.places.PlacesService(map);
-// 	placesService.nearbySearch(request, function(results, status) {
-// 		if (status == google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
-// 			console.log("retry");
-// 			setTimeout(function() {
-// 				callPlaces(request, route)
-// 			}, 1000);
-// 		}
-// 		else {
-// 			processPlaces(results, status, route);
-// 			counter--;
-// 			return counter;
-// 		}
-// 	})
-// }
-
 function processPlaces(results) {
 	// For each place return, create new Place object and add to allPlaces
 	for (var j = 0; j < results.length; j++) {
