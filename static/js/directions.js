@@ -252,6 +252,8 @@ function displayDirections (place) {
 					for (var j = 0; j < steps.length; j++) {
 						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
 					}
+
+					// $("#directions").append("<div class='waypoint'><h5>" + Arrive at + "</h5></div>");
 				}
 				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
 
