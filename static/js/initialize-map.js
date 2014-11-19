@@ -29,23 +29,6 @@ $(document).ready(function () {
 });
 
 
-function handleLogin(evt) {
-	evt.preventDefault();
-
-	var email = $("#email").val();
-	var password = $("#password").val();
-
-	$.post(
-		"/login",
-		{'email': email, 'password': password},
-		function(response) {
-			console.log(response);
-			$("#login").hide();
-		}
-	);
-}
-
-
 function getLocation() {
 	// Checks for geolocation capabilities, gets location, and calls function
 	// to set the location in start field.

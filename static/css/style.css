@@ -1,5 +1,6 @@
 html, body, #map-container {
 	height: 100%;
+	width: 100%;
 	margin: 0;
 	padding: 0;
 }
@@ -21,7 +22,7 @@ html, body, #map-container {
 	padding-top: 10px;
 }
 
-#login {
+/*#login {
 	line-height: 15px;
 	position: absolute;
 	top: 50%;
@@ -29,7 +30,7 @@ html, body, #map-container {
 	width: 300px;
 	padding: 15px 20px;
 	z-index: 10;
-	/*display: inline-block;*/
+	display: inline-block;
 	display: none;
 	box-shadow: 2px 2px 2px #888;
 	border-radius: 10px;
@@ -39,7 +40,7 @@ html, body, #map-container {
 
 #login .form-group {
 	margin-bottom: 0;
-}
+}*/
 
 
 #control-bar {
@@ -141,4 +142,52 @@ span.stars span {
     background-position: 0 0;
     display: none;
     /*width: 62px;*/
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  position: relative;
+}
+.form-signin .form-signin-heading,
+{
+  margin-bottom: 10px;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-group {
+	margin-bottom: 10px;
+}
+
+.form-signin h2 {
+	margin-bottom: 20px
+}
+
+.navbar-static-top {
+	margin-bottom: 0;
+}
+
+.nav, .navbar-collapse, .navbar-header {
+	max-height: 40px;
 }

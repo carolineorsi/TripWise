@@ -1,30 +1,5 @@
-<html>
-	<head>
-		<title>TripWise</title>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="/static/css/style.css"/>
-	</head>
-	<body>
-		<div class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">TripWise</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                        {% if 'id' in session %}
-                     <li><a href="/save">Save Trip</a></li>
-                     <li><a href="/mytrips">My Trips</a></li>
-                     <li><a href="/logout">Log Out</a></li>
-                         {% else %}
-                        <li><a id="nav-login">Log In</a></li>
-                        <li><a href="/create">Create Account</a></li>
-                        {% endif %}
-
-                    </ul>
-                </div>
-            </div>
-        </div>
+{% extends 'base.html' %}
+{% block body %}
 
 		<div id="control-bar">
 			<div class="form-group">
@@ -79,23 +54,8 @@
 			</div>
 		</div>
 
-		<div id="login">
-			<h3>User Login</h3>
-			<div class="form-group">
-			<form id="login-form" name="loginform" method="post" action="index.html">
-				<label for="email">Email</label>
-				<input type="text" name="username" id="email" class="form-control">
-			     
-				<label for="password">Password</label>
-				<input type="password" name="password" id="password" class="form-control">
-			     
-				<input type="submit" name="loginbtn" id="loginbtn" class="btn btn-default" value="Log In">
-				</form>
-			</div>
-		</div>
-
-
-        <div id="map-container"></div>
+        <div id="map-container">
+        </div>
 
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdYX2uSHJsvjQhI2eJo-6peidlfFlMvIs&libraries=places"></script>
@@ -106,5 +66,5 @@
 		<script src="/static/js/model.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
 		<script src="/static/js/jquery.geocomplete.js"></script> <!-- Include jQuery Geocomplete plugin. -->
-	</body>
-</html>
+
+{% endblock %}

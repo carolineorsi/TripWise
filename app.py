@@ -25,11 +25,19 @@ def send_to_phone():
     phone.send_message(message, url)
     return url
 
+
+@app.route("/login", methods=["GET"])
+def show_login():
+    return render_template("login.html")
+
+
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form.get("email")
     password = request.form.get("password")
-    return "you did it!" + email + password
+    if email != "blach":
+        flash("Invalid email")
+    return redirect(url_for("index"))
 
 
 # @app.route("/getplaces", methods=["GET"])
