@@ -246,13 +246,12 @@ function displayDirections (place) {
 
 				var legs = response.routes[0].legs;
 				for (var i = 0; i < legs.length; i++) {
+					$("#directions").append("<h5>Leg " + (i + 1) + ":</h5>")
 
 					var steps = response.routes[0].legs[i].steps;
 					for (var j = 0; j < steps.length; j++) {
 						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
 					}
-
-					$("#directions").append("<div class='waypoint'><h5>" + " " +"</h5></div>");
 				}
 				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
 
