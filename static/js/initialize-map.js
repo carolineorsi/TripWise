@@ -2,9 +2,7 @@ $(document).ready(function () {
 	initializeMap();
 
 	// When "Get Current Location" checked, calls geolocation API
-	$("#geolocation").on('click', function() {
-		getLocation();
-	});
+	$("#geolocation").on('click', getLocation);
 
 	// Call jQuery Geocomplete to add autocomplete to start and end fields
 	$("#start, #end").geocomplete({details: "form"});
@@ -15,24 +13,38 @@ $(document).ready(function () {
 	markersArray = [];
 
 	// When form submitted, initiates Place search
-	$("#directions-form").submit(function() {
-		findPlaces()
-	});
+	$("#directions-form").submit(findPlaces);
 
 	// When "Get More Results" button clicked, calls function to get next
 	// ten results
-	$("#get-more-results").on('click', function() {
-		callDistanceMatrix();
-	});
+	$("#get-more-results").on('click', callDistanceMatrix);
+	$("#reset").on('click', clearMap);
+	$("#send-button").on('click', sendMessage);
 
-	$("#reset").on('click', function() {
-		clearMap();
-	});
+	$("#nav-login").on('click', function() {
+		$("#login").toggle();
+	})
 
-	$("#send-button").on('click', function() {
-		sendMessage()
-	});
+	$("#login-form").submit(handleLogin);
 });
+
+
+function handleLogin(evt) {
+	evt.preventDefault();
+
+	var email = $("#email").val();
+	var password = $("#password").val();
+
+	$.post(
+		"/login",
+		{'email': email, 'password': password},
+		function(response) {
+			console.log(response);
+			$("#login").hide();
+		}
+	);
+}
+
 
 function getLocation() {
 	// Checks for geolocation capabilities, gets location, and calls function

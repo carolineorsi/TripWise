@@ -4,27 +4,56 @@ html, body, #map-container {
 	padding: 0;
 }
 
+.navbar-default {
+	background-color: white;
+	z-index: 10;
+	box-shadow: 2px 2px 2px #888;
+	min-height: 40px;
+	height: 40px;
+}
+
+.navbar-brand {
+	padding: 10px;
+}
+
+.navbar-nav li a {
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+#login {
+	line-height: 15px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	padding: 15px 20px;
+	z-index: 10;
+	/*display: inline-block;*/
+	display: none;
+	box-shadow: 2px 2px 2px #888;
+	border-radius: 10px;
+	background-color: white;
+	margin: 10px;
+}
+
+#login .form-group {
+	margin-bottom: 0;
+}
+
+
 #control-bar {
 	position: absolute;
 	left: 20px;
-	top: 3%;
-	/*display: inline-block;*/
+	top: calc(3% + 40px);
 	z-index: 10;
 	background-color: white;
 	padding: 10px;
 	width: 18%;
-	max-height: 94%; 
+	max-height: calc(94% - 40px); 
 	overflow-y: scroll;
-	box-shadow: 5px 5px 5px #888;
+	box-shadow: 2px 2px 2px #888;
 	border-radius: 10px;
-}
-
-#control-bar h3 {
-	padding: 0;
-	margin-top: 5px;
-	font-family: Geneva;
-	/*color: orange;*/
-	text-align: center;
 }
 
 .form-group {

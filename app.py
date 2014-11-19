@@ -25,6 +25,12 @@ def send_to_phone():
     phone.send_message(message, url)
     return url
 
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    return "you did it!" + email + password
+
 
 # @app.route("/getplaces", methods=["GET"])
 # def get_places():
