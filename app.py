@@ -39,6 +39,10 @@ def login():
         flash("Invalid email")
     return redirect(url_for("index"))
 
+@app.route("/create", methods=["GET"])
+def show_create():
+    return render_template("create.html")
+
 
 # @app.route("/getplaces", methods=["GET"])
 # def get_places():
