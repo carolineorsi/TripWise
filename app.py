@@ -71,8 +71,13 @@ def create_account():
     password = request.form.get("password")
     phone = request.form.get("phone")
 
-
-    return redirect(url_for("index"))
+    status = users.create_new_user(firstname, lastname, email, password, phone)
+    if status == "Exists":
+        flash("Email already in database.")
+        return redirect(url_for("create_account"))
+    elif status == "Success":
+        flash("New user created. Please log in.")
+        return redirect(url_for("login"))
 
 
 # @app.route("/getplaces", methods=["GET"])

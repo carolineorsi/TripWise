@@ -1,30 +1,33 @@
 {% extends 'base.html' %}
 {% block body %}
 
-    <div class="container">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for message in messages %}
+    <div class="form-signin">
+      <form class="form-signin" method="POST">
+      <h2>Log In:</h2>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
+        </div>
+        <div class="form-group" >
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+
+      <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
       <ul class="flashes">
           <li>{{message}}</li>
       </ul>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    
     </div>
 
-    <form class="form-signin" method="POST">
-    <h2>Log In:</h2>
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
-      </div>
-      <div class="form-group" >
-        <label for="password">Password</label>
-        <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/static/js/login.js"></script>
