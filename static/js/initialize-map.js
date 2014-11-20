@@ -24,8 +24,6 @@ $(document).ready(function () {
 	$("#nav-login").on('click', function() {
 		$("#login").toggle();
 	})
-
-	$("#login-form").submit(handleLogin);
 });
 
 

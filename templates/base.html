@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/style.css" />
+    </head>
+    <body>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">TripWise</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                        {% if 'id' in session %}
+                     <li><a href="/save">Save Trip</a></li>
+                     <li><a href="/mytrips">My Trips</a></li>
+                     <li><a href="/logout">Log Out</a></li>
+                        {% else %}
+                        <li><a href="/login">Log In</a></li>
+                        <li><a href="/create">Create Account</a></li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        {% block body %}{% endblock %}
+    </body>
+</html>

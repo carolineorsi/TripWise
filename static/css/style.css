@@ -184,10 +184,14 @@ span.stars span {
 	margin-bottom: 20px
 }
 
-.navbar-static-top {
+.navbar-fixed-top {
 	margin-bottom: 0;
 }
 
 .nav, .navbar-collapse, .navbar-header {
 	max-height: 40px;
+}
+
+.container {
+	margin-top: 70px;
 }

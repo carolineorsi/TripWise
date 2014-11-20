@@ -4,6 +4,7 @@ import os
 import model
 import map_data
 import phone
+import users
 
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
@@ -35,13 +36,43 @@ def show_login():
 def login():
     email = request.form.get("email")
     password = request.form.get("password")
-    if email != "blach":
+
+    if email == "":
+        flash("Must enter email address.")
+        return redirect(url_for("login"))
+    if password == "":
+        flash("Must enter password.")
+        return redirect(url_for("login"))
+
+    email = email.lower()
+    user = model.session.query(model.User).filter_by(email = email).first()
+
+    if user is None:
+        flash("User does not exist.")
+        return redirect(url_for("login"))
+
+    if email != "blah":
         flash("Invalid email")
+        return redirect(url_for("login"))
+
     return redirect(url_for("index"))
+
 
 @app.route("/create", methods=["GET"])
 def show_create():
     return render_template("create.html")
+
+
+@app.route("/create", methods=["POST"])
+def create_account():
+    firstname = request.form.get("firstname")
+    lastname = request.form.get("lastname")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    phone = request.form.get("phone")
+
+
+    return redirect(url_for("index"))
 
 
 # @app.route("/getplaces", methods=["GET"])
