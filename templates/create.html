@@ -2,8 +2,8 @@
 {% block body %}
 
 
-    <div class="form-signin">
-      <form class="form-signin" method="POST">
+    <div class="form-create">
+      <form class="form-create" id="create-new-user" method="POST">
       <h2>Create Account:</h2>
         <div class="form-group">
           <label for="first-name">First Name</label>
@@ -28,25 +28,20 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
 
-    <div class="container">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for message in messages %}
-    <ul class="flashes">
-        <li>{{message}}</li>
-    </ul>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-    
+      <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+      <ul class="flashes">
+          <li>{{message}}</li>
+      </ul>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+      
+      </div>
     </div>
-
-
-    </div>
-
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="/static/js/login.js"></script>
 
 {% endblock %}

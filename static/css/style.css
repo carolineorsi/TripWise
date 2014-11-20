@@ -145,17 +145,16 @@ span.stars span {
     /*width: 62px;*/
 }
 
-.form-signin {
+.form-signin, .form-create {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
   position: relative;
 }
-.form-signin .form-signin-heading,
-{
+.form-signin .form-signin-heading, .form-create .form-control {
   margin-bottom: 10px;
 }
-.form-signin .form-control {
+.form-signin .form-control, .form-create .form-control{
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
@@ -164,21 +163,11 @@ span.stars span {
   padding: 10px;
   font-size: 16px;
 }
-.form-signin .form-control:focus {
+.form-signin .form-control:focus, .form-create .form-control:focus{
   z-index: 2;
 }
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
 
-.form-signin h2 {
+.form-signin h2, .form-create h2 {
 	margin-bottom: 20px
 }
 
@@ -189,3 +178,22 @@ span.stars span {
 .nav, .navbar-collapse, .navbar-header {
 	max-height: 40px;
 }
+
+
+.navbar li div.dropdown {
+	display: none; 
+	width: 20em;
+	background-color: white;
+}
+
+.navbar li:hover div.dropdown {
+	display: block;
+	position: absolute;
+	right: 0px;
+	margin: 0;
+	padding: 0; 
+}
+.navbar li:hover div.dropdown {
+	float: none; 
+}
+

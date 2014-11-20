@@ -55,6 +55,7 @@ def login():
         # TODO: check password
         flask_session['id'] = user.id
         flask_session['firstname'] = user.firstname
+        print flask_session['firstname']
         return redirect(url_for("index"))
 
 
@@ -65,8 +66,8 @@ def show_create():
 
 @app.route("/create", methods=["POST"])
 def create_account():
-    firstname = request.form.get("firstname")
-    lastname = request.form.get("lastname")
+    firstname = request.form.get("first-name")
+    lastname = request.form.get("last-name")
     email = request.form.get("email")
     password = request.form.get("password")
     phone = request.form.get("phone")
