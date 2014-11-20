@@ -1,8 +1,10 @@
 html, body, #map-container {
 	height: 100%;
 	width: 100%;
-	margin: 20px 0 0 0;
+	margin: 13px 0 0 0;
+	/*margin: 0;*/
 	padding: 0;
+	overflow: hidden;
 }
 
 .navbar-default {
@@ -59,6 +61,9 @@ html, body, #map-container {
 
 .form-group {
 	line-height: 10px;
+}
+
+.sidebar-input {
 	margin-bottom: 50px;
 }
 
@@ -122,11 +127,7 @@ html, body, #map-container {
 	display: none;
 }
 
-#submit-buttons {
-	float: right;
-}
-
-#get-more-results {
+#submit-buttons, #get-more-results {
 	float: right;
 }
 
@@ -175,9 +176,6 @@ span.stars span {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-}
-.form-group {
-	margin-bottom: 10px;
 }
 
 .form-signin h2 {
