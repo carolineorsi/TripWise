@@ -148,6 +148,7 @@ function displayPlace(location, delay, place) {
 
 		// When marker clicked, directions are updated with marker location/place as waypoint
 		google.maps.event.addListener(marker, 'click', function(evt) {
+			addWaypoint(place);
 			displayDirections(place);
 			removeMarkers();
 		});
@@ -155,6 +156,14 @@ function displayPlace(location, delay, place) {
 		handleListHover(place, marker);
 	}, delay);
 }
+
+
+function addWaypoint(place) {
+	var waypoint = new Waypoint(place.location)
+	route.waypoints.push(waypoint);
+	route.places.push(place);
+}
+
 
 function handleListHover(place, marker) {
 	// When mouse hovers on list item, changes marker properties to highlight associated marker.
@@ -181,6 +190,7 @@ function handleListHover(place, marker) {
 			// $("#"+place.id+" .select-button").hide();
 		})
 		.click(function() {
+			addWaypoint(place);
 			displayDirections(place);
 			removeMarkers();
 		});

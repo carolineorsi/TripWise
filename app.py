@@ -6,6 +6,7 @@ import model
 import map_data
 import phone
 import users
+import json
 
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
@@ -41,18 +42,18 @@ def login():
     if email == "":
         # flash("Must enter email address.")
         # return redirect(url_for("login"))
-        return "didn't work"
+        return "Enter email"
     if password == "":
         # flash("Must enter password.")
         # return redirect(url_for("login"))
-        return "didn't work"
+        return "Enter password"
 
     user = model.session.query(model.User).filter_by(email=email).first()
 
     if user is None:
         # flash("User does not exist.")
         # return redirect(url_for("login"))
-        return "didn't work"
+        return "No user by that name."
     else:
         # TODO: check password
         flask_session['id'] = user.id
@@ -91,6 +92,13 @@ def create_account():
 
 @app.route("/save", methods=["POST"])
 def save_route():
+    route = users.save_route_to_db(request.form.get("name"),
+                                request.form.get("start"),
+                                request.form.get("end"),
+                                request.form.get("travel_mode"),
+                                flask_session['id'])
+    users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
+
     return "here"
 
 

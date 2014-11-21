@@ -1,4 +1,5 @@
 import model
+import json
 
 def authenticate_user(email, password):
 	# email = email.lower()
@@ -19,13 +20,52 @@ def create_new_user(firstname, lastname, email, password, phone):
 	if model.session.query(model.User).filter_by(email = email).first() is not None:
 		return None
 	else:
-		new_user = model.User()
-		new_user.firstname = firstname
-		new_user.lastname = lastname
-		new_user.email = email
-		new_user.password = password
-		new_user.phone = phone
-		model.session.add(new_user)
+		user = model.User()
+		user.firstname = firstname
+		user.lastname = lastname
+		user.email = email
+		user.password = password
+		user.phone = phone
+		model.session.add(user)
 		model.session.commit()
 
-		return new_user
+		return user
+
+
+def save_route_to_db(name, start, end, travel_mode, user):
+
+	# Create new route
+	route = model.Route()
+	route.name = name
+	route.user_id = user
+	route.start = start
+	route.end = end
+	route.travel_mode = travel_mode
+	model.session.add(route)
+	model.session.commit()
+
+	print "success"
+	return route
+
+
+def save_waypoints_to_db(route, places, user):
+	places_dict = json.loads(places)
+	
+	#Create new place for each item in places
+	for stopnum, place in places_dict.iteritems():
+		waypoint = model.Waypoint()
+		waypoint.name = place['name']
+		waypoint.address = place['address']
+		waypoint.route_id = route.id
+		waypoint.user_id = user
+		waypoint.lat = place['lat']
+		waypoint.lng = place['lng']
+		waypoint.google_id = place['id']
+		waypoint.stopnum = int(stopnum) + 1
+		waypoint.stopover = place['stopover']
+		model.session.add(waypoint)
+
+	model.session.commit()
+	print "double success"
+	pass
+

@@ -230,14 +230,7 @@ function displayTopTen () {
 }
 
 function displayDirections (place) {
-	// When a marker is clicked, this function is called to add the point as a
-	// waypoint and show new directions in the control bar.
-	var waypoint = new Waypoint(place.location)
-	route.waypoints.push(waypoint);
-
-	for (var i = 0; i < markersArray.length; i++) {
-		markersArray[i].setMap(null);
-	}
+	// This function is called to show new directions in the control bar.
 
 	route.getDirections()
 		.then(

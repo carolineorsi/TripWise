@@ -3,6 +3,7 @@ function Route(start, end, travelMode) {
 	this.end = end;					// User's ending point
 	this.travelMode = travelMode;	// User's travel mode
 	this.waypoints = [];			// Waypoints along route; populated when user chooses a Place
+	this.places = [];				// Chosen places along route
 	this.polyline = [];				// Array of latlngs that comprise the route polyline
 	this.initialDuration = null;	// Initial route duration
 	this.initialDistance = null;	// Initial route distance

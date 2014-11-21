@@ -75,23 +75,26 @@ function handleSaveRoute(evt) {
 
 	// TODO: Handle case where route hasn't been defined yet.
 	var name = $("#route-name").val();
-	var start_name = route.start;
-	var end_name = route.end;
-	var travel_mode = route.travelMode;
 
-	for (var i = 0; i < route.waypoints.length; i++) {
-		
+	var places = {};
+	for (var i = 0; i < route.places.length; i++) {
+		places[i] = {
+			'name': route.places[i].name,
+			'address': route.places[i].address,
+			'id': route.places[i].id,
+			'lat': route.places[i].lat,
+			'lng': route.places[i].lng,
+			'stopover': true
+		};
 	}
-
-
-	console.log(name, start_name, end_name, travel_mode);
 
 	$.post(
 		"/save",
 		{'name': name,
-		'start_name': start_name,
-		'end_name': end_name,
-		'travel_mode': travel_mode},
+		'start': route.start,
+		'end': route.end,
+		'travel_mode': route.travelMode,
+		'places': JSON.stringify(places)},
 		function(response){
 			console.log(response);
 		}
