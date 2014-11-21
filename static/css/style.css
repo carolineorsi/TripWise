@@ -24,26 +24,6 @@ html, body, #map-container {
 	padding-top: 10px;
 }
 
-/*#login {
-	line-height: 15px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 300px;
-	padding: 15px 20px;
-	z-index: 10;
-	display: inline-block;
-	display: none;
-	box-shadow: 2px 2px 2px #888;
-	border-radius: 10px;
-	background-color: white;
-	margin: 10px;
-}
-
-#login .form-group {
-	margin-bottom: 0;
-}*/
-
 
 #control-bar {
 	position: absolute;
@@ -151,18 +131,21 @@ span.stars span {
   margin: 0 auto;
   position: relative;
 }
+
 .form-signin .form-signin-heading, .form-create .form-control {
   margin-bottom: 10px;
 }
+
 .form-signin .form-control, .form-create .form-control{
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+  padding: 8px;
+  font-size: 14px;
 }
+
 .form-signin .form-control:focus, .form-create .form-control:focus{
   z-index: 2;
 }
@@ -197,3 +180,6 @@ span.stars span {
 	float: none; 
 }
 
+li.logged-in {
+	display: none;
+}

@@ -1,6 +1,11 @@
 $(document).ready(function () {
-	$("#login-user").submit(handleLogin);
+	$("#login-user-dropdown").submit(handleLogin);
 	$("#create-new-user").submit(handleCreate);
+
+	$("#logout").click(function() {
+		$(".logged-in").hide();
+		$(".logged-out").show();
+	})
 });
 
 
@@ -15,6 +20,8 @@ function handleLogin(evt) {
 		{'email': email, 'password': password},
 		function(response) {
 			console.log(response);
+			$(".logged-in").show();
+			$(".logged-out").hide();
 		}
 	);
 }

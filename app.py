@@ -28,47 +28,49 @@ def send_to_phone():
     return url
 
 
-@app.route("/login", methods=["GET"])
-def show_login():
-    return render_template("login.html")
+# @app.route("/login", methods=["GET"])
+# def show_login():
+#     return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
-    email = request.form.get("email")
+    email = request.form.get("email").lower()
     password = request.form.get("password")
 
     if email == "":
-        flash("Must enter email address.")
-        return redirect(url_for("login"))
+        # flash("Must enter email address.")
+        # return redirect(url_for("login"))
+        return "didn't work"
     if password == "":
-        flash("Must enter password.")
-        return redirect(url_for("login"))
+        # flash("Must enter password.")
+        # return redirect(url_for("login"))
+        return "didn't work"
 
-    email = email.lower()
-    user = model.session.query(model.User).filter_by(email = email).first()
+    user = model.session.query(model.User).filter_by(email=email).first()
 
     if user is None:
-        flash("User does not exist.")
-        return redirect(url_for("login"))
+        # flash("User does not exist.")
+        # return redirect(url_for("login"))
+        return "didn't work"
     else:
         # TODO: check password
         flask_session['id'] = user.id
         flask_session['firstname'] = user.firstname
         print flask_session['firstname']
-        return redirect(url_for("index"))
+        return "done"
 
 
-@app.route("/create", methods=["GET"])
-def show_create():
-    return render_template("create.html")
+# @app.route("/create", methods=["GET"])
+# def show_create():
+#     return render_template("create.html")
 
 
 @app.route("/create", methods=["POST"])
 def create_account():
     firstname = request.form.get("first-name")
     lastname = request.form.get("last-name")
-    email = request.form.get("email")
+    email = request.form.get("email").lower()
     password = request.form.get("password")
     phone = request.form.get("phone")
 
@@ -79,6 +81,13 @@ def create_account():
     elif status == "Success":
         flash("New user created. Please log in.")
         return redirect(url_for("login"))
+
+
+@app.route("/save", methods=["GET"])
+def show_save():
+    return render_template("save.html")
+
+
 
 
 @app.route("/logout")
