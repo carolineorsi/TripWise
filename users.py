@@ -27,5 +27,5 @@ def create_new_user(firstname, lastname, email, password, phone):
 		new_user.phone = phone
 		model.session.add(new_user)
 		model.session.commit()
-		status = "Success"
+
 		return new_user

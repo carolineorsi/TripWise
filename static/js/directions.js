@@ -235,6 +235,10 @@ function displayDirections (place) {
 	var waypoint = new Waypoint(place.location)
 	route.waypoints.push(waypoint);
 
+	for (var i = 0; i < markersArray.length; i++) {
+		markersArray[i].setMap(null);
+	}
+
 	route.getDirections()
 		.then(
 			function (response) {
@@ -277,27 +281,3 @@ function sendMessage() {
 		}
 	);
 }
-
-// AJAX CALL TO MY SERVER-SIDE SCRIPTS
-// function ajaxCall(route, radius) {
-// 			var polylineArray = [];
-
-// 			for (i = 0; i < route.polyline.length; i++) {
-// 				var latlng = (route.polyline[i].k + "," + route.polyline[i].B)
-// 				polylineArray.push(latlng);
-// 			}
-
-// 			$.get("/getplaces", {
-// 	 					'polyline': JSON.stringify(polylineArray),
-// 	 					'initialDuration': route.initialDuration,
-// 	 					'initialDistance': route.initialDistance,
-// 	 					'start': route.start,
-// 	 					'end': route.end,
-// 	 					'keyword': route.keyword,
-// 	 					'radius': radius
-// 	 				},
-// 	  				function(result) {
-// 						console.log(result);
-// 					});
-// }
-

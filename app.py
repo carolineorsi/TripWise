@@ -84,10 +84,14 @@ def create_account():
 
 
 
-@app.route("/save", methods=["GET"])
-def show_save():
-    return render_template("save.html")
+# @app.route("/save", methods=["GET"])
+# def show_save():
+#     return render_template("save.html")
 
+
+@app.route("/save", methods=["POST"])
+def save_route():
+    return "here"
 
 
 

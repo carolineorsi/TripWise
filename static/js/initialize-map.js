@@ -75,15 +75,19 @@ function clearMap(){
 	// Clears directions and markers from map, empties control bar results,
 	// and clears search object.
 	directionsDisplay.setMap(null);
-	for (var i = 0; i < markersArray.length; i++) {
-		markersArray[i].setMap(null);
-	}
-	markersArray.length = 0;
+	removeMarkers();
 	$("#list-container").empty().removeClass("text-alert");
 	$("#directions").empty().removeClass("text-alert");
 	search = null; // TODO: change this to create new instance of search instead (maybe store search objects in array?)
 
 	$("#find-more").hide();
+}
+
+function removeMarkers() {
+	for (var i = 0; i < markersArray.length; i++) {
+		markersArray[i].setMap(null);
+	}
+	markersArray.length = 0;
 }
 
 
@@ -145,6 +149,7 @@ function displayPlace(location, delay, place) {
 		// When marker clicked, directions are updated with marker location/place as waypoint
 		google.maps.event.addListener(marker, 'click', function(evt) {
 			displayDirections(place);
+			removeMarkers();
 		});
 
 		handleListHover(place, marker);
@@ -177,6 +182,7 @@ function handleListHover(place, marker) {
 		})
 		.click(function() {
 			displayDirections(place);
+			removeMarkers();
 		});
 }
 

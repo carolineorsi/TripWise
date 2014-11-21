@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	$("#login-user-dropdown").submit(handleLogin);
 	$("#create-new-user").submit(handleCreate);
+	$("#save-route").submit(handleSaveRoute);
 
 	$("#logout").click(function() {
 		$(".logged-in").hide();
@@ -68,3 +69,37 @@ function handleCreate(evt) {
 		);
 	} 
 }
+
+function handleSaveRoute(evt) {
+	evt.preventDefault();
+
+	// TODO: Handle case where route hasn't been defined yet.
+	var name = $("#route-name").val();
+	var start_name = route.start;
+	var end_name = route.end;
+	var travel_mode = route.travelMode;
+
+	for (var i = 0; i < route.waypoints.length; i++) {
+		
+	}
+
+
+	console.log(name, start_name, end_name, travel_mode);
+
+	$.post(
+		"/save",
+		{'name': name,
+		'start_name': start_name,
+		'end_name': end_name,
+		'travel_mode': travel_mode},
+		function(response){
+			console.log(response);
+		}
+	);
+
+}
+
+
+
+
+
