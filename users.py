@@ -17,16 +17,15 @@ def authenticate_user(email, password):
 
 def create_new_user(firstname, lastname, email, password, phone):
 	if model.session.query(model.User).filter_by(email = email).first() is not None:
-		status = "Exists"
+		return None
 	else:
-		newUser = model.User()
-		newUser.firstname = firstname
-		newUser.lastname = lastname
-		newUser.email = email
-		newUser.password = password
-		newUser.phone = phone
-		model.session.add(newUser)
+		new_user = model.User()
+		new_user.firstname = firstname
+		new_user.lastname = lastname
+		new_user.email = email
+		new_user.password = password
+		new_user.phone = phone
+		model.session.add(new_user)
 		model.session.commit()
 		status = "Success"
-
-	return status
+		return new_user

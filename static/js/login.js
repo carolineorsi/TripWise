@@ -19,9 +19,9 @@ function handleLogin(evt) {
 		"/login",
 		{'email': email, 'password': password},
 		function(response) {
-			console.log(response);
 			$(".logged-in").show();
 			$(".logged-out").hide();
+			$("#user-firstname").html("<a>Hi " + response + "!</a>");
 		}
 	);
 }
@@ -29,24 +29,42 @@ function handleLogin(evt) {
 
 function handleCreate(evt) {
 	evt.preventDefault();
+	$("#login-alert").html("");
 
-	var email = $("#email").val();
-	var password = $("#password").val();
+	var email = $("#new-email").val();
+	var password = $("#new-password").val();
 	var firstname = $("#first-name").val();
 	var lastname = $("#last-name").val();
 	var phone = $("#phone").val();
 
-	console.log(firstname);
-
-	$.post(
-		"/create",
-		{'email': email,
-		'password': password,
-		'firstname': firstname,
-		'lastname': lastname,
-		'phone': phone},
-		function(response) {
-			console.log(response);
-		}
-	);
+	if (email == "") {
+		$("#login-alert").html("Please enter an email address.");
+	}
+	else if (password == "") {
+		$("#login-alert").html("Please enter a password.");
+	}
+	else if (phone == "") {
+		$("#login-alert").html("Please enter a phone number.");
+	}
+	else {
+		$.post(
+			"/create",
+			{'email': email,
+			'password': password,
+			'firstname': firstname,
+			'lastname': lastname,
+			'phone': phone},
+			function(response) {
+				if (response == "User Exists") {
+					$("#login-alert").html("User with that email already exists.");
+				}
+				else {
+					alert("User added!")
+					$(".logged-in").show();
+					$(".logged-out").hide();
+					$("#user-firstname").html("<a>Hi " + response + "!</a>");
+				}
+			}
+		);
+	} 
 }

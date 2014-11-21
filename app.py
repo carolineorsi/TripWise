@@ -57,8 +57,7 @@ def login():
         # TODO: check password
         flask_session['id'] = user.id
         flask_session['firstname'] = user.firstname
-        print flask_session['firstname']
-        return "done"
+        return user.firstname
 
 
 # @app.route("/create", methods=["GET"])
@@ -68,19 +67,21 @@ def login():
 
 @app.route("/create", methods=["POST"])
 def create_account():
-    firstname = request.form.get("first-name")
-    lastname = request.form.get("last-name")
-    email = request.form.get("email").lower()
+    firstname = request.form.get("firstname")
+    lastname = request.form.get("lastname")
+    email = request.form.get("email").lower() 
     password = request.form.get("password")
-    phone = request.form.get("phone")
+    phone = request.form.get("phone").replace(".","").replace("/","")
 
-    status = users.create_new_user(firstname, lastname, email, password, phone)
-    if status == "Exists":
-        flash("Email already in database.")
-        return redirect(url_for("create_account"))
-    elif status == "Success":
-        flash("New user created. Please log in.")
-        return redirect(url_for("login"))
+    new_user = users.create_new_user(firstname, lastname, email, password, phone)
+
+    if new_user:
+        flask_session['id'] = new_user.id
+        flask_session['firstname'] = new_user.firstname
+        return new_user.firstname
+    else:
+        return "User Exists"
+
 
 
 @app.route("/save", methods=["GET"])

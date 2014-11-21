@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="form-signin">
+      <form class="form-signin" id="save-route" method="POST">
+      <h2>Save Route</h2>
+        <div class="form-group">
+          <input type="text" name="route-name" class="form-control" id="route-name" placeholder="Enter route name">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+
+      <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+      <ul class="flashes">
+          <li>{{message}}</li>
+      </ul>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+{% endblock %}

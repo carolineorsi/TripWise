@@ -13,7 +13,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     <!-- <div class="logged-in"> -->
-                         <li class="logged-in"><a>Hi {{ session.firstname }}!</a></li>
+                         <li class="logged-in" id="user-firstname"></li>
                          <li class="logged-in"><a class="logged-in" href="/save">Save Trip</a>
                             <div class="form-signin dropdown">
                               <form class="form-signin" id="save-route" method="POST">
@@ -65,17 +65,18 @@
                                 </div>
                                 <div class="form-group">
                                   <label for="email">Email Address</label>
-                                  <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
+                                  <input type="email" name="email" class="form-control" id="new-email" placeholder="Enter email">
                                 </div>
                                 <div class="form-group" >
                                   <label for="password">Password</label>
-                                  <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                                  <input type="password" name="password" class="form-control" id="new-password" placeholder="Password">
                                 </div>
                                 <div class="form-group" >
                                   <label for="phone">Cell Phone Number</label>
                                   <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone">
                                 </div>
                                 <button type="submit" class="btn btn-default">Submit</button>
+                                <div id="login-alert"></div>
                               </form>
                             </div>
                         </li>
