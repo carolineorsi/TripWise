@@ -102,6 +102,12 @@ def save_route():
     return status
 
 
+@app.route("/list")
+def list_routes():
+    route_list = users.get_routes_by_user(flask_session['id'])
+    return render_template("list.html", route_list=route_list)
+
+
 
 @app.route("/logout")
 def logout():
