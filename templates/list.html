@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 {% block body %}
-
+	<p>.</p>
+	<p>.</p>
+	<p>.</p>
 	<div id="route-list">
 		<ul>
 			{% for route in route_list %}
-			<li>route.name</li>
+			<div>{{ route.name }}: {{ route.start }} to {{ route.end }}</div>
+				{% for waypoint in route.waypoints %}
+				<li>{{ waypoint.name }}</li>
+				{% endfor %}
 			{% endfor %}
 		</ul>
 	</div>
