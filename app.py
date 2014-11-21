@@ -97,9 +97,9 @@ def save_route():
                                 request.form.get("end"),
                                 request.form.get("travel_mode"),
                                 flask_session['id'])
-    users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
+    status = users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
 
-    return "here"
+    return status
 
 
 

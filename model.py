@@ -30,16 +30,12 @@ class Route(Base):
 	name = Column(String(60), nullable=False)
 	user_id = Column(Integer, ForeignKey('users.id'))
 	start = Column(String(250), nullable=False)
-	# start_lat = Column(Float, nullable=False)
-	# start_lng = Column(Float, nullable=False)
 	end = Column(String(250), nullable=False)
-	# end_lat = Column(Float, nullable=False)
-	# end_lng = Column(Float, nullable=False)
 	travel_mode = Column(String(10))
 
 	# __table_args__ = (CheckConstraint(travel_mode.in_(["driving","biking","walking"])))
 
-	user = relationship("User", backref=backref("users", order_by=id))
+	user = relationship("User", backref=backref("routes", order_by=id))
 
 
 class Waypoint(Base):
@@ -56,8 +52,8 @@ class Waypoint(Base):
 	stopnum = Column(Integer)
 	stopover = Column(Boolean)
 
-	route = relationship("Route", backref=backref("routes", order_by=id))
-	user = relationship("Route", backref=backref("users", order_by=id))
+	route = relationship("Route", backref=backref("waypoints", order_by=id))
+	user = relationship("User", backref=backref("waypoints", order_by=id))
 
 
 def connect():

@@ -44,7 +44,6 @@ def save_route_to_db(name, start, end, travel_mode, user):
 	model.session.add(route)
 	model.session.commit()
 
-	print "success"
 	return route
 
 
@@ -66,6 +65,13 @@ def save_waypoints_to_db(route, places, user):
 		model.session.add(waypoint)
 
 	model.session.commit()
-	print "double success"
-	pass
+	return "Success"
+
+
+def get_routes_by_user(user_id):
+	user = model.session.query(model.User).filter_by(id=user_id).first()
+	routes = user.routes
+	for route in routes:
+		waypoints = route.waypoints
+		print waypoints
 

@@ -96,7 +96,12 @@ function handleSaveRoute(evt) {
 		'travel_mode': route.travelMode,
 		'places': JSON.stringify(places)},
 		function(response){
-			console.log(response);
+			if (response == "Success") {
+				alert("Your route has been added!");
+			}
+			else {
+				console.log(response);
+			}
 		}
 	);
 
