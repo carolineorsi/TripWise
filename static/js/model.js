@@ -33,8 +33,13 @@ function Route(start, end, travelMode) {
 	this.getPolyline = function getPolyline(directions) {
 		// Decodes directions polyline and identifies search points and radius
 		this.polyline = google.maps.geometry.encoding.decodePath(directions.routes[0].overview_polyline);
-		this.initialDuration = directions.routes[0].legs[0].duration.value;
-		this.initialDistance = directions.routes[0].legs[0].distance.value;
+		this.initialDuration = 0;
+		this.initialDistance = 0;
+
+		for (var i = 0; i < directions.routes[0].legs.length; i++) {
+			this.initialDuration += directions.routes[0].legs[0].duration.value;
+			this.initialDistance += directions.routes[0].legs[0].distance.value;
+		}
 	};
 }
 

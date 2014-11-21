@@ -81,7 +81,7 @@ html, body, #map-container {
 	padding-right: 3px;
 }
 
-#send-to-phone {
+#directions-todo {
 	display: none;
 }
 
@@ -107,7 +107,7 @@ html, body, #map-container {
 	display: none;
 }
 
-#submit-buttons, #get-more-results {
+.control-buttons {
 	float: right;
 }
 

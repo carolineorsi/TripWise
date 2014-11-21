@@ -11,6 +11,7 @@ $(document).ready(function () {
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer({draggable: true});
 	markersArray = [];
+	route = null;
 
 	// When form submitted, initiates Place search
 	$("#directions-form").submit(findPlaces);
@@ -20,10 +21,19 @@ $(document).ready(function () {
 	$("#get-more-results").on('click', callDistanceMatrix);
 	$("#reset").on('click', clearMap);
 	$("#send-button").on('click', sendMessage);
+	$("#add-stop").on('click', addStop);
 
 	$("#nav-login").on('click', function() {
 		$("#login").toggle();
 	})
+
+	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+	// 	route.getpolyline;
+	// 	search.getSearchPoints(route);
+	// 	search.getPlaces();
+	// 	console.log("echeck");
+	// });
+
 });
 
 
@@ -78,7 +88,10 @@ function clearMap(){
 	removeMarkers();
 	$("#list-container").empty().removeClass("text-alert");
 	$("#directions").empty().removeClass("text-alert");
+	$("#directions-todo").hide();
+	$("#start, #end").removeAttr("disabled");
 	search = null; // TODO: change this to create new instance of search instead (maybe store search objects in array?)
+	route = null;
 
 	$("#find-more").hide();
 }
@@ -179,7 +192,6 @@ function handleListHover(place, marker) {
 
 			place.infoWindow.open(map, marker);
 			showStars();
-			// $("#"+place.id+" .select-button").show();
 		})
 		.mouseleave(function () {
 			// marker.setAnimation(null);
@@ -187,7 +199,6 @@ function handleListHover(place, marker) {
 			$(this).css({"background-color": "transparent"});
 			$("#details-"+place.id).hide();
 			place.infoWindow.close(map, marker);
-			// $("#"+place.id+" .select-button").hide();
 		})
 		.click(function() {
 			addWaypoint(place);

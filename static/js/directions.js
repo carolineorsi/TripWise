@@ -1,13 +1,16 @@
 function findPlaces(evt) {
 	event.preventDefault();
-	clearMap();
+	// clearMap();
 
-	// Create route object based on user's input.
-	route = new Route(
-		document.getElementById('start').value,
-		document.getElementById('end').value,
-		checkTravelMode()
-	);
+	if (!route) {
+		// Create route object based on user's input.
+		route = new Route(
+			document.getElementById('start').value,
+			document.getElementById('end').value,
+			checkTravelMode()
+		);
+		$("#start, #end").attr("disabled", "disabled");
+	}
 
 	// Create search object based on user's input.
 	search = new Search(
@@ -20,13 +23,13 @@ function findPlaces(evt) {
 			function (response) {
 				route.getPolyline(response);
 				return search.getSearchPoints(route);
+				// TODO: add intermediate button to confirm route and add keyword before calling getPlaces
 			}
 		)
 		.then(function () {
 				search.getPlaces();
 			}
 		);
-
 }
 
 function checkTravelMode() {
@@ -243,18 +246,19 @@ function displayDirections (place) {
 
 				var legs = response.routes[0].legs;
 				for (var i = 0; i < legs.length; i++) {
-					$("#directions").append("<h5>Leg " + (i + 1) + ":</h5>")
 
 					var steps = response.routes[0].legs[i].steps;
 					for (var j = 0; j < steps.length; j++) {
 						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
 					}
 
-					// $("#directions").append("<div class='waypoint'><h5>" + Arrive at + "</h5></div>");
+					if (i < route.places.length) {
+						$("#directions").append("<div class='waypoint'><h5>Stop " + (i + 1) + ": " + route.places[i].name + "</h5></div>");
+					}
 				}
 				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
 
-				$("#send-to-phone").show();
+				$("#directions-todo").show();
 			},
 			function (status) {
 				console.log(status);
@@ -273,4 +277,12 @@ function sendMessage() {
 			console.log(response);
 		}
 	);
+}
+
+function addStop() {
+	$("#list-container").empty().removeClass("text-alert");
+	$("#directions").empty().removeClass("text-alert");
+	$("#directions-todo").hide();
+
+	$("#find-more").hide();
 }
