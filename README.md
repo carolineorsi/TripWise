@@ -50,6 +50,7 @@ The app will take input from the user (starting point, ending point, and a keywo
   - ~~When second search is completed, use existing route~~
   - ~~Optimize waypoints~~
   - ~~Reorder route.places so that they are in the proper order when the route is optimized.~~
+  - NEED TO FIX ERROR with second waypoint search... does not recalculate time added properly.
 
 ####Additional Features to Add:
 - ~~Autocomplete of input fields~~

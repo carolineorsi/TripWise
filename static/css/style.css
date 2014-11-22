@@ -183,3 +183,11 @@ span.stars span {
 li.logged-in {
 	display: none;
 }
+#route-list {
+	margin-top: 50px;
+}
+
+#route-list div {
+	border-bottom: 2px solid #EEE;
+	padding-left: 10px;
+}

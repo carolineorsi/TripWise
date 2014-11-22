@@ -38,8 +38,8 @@ def save_route_to_db(name, start, end, travel_mode, user):
 	route = model.Route()
 	route.name = name
 	route.user_id = user
-	route.start = start
-	route.end = end
+	route.start = start.title()
+	route.end = end.title()
 	route.travel_mode = travel_mode
 	model.session.add(route)
 	model.session.commit()

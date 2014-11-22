@@ -38,8 +38,8 @@ function Route(start, end, travelMode) {
 		this.initialDistance = 0;
 
 		for (var i = 0; i < directions.routes[0].legs.length; i++) {
-			this.initialDuration += directions.routes[0].legs[0].duration.value;
-			this.initialDistance += directions.routes[0].legs[0].distance.value;
+			this.initialDuration += directions.routes[0].legs[i].duration.value;
+			this.initialDistance += directions.routes[0].legs[i].distance.value;
 		}
 	};
 
