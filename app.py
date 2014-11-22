@@ -1,5 +1,6 @@
 from flask import Flask, request, session, render_template, g, redirect, url_for, flash
 from flask import session as flask_session
+from passlib.hash import sha256_crypt
 import jinja2
 import os
 import model
@@ -20,13 +21,22 @@ def index():
 @app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
     message = request.args.get('message')
-    saddr = request.args.get('start')
-    daddr = request.args.get('destination')
+    start = request.args.get('start')
+    end = request.args.get('destination')
+    places = json.loads(request.args.get('places'))
     directionsmode = request.args.get('directionsmode')
 
-    url = phone.build_url(saddr, daddr, directionsmode)
-    phone.send_message(message, url)
-    return url
+    addresses = [start]
+    for i in range(len(places.keys())):
+        key = unicode(i)
+        addresses.append(places[key])
+    addresses.append(end)
+
+    for i in range(len(addresses) - 1):
+        url = phone.build_url(addresses[i], addresses[i + 1], directionsmode)
+        message = "Leg %d: " % (i + 1)
+        phone.send_message(message, url)
+    return "done"
 
 
 # @app.route("/login", methods=["GET"])
@@ -37,16 +47,10 @@ def send_to_phone():
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form.get("email").lower()
-    password = request.form.get("password")
-
     if email == "":
         # flash("Must enter email address.")
         # return redirect(url_for("login"))
-        return "Enter email"
-    if password == "":
-        # flash("Must enter password.")
-        # return redirect(url_for("login"))
-        return "Enter password"
+        return "Enter email" # TODO: handle this differently
 
     user = model.session.query(model.User).filter_by(email=email).first()
 
@@ -54,11 +58,13 @@ def login():
         # flash("User does not exist.")
         # return redirect(url_for("login"))
         return "No user by that name."
-    else:
-        # TODO: check password
+
+    if sha256_crypt.verify(request.form.get("password"), user.password):
         flask_session['id'] = user.id
         flask_session['firstname'] = user.firstname
         return user.firstname
+    else:
+        return "invalid password"
 
 
 # @app.route("/create", methods=["GET"])
@@ -71,10 +77,10 @@ def create_account():
     firstname = request.form.get("firstname")
     lastname = request.form.get("lastname")
     email = request.form.get("email").lower() 
-    password = request.form.get("password")
+    hashed_password = sha256_crypt.encrypt(request.form.get("password"))
     phone = request.form.get("phone").replace(".","").replace("/","")
 
-    new_user = users.create_new_user(firstname, lastname, email, password, phone)
+    new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone)
 
     if new_user:
         flask_session['id'] = new_user.id

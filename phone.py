@@ -13,7 +13,7 @@ app = Flask(__name__)
 def send_message(msg, url):
     client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     number_to_text = "+18029890078"
-    text_body = msg + " " + url
+    text_body = msg + url
 
     message = client.messages.create(from_=TWILIO_NUMBER,
                                     to=number_to_text,

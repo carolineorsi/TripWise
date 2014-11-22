@@ -72,9 +72,5 @@ def get_routes_by_user(user_id):
 	user = model.session.query(model.User).filter_by(id=user_id).first()
 	routes = user.routes
 
-	# for route in routes:
-	# 	for waypoint in route.waypoints:
-	# 		print waypoint.name
-
 	return routes
 
