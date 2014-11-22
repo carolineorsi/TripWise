@@ -39,11 +39,11 @@ The app will take input from the user (starting point, ending point, and a keywo
     UPDATE: NEED TO FORMAT DIRECTIONS~~
 
 6. Add "Send to Phone" button
-	- When route is updated, add a Send to Phone button that makes an AJAX call to Flask
-    UPDATE: 
-	- Data to send in GET request: route information, user's phone number
-	- Write Python script using Twilio API to send a URL to user's phone number with a link to the route
-	- Format the URL to open directly in Google Maps App on phone
+	- ~~When route is updated, add a Send to Phone button that makes an AJAX call to Flask~~ 
+	- ~~Data to send in GET request: route information, user's phone number~~
+	- ~~Write Python script using Twilio API to send a URL to user's phone number with a link to the route~~
+	- ~~Format the URL to open directly in Google Maps App on phone~~
+  - TODO: Use user's phone number if logged in, otherwise prompt user for phone.
 
 7. Allow multiple waypoints
   - ~~Update search button so that it doesn't clear route.~~
