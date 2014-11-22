@@ -24,6 +24,11 @@ html, body, #map-container {
 	padding-top: 10px;
 }
 
+#reset {
+	/*background-color: #C4E8FF;*/
+	background-color: #DDD;
+}
+
 
 #control-bar {
 	position: absolute;

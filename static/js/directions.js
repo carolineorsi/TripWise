@@ -1,6 +1,5 @@
 function findPlaces(evt) {
 	event.preventDefault();
-	$(".initial-search").hide();
 	// clearMap();
 
 	if (!route) {
@@ -213,6 +212,8 @@ function displayTopTen () {
 		$("#get-more-results").show();
 	}
 
+	$(".initial-search").hide();
+
 	// For each of ten places, display in results div and add to map.
 	for (var i = 0; i < maxResult; i++) {
 		place = search.places[search.sortedPlaces[i][1]].place;
@@ -292,6 +293,7 @@ function sendMessage() {
 }
 
 function addStop() {
+	removeMarkers();
 	$("#list-container").empty().removeClass("text-alert");
 	$("#directions").empty().removeClass("text-alert");
 	$("#directions-todo").hide();

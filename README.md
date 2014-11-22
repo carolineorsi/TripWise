@@ -43,21 +43,29 @@ The app will take input from the user (starting point, ending point, and a keywo
 	- ~~Data to send in GET request: route information, user's phone number~~
 	- ~~Write Python script using Twilio API to send a URL to user's phone number with a link to the route~~
 	- ~~Format the URL to open directly in Google Maps App on phone~~
-  - TODO: Use user's phone number if logged in, otherwise prompt user for phone.
 
 7. Allow multiple waypoints
   - ~~Update search button so that it doesn't clear route.~~
   - ~~When second search is completed, use existing route~~
   - ~~Optimize waypoints~~
   - ~~Reorder route.places so that they are in the proper order when the route is optimized.~~
-  - NEED TO FIX ERROR with second waypoint search... does not recalculate time added properly.
+  - ~~NEED TO FIX ERROR with second waypoint search... does not recalculate time added properly.~~
+
+8. Remaining To Dos:
+  - Fix button alignment
+  - Add button to redo search if don't like results (without clearing the map/route)
+  - Make list of saved trip pop up in main screen
+  - When clicking on saved trip, rebuild route
+  - When saving trip, ask if want to overwrite existing trip or save as new trip
+  - Use user's phone number to send to phone if logged in, otherwise prompt user for phone.
+  - Keep user logged in when page reloads.
 
 ####Additional Features to Add:
 - ~~Autocomplete of input fields~~
 - Geolocation to allow user to input current location as starting point
-- User login feature to allow user to save routes
-- Multiple waypoint feature
+- ~~User login feature to allow user to save routes~~
+- ~~Multiple waypoint feature~~
 - Draggable routes, so that user can specify route preference.
-- Ratings for business, and possibly a way to sort by rating or color markers based on rating.
+- ~~Ratings for business, and possibly a way to sort by rating or color markers based on rating.~~
 - ~~Allow user to specify mode of transportation (walking, driving)~~
 - ~~Add "open now" checkbox~~
