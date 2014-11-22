@@ -32,10 +32,15 @@ def send_to_phone():
         addresses.append(places[key])
     addresses.append(end)
 
+    phone_num = "4157309275"
+    if 'id' in flask_session:
+        user = model.session.query(model.User).filter_by(id=flask_session['id']).first()
+        phone_num = user.phone
+
     for i in range(len(addresses) - 1):
         url = phone.build_url(addresses[i], addresses[i + 1], directionsmode)
         message = "Leg %d: " % (i + 1)
-        phone.send_message(message, url)
+        phone.send_message(message, url, phone_num)
     return "done"
 
 
@@ -81,7 +86,7 @@ def create_account():
     lastname = request.form.get("lastname").title()
     email = request.form.get("email").lower() 
     password = request.form.get("password")
-    phone = request.form.get("phone").replace(".","").replace("/","")
+    phone = request.form.get("phone").replace(".","").replace("-","")
 
     response = {"status": "warning"}
 
