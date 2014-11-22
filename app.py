@@ -61,9 +61,9 @@ def login():
             flask_session['id'] = user.id
             flask_session['firstname'] = user.firstname
             response["status"] = "success"
-            response["message"] = "You are logged in!"
+            response["message"] = "Welcome back!"
             response["firstname"] = user.firstname
-        
+            response["user"] = user.id
         else:
             response["message"] = "Invalid password."
     
@@ -99,6 +99,7 @@ def create_account():
             response["status"] = "success"
             response["message"] = "Account created!"
             response["firstname"] = new_user.firstname
+            response["user"] = new_user.id
             flask_session['id'] = new_user.id
             flask_session['firstname'] = new_user.firstname
         else:

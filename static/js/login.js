@@ -53,6 +53,7 @@ function handleCreate(evt) {
 		function(response) {
 			displayResultStatus(response.status, response.message, "#sent-create");
 			if (response.status == "success") {
+				user = response.user
 				setTimeout(function(){ 
 					$(".logged-in").show();
 					$(".logged-out").hide();

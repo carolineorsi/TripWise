@@ -2,20 +2,6 @@ import model
 import json
 
 
-def authenticate_user(email, password):
-	# email = email.lower()
-	# user = model.session.query(model.User).filter_by(email = email).first()
-
-	# if user is None:
-	# 	flash("User does not exist.")
-	# 	return redirect(url_for("login"))
-
-
-	# if email != "blah":
-	# 	flash("Invalid email")
-	# 	return redirect(url_for("login"))
-	pass
-
 
 def create_new_user(firstname, lastname, email, password, phone):
 	if model.session.query(model.User).filter_by(email = email).first() is not None:
@@ -39,8 +25,10 @@ def save_route_to_db(name, start, end, travel_mode, user):
 	route = model.Route()
 	route.name = name
 	route.user_id = user
-	route.start = start.title()
-	route.end = end.title()
+	route.start = start
+	# route.start = start.title()
+	route.end = end
+	# route.end = end.title()
 	route.travel_mode = travel_mode
 	model.session.add(route)
 	model.session.commit()

@@ -1,5 +1,6 @@
 function findPlaces(evt) {
 	event.preventDefault();
+	$(".initial-search").hide();
 	// clearMap();
 
 	if (!route) {
@@ -205,11 +206,11 @@ function displayTopTen () {
 	// "Get More Results" button from results div.
 	if (search.sortedPlaces.length < 10) {
 		var maxResult = search.sortedPlaces.length;
-		$("#find-more").hide();
+		$("#get-more-results").hide();
 	}
 	else {
 		var maxResult = 10;
-		$("#find-more").show();
+		$("#get-more-results").show();
 	}
 
 	// For each of ten places, display in results div and add to map.
@@ -241,7 +242,7 @@ function displayDirections (place) {
 			function (response) {
 				$("#list-container").empty();
 				$("#directions").empty();
-				$("#find-more").hide();
+				$("#get-more-results").hide();
 				$("#directions").append("<h4>Directions</h4>");
 				$("#directions").append("<div class='waypoint'><h5>A: " + route.start + "</h5></div>");
 
@@ -295,5 +296,5 @@ function addStop() {
 	$("#directions").empty().removeClass("text-alert");
 	$("#directions-todo").hide();
 
-	$("#find-more").hide();
+	$("#get-more-results").hide();
 }

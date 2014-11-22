@@ -2,27 +2,41 @@
 {% block body %}
 
 		<div id="control-bar">
-			<div class="form-group sidebar-input">
+			<div id="list-container">
+        </div>
 
-				<form id="directions-form">
-					<!-- <button class="btn btn-default" id="geolocation" type="button">Use Current Location</button> -->
+        <div id="directions">
+		</div>
+		<div id="directions-todo" class="control-buttons">
+			<button class="btn btn-default" id="add-stop" type="button">Add Another Stop</button>
+			<button class="btn btn-default" id="send-button" type="button">Send to Phone</button>
+		</div>
 
+		<div class="form-group sidebar-input">
+
+			<form id="directions-form">
+				<!-- <button class="btn btn-default" id="geolocation" type="button">Use Current Location</button> -->
+
+				<div class="initial-search">
 					<label for="start">Start</label>
-					<input type="text" id="start" class="form-control" value="683 Sutter St, San Francisco, CA"><br>
-					<!-- <input type="text" id="start" class="form-control"><br> -->
-					
+					<input type="text" id="start" class="form-control" value="3896 19th St, San Francisco, CA"><br>
+				</div>
+				
+				<div class="initial-search">
 					<label for="end">End</label>
-					<!-- <input type="text" id="end" class="form-control"><br> -->
-					<input type="text" id="end" class="form-control" value="3896 19th St, San Francisco, CA"><br>
-					
+					<input type="text" id="end" class="form-control" value="Santa Rosa, CA"><br>
+				</div>
+				
+				<div class="initial-search">
 					<label for="keyword">Keyword</label>
-					<input type="text" id="keyword" class="form-control" value="Sushi"><br>
-					<!-- <input type="text" id="keyword" class="form-control"><br> -->
-					
-					<div id="checkbox"><input type="checkbox" id="opennow">
-						<label for="opennow">Open Now</label>
-					</div>
+					<input type="text" id="keyword" class="form-control" value="Brewpub"><br>
+				</div>
+				
+				<div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
+					<label for="opennow">Open Now</label>
+				</div>
 
+				<div class="initial-search">
 					<input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
 					<label for="opennow" class="travel-mode">Drive</label>
 
@@ -31,27 +45,15 @@
 
 					<input type="radio" name="travel-mode" class="travel-mode" id="walking">
 					<label for="opennow" class="travel-mode">Walk</label><br>
+				</div>
 
-					<div id="submit-buttons" class="control-buttons">
-						<button class="btn btn-default" type="submit">Go!</button>
-						<button class="btn btn-default" type="reset" id="reset">Start Over</button>
-					</div>
-				</form>
-			</div>
-
-			<div id="list-container">
-        	</div>
-
-        	<div id="find-more">
-				<button class="btn btn-default control-buttons" id="get-more-results" type="button">Get More Results</button>
-        	</div>
-
-			<div id="directions">
-			</div>
-			<div id="directions-todo" class="control-buttons">
-				<button class="btn btn-default" id="add-stop" type="button">Add Another Stop</button>
-				<button class="btn btn-default" id="send-button" type="button">Send to Phone</button>
-			</div>
+				<div id="submit-buttons" class="control-buttons">
+					<button class="btn btn-default initial-search" type="submit">Go!</button>
+					<button class="btn btn-default control-buttons" id="get-more-results" type="button">More Results</button>
+					<button class="btn btn-default" type="reset" id="reset">Start Over</button>
+				</div>
+			</form>
+		</div>
 		</div>
 
         <div id="map-container">

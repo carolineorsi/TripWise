@@ -21,7 +21,10 @@ $(document).ready(function () {
 	$("#get-more-results").on('click', callDistanceMatrix);
 	$("#reset").on('click', clearMap);
 	$("#send-button").on('click', sendMessage);
-	$("#add-stop").on('click', addStop);
+	$("#add-stop").on('click', function () {
+		addStop();
+		$(".initial-search").show();
+	});
 
 	$("#nav-login").on('click', function() {
 		$("#login").toggle();
@@ -90,10 +93,11 @@ function clearMap(){
 	$("#directions").empty().removeClass("text-alert");
 	$("#directions-todo").hide();
 	$("#start, #end").removeAttr("disabled");
-	search = null; // TODO: change this to create new instance of search instead (maybe store search objects in array?)
+	search = null;
 	route = null;
 
-	$("#find-more").hide();
+	$("#get-more-results").hide();
+	$(".initial-search").show();
 }
 
 function removeMarkers() {
@@ -163,7 +167,7 @@ function displayPlace(location, delay, place) {
 		google.maps.event.addListener(marker, 'click', function(evt) {
 			addWaypoint(place);
 			displayDirections(place);
-			removeMarkers();
+			marker.setMap(null);
 		});
 
 		handleListHover(place, marker);
@@ -203,7 +207,7 @@ function handleListHover(place, marker) {
 		.click(function() {
 			addWaypoint(place);
 			displayDirections(place);
-			removeMarkers();
+			place.marker.setMap(null);
 		});
 }
 

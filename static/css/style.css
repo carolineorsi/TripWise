@@ -65,7 +65,11 @@ html, body, #map-container {
 	margin-top: 10px;
 }
 
-#find-more {
+/*#find-more {
+	display: none;
+}*/
+
+#get-more-results {
 	display: none;
 }
 
