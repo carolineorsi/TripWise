@@ -1,6 +1,7 @@
 import model
 import json
 
+
 def authenticate_user(email, password):
 	# email = email.lower()
 	# user = model.session.query(model.User).filter_by(email = email).first()
@@ -65,7 +66,6 @@ def save_waypoints_to_db(route, places, user):
 		model.session.add(waypoint)
 
 	model.session.commit()
-	return "Success"
 
 
 def get_routes_by_user(user_id):

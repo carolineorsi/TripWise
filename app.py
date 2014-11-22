@@ -77,21 +77,34 @@ def login():
 
 @app.route("/create", methods=["POST"])
 def create_account():
-    firstname = request.form.get("firstname")
-    lastname = request.form.get("lastname")
+    firstname = request.form.get("firstname").title()
+    lastname = request.form.get("lastname").title()
     email = request.form.get("email").lower() 
-    hashed_password = sha256_crypt.encrypt(request.form.get("password"))
+    password = request.form.get("password")
     phone = request.form.get("phone").replace(".","").replace("/","")
 
-    new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone)
+    response = {"status": "warning"}
 
-    if new_user:
-        flask_session['id'] = new_user.id
-        flask_session['firstname'] = new_user.firstname
-        return new_user.firstname
+    if firstname == "":
+        response["message"] = "Please enter a first name."
+    elif email == "":
+        response["message"] = "Please enter an email address."
+    elif password == "":
+        response["message"] = "Please enter a password."
     else:
-        return "User Exists"
+        hashed_password = sha256_crypt.encrypt(password)
+        new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone)
 
+        if new_user:
+            response["status"] = "success"
+            response["message"] = "Account created!"
+            response["firstname"] = new_user.firstname
+            flask_session['id'] = new_user.id
+            flask_session['firstname'] = new_user.firstname
+        else:
+            response["message"] = "User with that email already exists."
+
+    return jsonify(response)
 
 
 # @app.route("/save", methods=["GET"])
@@ -101,14 +114,21 @@ def create_account():
 
 @app.route("/save", methods=["POST"])
 def save_route():
-    route = users.save_route_to_db(request.form.get("name"),
-                                request.form.get("start"),
-                                request.form.get("end"),
-                                request.form.get("travel_mode"),
-                                flask_session['id'])
-    status = users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
+    response = {"status": "warning"}
+    if request.form.get("name") == "":
+        response["message"] = "Please enter a name for your trip."
 
-    return status
+    else:
+        route = users.save_route_to_db(request.form.get("name"),
+                                    request.form.get("start"),
+                                    request.form.get("end"),
+                                    request.form.get("travel_mode"),
+                                    flask_session['id'])
+        users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
+        response["status"] = "success"
+        response["message"] = "Trip has been saved!"
+
+    return jsonify(response)
 
 
 @app.route("/mytrips")

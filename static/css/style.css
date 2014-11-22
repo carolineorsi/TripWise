@@ -192,7 +192,7 @@ li.logged-in {
 	padding-left: 10px;
 }
 
-#sent-result {
+#sent-login, #sent-create, #sent-save {
 	margin-top: 1em;
 	display: none;
 	margin-bottom: 1em;

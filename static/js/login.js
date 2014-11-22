@@ -21,19 +21,17 @@ function handleLogin(evt) {
 		{'email': email, 'password': password},
 		function(response) {
 			if (response.status == "warning") {
-				$("#sent-result").removeClass("alert-success");
-	   			$("#sent-result").addClass("alert-warning");
-				displayResultStatus(response.message);
+				toggleAlertStatus("warning", "success", "#sent-login");
+				displayResultStatus(response.message, "#sent-login");
 			}
 			else if (response.status == "success") {
-				$("#sent-result").removeClass("alert-warning");
-				$("#sent-result").addClass("alert-success");
-				displayResultStatus(response.message);
+				toggleAlertStatus("success", "warning", "#sent-login");
+				displayResultStatus(response.message, "#sent-login");
 				setTimeout(function(){ 
 					$(".logged-in").show();
 					$(".logged-out").hide();
 					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
-				}, 1000);
+				}, 2000);
 			}
 		}
 	);
@@ -50,81 +48,87 @@ function handleCreate(evt) {
 	var lastname = $("#last-name").val();
 	var phone = $("#phone").val();
 
-	if (email == "") {
-		$("#login-alert").html("Please enter an email address.");
-	}
-	else if (password == "") {
-		$("#login-alert").html("Please enter a password.");
-	}
-	else if (phone == "") {
-		$("#login-alert").html("Please enter a phone number.");
-	}
-	else {
-		$.post(
-			"/create",
-			{'email': email,
-			'password': password,
-			'firstname': firstname,
-			'lastname': lastname,
-			'phone': phone},
-			function(response) {
-				if (response == "User Exists") {
-					$("#login-alert").html("User with that email already exists.");
-				}
-				else {
-					alert("User added!")
+	$.post(
+		"/create",
+		{'email': email,
+		'password': password,
+		'firstname': firstname,
+		'lastname': lastname,
+		'phone': phone},
+		function(response) {
+			if (response.status == "warning") {
+				toggleAlertStatus("warning", "success", "#sent-create");
+				displayResultStatus(response.message, "#sent-create");
+			}
+			else if (response.status == "success") {
+				toggleAlertStatus("success", "warning", "#sent-create");
+				displayResultStatus(response.message, "#sent-create");
+				setTimeout(function(){ 
 					$(".logged-in").show();
 					$(".logged-out").hide();
-					$("#user-firstname").html("<a>Hi " + response + "!</a>");
-				}
+					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
+				}, 2000);
 			}
-		);
-	} 
+		}
+	);
 }
 
 function handleSaveRoute(evt) {
 	evt.preventDefault();
 
-	// TODO: Handle case where route hasn't been defined yet.
-	var name = $("#route-name").val();
+	if (route == null) {
+		toggleAlertStatus("warning", "success", "#sent-save");
+		displayResultStatus("No trip to save. Please start your search.", "#sent-save");
 
-	var places = {};
-	for (var i = 0; i < route.places.length; i++) {
-		places[i] = {
-			'name': route.places[i].name,
-			'address': route.places[i].address,
-			'id': route.places[i].id,
-			'lat': route.places[i].lat,
-			'lng': route.places[i].lng,
-			'stopover': true
-		};
 	}
+	else {
+		var name = $("#route-name").val();
 
-	$.post(
-		"/save",
-		{'name': name,
-		'start': route.start,
-		'end': route.end,
-		'travel_mode': route.travelMode,
-		'places': JSON.stringify(places)},
-		function(response){
-			if (response == "Success") {
-				alert("Your route has been added!");
-			}
-			else {
-				console.log(response);
-			}
+		var places = {};
+		for (var i = 0; i < route.places.length; i++) {
+			places[i] = {
+				'name': route.places[i].name,
+				'address': route.places[i].address,
+				'id': route.places[i].id,
+				'lat': route.places[i].lat,
+				'lng': route.places[i].lng,
+				'stopover': true
+			};
 		}
-	);
 
+		$.post(
+			"/save",
+			{'name': name,
+			'start': route.start,
+			'end': route.end,
+			'travel_mode': route.travelMode,
+			'places': JSON.stringify(places)},
+			function(response){
+				if (response.status == "warning") {
+					toggleAlertStatus("warning", "success", "#sent-save");
+					displayResultStatus(response.message, "#sent-save");
+				}
+				else if (response.status == "success") {
+					toggleAlertStatus("success", "warning", "#sent-save");
+					displayResultStatus(response.message, "#sent-save");
+				}
+			}
+		);
+	}
 }
 
-function displayResultStatus(resultMsg) {
-    var notificationArea = $("#sent-result");
+function toggleAlertStatus(onStatus, offStatus, alertID) {
+	$(alertID).removeClass("alert-" + offStatus);
+	$(alertID).addClass("alert-" + onStatus);
+}
+
+
+function displayResultStatus(resultMsg, alertID) {
+    var notificationArea = $(alertID);
     notificationArea.text(resultMsg);
     notificationArea.slideDown(function () {
         setTimeout(function() {
-            $(this).slideUp();
+            $(alertID).slideUp();
         }, 2000);
     });
 }
