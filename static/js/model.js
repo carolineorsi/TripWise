@@ -19,6 +19,7 @@ function Route(start, end, travelMode) {
 				// Displays route on map.
 				directionsDisplay.setMap(map);
 				directionsDisplay.setDirections(response);
+				route.reorderWaypoints(response.routes[0].waypoint_order);
 
 				deferred.resolve(response);
 			}
@@ -40,6 +41,14 @@ function Route(start, end, travelMode) {
 			this.initialDuration += directions.routes[0].legs[0].duration.value;
 			this.initialDistance += directions.routes[0].legs[0].distance.value;
 		}
+	};
+
+	this.reorderWaypoints = function reorderWaypoints(order) {
+		var templist = [];
+		for (var i = 0; i < order.length; i++) {
+			templist.push(this.places[order[i]]);
+		}
+		this.places = templist;
 	};
 }
 
@@ -144,6 +153,7 @@ function directionsRequest(origin, destination, waypoints) {
 	this.destination = destination;
 	this.travelMode = route.travelMode;
 	this.waypoints = waypoints;
+	this.optimizeWaypoints = true;
 }
 
 

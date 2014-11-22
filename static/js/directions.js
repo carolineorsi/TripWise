@@ -9,7 +9,7 @@ function findPlaces(evt) {
 			document.getElementById('end').value,
 			checkTravelMode()
 		);
-		$("#start, #end").attr("disabled", "disabled");
+		// $("#start, #end").attr("disabled", "disabled");
 	}
 
 	// Create search object based on user's input.
@@ -21,6 +21,7 @@ function findPlaces(evt) {
 	route.getDirections()
 		.then(
 			function (response) {
+				// route.reorderWaypoints(response.routes[0].waypoint_order);
 				route.getPolyline(response);
 				return search.getSearchPoints(route);
 				// TODO: add intermediate button to confirm route and add keyword before calling getPlaces
@@ -242,7 +243,9 @@ function displayDirections (place) {
 				$("#directions").empty();
 				$("#find-more").hide();
 				$("#directions").append("<h4>Directions</h4>");
-				$("#directions").append("<div class='waypoint'><h5>Start: " + route.start + "</h5></div>");
+				$("#directions").append("<div class='waypoint'><h5>A: " + route.start + "</h5></div>");
+
+				var alpha = "BCDEFGHIJKLMNOPQRSTUVWYXZ"
 
 				var legs = response.routes[0].legs;
 				for (var i = 0; i < legs.length; i++) {
@@ -253,10 +256,12 @@ function displayDirections (place) {
 					}
 
 					if (i < route.places.length) {
-						$("#directions").append("<div class='waypoint'><h5>Stop " + (i + 1) + ": " + route.places[i].name + "</h5></div>");
+						$("#directions").append("<div class='waypoint'><h5>" + alpha[i] + ": " + route.places[i].name + "</h5></div>");
+					}
+					else {
+						$("#directions").append("<div class='waypoint'><h5>" + alpha[i] + ": " + route.end +"</h5></div>");
 					}
 				}
-				$("#directions").append("<div class='waypoint'><h5>End: " + route.end +"</h5></div>");
 
 				$("#directions-todo").show();
 			},
