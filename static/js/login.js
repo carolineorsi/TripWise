@@ -20,13 +20,8 @@ function handleLogin(evt) {
 		"/login",
 		{'email': email, 'password': password},
 		function(response) {
-			if (response.status == "warning") {
-				toggleAlertStatus("warning", "success", "#sent-login");
-				displayResultStatus(response.message, "#sent-login");
-			}
-			else if (response.status == "success") {
-				toggleAlertStatus("success", "warning", "#sent-login");
-				displayResultStatus(response.message, "#sent-login");
+			displayResultStatus(response.status, response.message, "#sent-login");
+			if (response.status == "success") {
 				setTimeout(function(){ 
 					$(".logged-in").show();
 					$(".logged-out").hide();
@@ -56,13 +51,8 @@ function handleCreate(evt) {
 		'lastname': lastname,
 		'phone': phone},
 		function(response) {
-			if (response.status == "warning") {
-				toggleAlertStatus("warning", "success", "#sent-create");
-				displayResultStatus(response.message, "#sent-create");
-			}
-			else if (response.status == "success") {
-				toggleAlertStatus("success", "warning", "#sent-create");
-				displayResultStatus(response.message, "#sent-create");
+			displayResultStatus(response.status, response.message, "#sent-create");
+			if (response.status == "success") {
 				setTimeout(function(){ 
 					$(".logged-in").show();
 					$(".logged-out").hide();
@@ -77,9 +67,7 @@ function handleSaveRoute(evt) {
 	evt.preventDefault();
 
 	if (route == null) {
-		toggleAlertStatus("warning", "success", "#sent-save");
-		displayResultStatus("No trip to save. Please start your search.", "#sent-save");
-
+		displayResultStatus("warning", "No trip to save. Please start your search.", "#sent-save");
 	}
 	else {
 		var name = $("#route-name").val();
@@ -104,26 +92,23 @@ function handleSaveRoute(evt) {
 			'travel_mode': route.travelMode,
 			'places': JSON.stringify(places)},
 			function(response){
-				if (response.status == "warning") {
-					toggleAlertStatus("warning", "success", "#sent-save");
-					displayResultStatus(response.message, "#sent-save");
-				}
-				else if (response.status == "success") {
-					toggleAlertStatus("success", "warning", "#sent-save");
-					displayResultStatus(response.message, "#sent-save");
-				}
+				displayResultStatus(response.status, response.message, "#sent-save");
 			}
 		);
 	}
 }
 
-function toggleAlertStatus(onStatus, offStatus, alertID) {
-	$(alertID).removeClass("alert-" + offStatus);
-	$(alertID).addClass("alert-" + onStatus);
-}
 
+function displayResultStatus(status, resultMsg, alertID) {
+	if (status == "warning") {
+		$(alertID).removeClass("alert-success");
+		$(alertID).addClass("alert-warning");
+	}
+	else if (status == "success") {
+		$(alertID).removeClass("alert-warning");
+		$(alertID).addClass("alert-success");
+	}
 
-function displayResultStatus(resultMsg, alertID) {
     var notificationArea = $(alertID);
     notificationArea.text(resultMsg);
     notificationArea.slideDown(function () {
