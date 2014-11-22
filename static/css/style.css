@@ -191,3 +191,9 @@ li.logged-in {
 	border-bottom: 2px solid #EEE;
 	padding-left: 10px;
 }
+
+#sent-result {
+	margin-top: 1em;
+	display: none;
+	margin-bottom: 1em;
+}

@@ -20,9 +20,21 @@ function handleLogin(evt) {
 		"/login",
 		{'email': email, 'password': password},
 		function(response) {
-			$(".logged-in").show();
-			$(".logged-out").hide();
-			$("#user-firstname").html("<a>Hi " + response + "!</a>");
+			if (response.status == "warning") {
+				$("#sent-result").removeClass("alert-success");
+	   			$("#sent-result").addClass("alert-warning");
+				displayResultStatus(response.message);
+			}
+			else if (response.status == "success") {
+				$("#sent-result").removeClass("alert-warning");
+				$("#sent-result").addClass("alert-success");
+				displayResultStatus(response.message);
+				setTimeout(function(){ 
+					$(".logged-in").show();
+					$(".logged-out").hide();
+					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
+				}, 1000);
+			}
 		}
 	);
 }
@@ -107,7 +119,15 @@ function handleSaveRoute(evt) {
 
 }
 
-
+function displayResultStatus(resultMsg) {
+    var notificationArea = $("#sent-result");
+    notificationArea.text(resultMsg);
+    notificationArea.slideDown(function () {
+        setTimeout(function() {
+            $(this).slideUp();
+        }, 2000);
+    });
+}
 
 
 

@@ -1,4 +1,4 @@
-from flask import Flask, request, session, render_template, g, redirect, url_for, flash
+from flask import Flask, request, session, render_template, g, redirect, url_for, flash, jsonify
 from flask import session as flask_session
 from passlib.hash import sha256_crypt
 import jinja2
@@ -47,24 +47,27 @@ def send_to_phone():
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form.get("email").lower()
+    response = {"status": "warning"}
     if email == "":
-        # flash("Must enter email address.")
-        # return redirect(url_for("login"))
-        return "Enter email" # TODO: handle this differently
+        response["message"] = "Please enter an email address."
 
-    user = model.session.query(model.User).filter_by(email=email).first()
-
-    if user is None:
-        # flash("User does not exist.")
-        # return redirect(url_for("login"))
-        return "No user by that name."
-
-    if sha256_crypt.verify(request.form.get("password"), user.password):
-        flask_session['id'] = user.id
-        flask_session['firstname'] = user.firstname
-        return user.firstname
     else:
-        return "invalid password"
+        user = model.session.query(model.User).filter_by(email=email).first()
+
+        if user is None:
+            response["message"] = "There is no user with that email address."
+        
+        elif sha256_crypt.verify(request.form.get("password"), user.password):
+            flask_session['id'] = user.id
+            flask_session['firstname'] = user.firstname
+            response["status"] = "success"
+            response["message"] = "You are logged in!"
+            response["firstname"] = user.firstname
+        
+        else:
+            response["message"] = "Invalid password."
+    
+    return jsonify(response)
 
 
 # @app.route("/create", methods=["GET"])
