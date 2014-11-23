@@ -201,6 +201,7 @@ function returnTopTen (route, requestList) {
 
 
 function displayTopTen () {
+	$("#list-container").show();
 	// Checks if there are fewer than 10 results remaining. If so, removes
 	// "Get More Results" button from results div.
 	if (search.sortedPlaces.length < 10) {
@@ -258,7 +259,7 @@ function displayDirections (place) {
 					}
 
 					if (i < route.places.length) {
-						$("#directions").append("<div class='waypoint'><h5>" + alpha[i] + ": " + route.places[i].name + "</h5></div>");
+						$("#directions").append("<div class='waypoint' id=dir-" + route.places[i].id + "><h5>" + alpha[i] + ": " + route.places[i].name + "</h5></div>");
 					}
 					else {
 						$("#directions").append("<div class='waypoint'><h5>" + alpha[i] + ": " + route.end +"</h5></div>");
@@ -287,7 +288,19 @@ function sendMessage() {
 		'places': JSON.stringify(places),
 		'message' : 'This is your test message from the website!'},
 		function(response) {
-			console.log(response);
+			if (response == "No Num") {
+				$(".phone-loggedin").toggle();
+				$(".phone-loggedout").toggle();
+				$("#send-loggedout").click(function() {
+					// This is ridiculous. Need a way to check client-side if logged in.
+				})
+				// Open box for number
+				console.log(response);
+			}
+			else {
+				// Alert message sent
+				console.log(response);
+			};
 		}
 	);
 }

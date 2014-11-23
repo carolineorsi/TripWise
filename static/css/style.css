@@ -7,6 +7,10 @@ html, body, #map-container {
 	overflow: hidden;
 }
 
+.btn {
+	margin: 5px 0 5px 0;
+}
+
 .navbar-default {
 	background-color: white;
 	z-index: 10;
@@ -27,8 +31,12 @@ html, body, #map-container {
 #reset {
 	/*background-color: #C4E8FF;*/
 	background-color: #EEE;
+	margin: 10px auto auto auto;
 }
 
+#list-container {
+	display: none;
+}
 
 #control-bar {
 	position: absolute;
@@ -49,7 +57,7 @@ html, body, #map-container {
 }
 
 .sidebar-input {
-	margin-bottom: 50px;
+	margin-bottom: 10px;
 }
 
 .list-item {
@@ -117,7 +125,8 @@ html, body, #map-container {
 }
 
 .control-buttons {
-	float: right;
+	text-align: right;
+	/*float: right;*/
 }
 
 /*From Stack Overflow:*/
@@ -192,6 +201,7 @@ span.stars span {
 li.logged-in {
 	display: none;
 }
+
 #route-list {
 	margin-top: 50px;
 }
@@ -205,4 +215,13 @@ li.logged-in {
 	margin-top: 1em;
 	display: none;
 	margin-bottom: 1em;
+}
+
+.phone-loggedout {
+	display: none;
+}
+
+#start-over-div {
+	text-align: center;
+	border-top: 2px solid #EEE;
 }

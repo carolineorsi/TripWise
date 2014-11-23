@@ -2,7 +2,7 @@
 {% block body %}
 	<div id="route-list">
 			{% for route in route_list %}
-			<div id="{{ route.id }}"><h4>{{ route.name }}</h4>
+			<div id="{{ route.id }}" class="saved-route-list"><h4>{{ route.name }}</h4>
 				<strong>{{ route.start }} to {{ route.end }}</strong>
 				<ul>
 					{% for waypoint in route.waypoints %}

@@ -6,7 +6,7 @@ $(document).ready(function () {
 	$("#logout").click(function() {
 		$(".logged-in").hide();
 		$(".logged-out").show();
-	})
+	});
 });
 
 
@@ -26,7 +26,7 @@ function handleLogin(evt) {
 					$(".logged-in").show();
 					$(".logged-out").hide();
 					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
-				}, 2000);
+				}, 1000);
 			}
 		}
 	);
@@ -58,7 +58,7 @@ function handleCreate(evt) {
 					$(".logged-in").show();
 					$(".logged-out").hide();
 					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
-				}, 2000);
+				}, 1000);
 			}
 		}
 	);
@@ -119,5 +119,14 @@ function displayResultStatus(status, resultMsg, alertID) {
     });
 }
 
+
+function selectFromList() {
+	$(".saved-route-list").on('hover', function() {
+		$(this).css({"background-color":"lightblue"});
+	});
+	$(".saved-route-list").on('click', function() {
+		$(this).html("Selected");
+	});
+}
 
 

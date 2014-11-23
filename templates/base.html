@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
     <body>
-        <div class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar navbar-default navbar-fixed-top" id="navigation-bar">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/">TripWise</a>
@@ -12,7 +12,6 @@
                 <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     
-                    <!-- <div class="logged-in"> -->
                          <li class="logged-in" id="user-firstname"></li>
                          <li class="logged-in"><a>Save Trip</a>
                             <div class="form-signin dropdown">
@@ -36,13 +35,10 @@
                          </li>
                          
                          <li class="logged-in" id="logout"><a href="/logout">Log Out</a></li>
-                    <!-- </div> -->
-
                     
-                    <!-- <div class="logged-out">  -->
-                        <!-- <li><a href="/login">Log In</a> -->
                         <li class="logged-out"><a>Log In</a>
                             <div class="form-signin dropdown">
+                              <!-- <form class="form-signin" id="login-user-dropdown" method="POST" action="/login"> -->
                               <form class="form-signin" id="login-user-dropdown" method="POST">
                               <h4>Log In</h4>
                                 <div class="form-group">
@@ -59,6 +55,7 @@
                             </div>
                         </li>
                     
+                        <!-- <li class="logged-out" action="/create"><a>Create Account</a> -->
                         <li class="logged-out"><a>Create Account</a>
                             <div class="form-create dropdown">
                               <form class="form-create" id="create-new-user" method="POST">
@@ -88,7 +85,6 @@
                               </form>
                             </div>
                         </li>
-                    <!-- </div> -->
 
                     </ul>
                 </div>

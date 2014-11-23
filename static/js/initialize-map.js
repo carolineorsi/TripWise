@@ -30,6 +30,11 @@ $(document).ready(function () {
 		$("#login").toggle();
 	})
 
+	$("#testlink").click(function() {
+		$("#navigation-bar").load();
+		console.log("check");
+	})
+
 	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
 	// 	route.getpolyline;
 	// 	search.getSearchPoints(route);
