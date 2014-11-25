@@ -38,6 +38,8 @@ $(document).ready(function () {
 
 	$(".nav-bar-hide").hide();
 
+	rebuildSavedRoute();
+
 	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
 	// 	route.getpolyline;
 	// 	search.getSearchPoints(route);

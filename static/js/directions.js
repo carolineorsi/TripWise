@@ -321,3 +321,20 @@ function addStop() {
 
 	$("#get-more-results").hide();
 }
+
+
+function rebuildSavedRoute() {
+	var savedStart = $("#route_start_from_server").text();
+	var savedEnd = $("#route_end_from_server").text();
+	var savedTravelMode = $("#route_travelmode_from_server").text();
+	var savedWaypoints = $("#route_waypointlist_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
+
+	route = new Route(savedStart, savedEnd, savedTravelMode);
+
+	for (var i = 0; i < savedWaypoints.length; i++) {
+		waypoint = new Waypoint(savedWaypoints[i]);
+		route.waypoints.push(waypoint);	
+	}
+
+	route.getDirections();
+}

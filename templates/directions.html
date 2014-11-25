@@ -2,7 +2,14 @@
 {% block body %}
 
 
+
 		<div id="control-bar">
+			{% if start %}
+				<div id="route_start_from_server">{{ start }}</div>
+				<div id="route_end_from_server">{{ end }}</div>
+				<div id="route_travelmode_from_server">{{ travel_mode }}</div>
+				<div id="route_waypointlist_from_server">{{ waypoints }}</div>
+			{% endif %}
 			<div id="list-container">
         	</div>
 

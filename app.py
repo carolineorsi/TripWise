@@ -154,17 +154,22 @@ def list_routes():
 @app.route("/get_route/<int:route_id>")
 def get_route(route_id):
     route = model.session.query(model.Route).filter_by(id=route_id).first()
-    route_data = {}
+    # route_data = {}
 
-    route_data['start'] = route.start
-    route_data['end'] = route.end
-    route_data['travel_mode'] = route.travel_mode
+    # route_data['start'] = route.start
+    # route_data['end'] = route.end
+    # route_data['travel_mode'] = route.travel_mode
     
-    route_data['waypoints'] = []
+    waypoints = []
+    # waypoints = "yo"
     for waypoint in route.waypoints:
-        route_data['waypoints'].append(waypoint.address)
+        waypoints.append(waypoint.address)
 
-    return render_template("directions.html")
+    return render_template("directions.html",
+                            start=route.start,
+                            end=route.end,
+                            travel_mode=route.travel_mode,
+                            waypoints=waypoints)
 
 
 
