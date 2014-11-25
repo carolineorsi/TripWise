@@ -2,8 +2,22 @@
     <head>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/css/style.css" />
+        
+        <style>
+        {% if 'id' in session %}
+
+        li.logged-out {
+          display: none;
+        }
+        {% else %}
+        li.logged-in {
+          display: none;  
+        }
+        {% endif %}
+        </style>
     </head>
     <body>
+        <div id="logged-status" style="display:none">{{ user_status }}</div>
         <div class="navbar navbar-default navbar-fixed-top" id="navigation-bar">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -12,8 +26,13 @@
                 <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     
-                         <li class="logged-in" id="user-firstname"></li>
-                         <li class="logged-in"><a>Save Trip</a>
+                        <li id="user-firstname" class="logged-in">
+                          {% if 'id' in session %}
+                            <a>Hi {{ session.firstname }}!</a>
+                          {% endif %}
+                        </li>
+                        
+                        <li id="save-trip" class="logged-in"><a>Save Trip</a>
                             <div class="form-signin dropdown">
                               <form class="form-signin" id="save-route" method="POST">
                               <h4>Save Route</h4>
@@ -24,19 +43,14 @@
                                 <p id="sent-save" class="alert alert-success"></p>
                               </form>
                             </div>
-                         </li>
+                        </li>
 
-                         <li class="logged-in"><a href="/mytrips">My Trips</a>
-<!--                             <div class="form-signin dropdown">
-                              <form class="form-signin" method="GET" action="/mytrips">
-                                <button type="submit" class="btn btn-default">Get Saved Routes</button>
-                              </form>
-                            </div> -->
-                         </li>
+                        <li id="my-trips" class="logged-in"><a href="/mytrips">My Trips</a>
+                        </li>
                          
-                         <li class="logged-in" id="logout"><a href="/logout">Log Out</a></li>
+                        <li id="logout" class="logged-in"><a href="/logout">Log Out</a></li>
                     
-                        <li class="logged-out"><a>Log In</a>
+                        <li id="login" class="logged-out"><a>Log In</a>
                             <div class="form-signin dropdown">
                               <!-- <form class="form-signin" id="login-user-dropdown" method="POST" action="/login"> -->
                               <form class="form-signin" id="login-user-dropdown" method="POST">
@@ -56,7 +70,7 @@
                         </li>
                     
                         <!-- <li class="logged-out" action="/create"><a>Create Account</a> -->
-                        <li class="logged-out"><a>Create Account</a>
+                        <li id="create-account" class="logged-out"><a>Create Account</a>
                             <div class="form-create dropdown">
                               <form class="form-create" id="create-new-user" method="POST">
                               <h4>Create Account</h4>

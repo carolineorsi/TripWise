@@ -74,10 +74,6 @@ html, body, #map-container {
 	margin-top: 10px;
 }
 
-/*#find-more {
-	display: none;
-}*/
-
 #get-more-results {
 	display: none;
 }
@@ -194,10 +190,6 @@ span.stars span {
 	float: none; 
 }
 
-li.logged-in {
-	display: none;
-}
-
 #route-list {
 	margin-top: 50px;
 }
@@ -213,8 +205,14 @@ li.logged-in {
 	margin-bottom: 1em;
 }
 
-.phone-loggedout {
+#phone-loggedout {
 	display: none;
+	background-color: #EEE;
+	padding: 10px;
+}
+
+#phone-loggedout .alert {
+	margin-bottom: 0px;
 }
 
 #start-over-div {
@@ -227,7 +225,10 @@ li.logged-in {
 	margin-bottom: 0px;
 }
 
-.form-group, .sidebar-input {
+.sidebar-input {
 	margin-bottom: 0px;
 }
 
+#send-button-div {
+	text-align: right;
+}

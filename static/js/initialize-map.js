@@ -1,5 +1,6 @@
 $(document).ready(function () {
 	initializeMap();
+	loggedIn = $("#logged-status").text();
 
 	// When "Get Current Location" checked, calls geolocation API
 	$("#geolocation").on('click', getLocation);
@@ -20,7 +21,7 @@ $(document).ready(function () {
 	// ten results
 	$("#get-more-results").on('click', callDistanceMatrix);
 	$("#reset").on('click', clearMap);
-	$("#send-button").on('click', sendMessage);
+	$("#send-button").on('click', checkLoggedIn);
 	$("#add-stop").on('click', function () {
 		addStop();
 		$(".initial-search").show();
@@ -34,6 +35,8 @@ $(document).ready(function () {
 		$("#navigation-bar").load();
 		console.log("check");
 	})
+
+	$(".nav-bar-hide").hide();
 
 	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
 	// 	route.getpolyline;
@@ -103,6 +106,7 @@ function clearMap(){
 
 	$("#start-over-div").hide();
 	$(".initial-search").show();
+	$("#phone-loggedout").hide();
 }
 
 function removeMarkers() {

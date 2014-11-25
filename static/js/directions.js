@@ -275,35 +275,42 @@ function displayDirections (place) {
 		);
 }
 
-function sendMessage() {
+function sendMessage(user_phone) {
 	// TODO: send waypoints to create link to/from waypoints instead of route start and end.
 	var places = {};
 	for (var i = 0; i < route.places.length; i++) {
 		places[i] = route.places[i].address;
 	}
 
-	$.get("/send_to_phone", 
-		{'start' : route.start,
+	var route_data = {'start' : route.start,
 		'destination' : route.end,
 		'directionsmode' : route.travelMode,
-		'places': JSON.stringify(places),
-		'message' : 'This is your test message from the website!'},
+		'places': JSON.stringify(places)}
+
+	if (user_phone) {
+		route_data['phone'] = user_phone;	
+	}
+
+	$.get("/send_to_phone", 
+		route_data,
 		function(response) {
-			if (response == "No Num") {
-				$(".phone-loggedin").toggle();
-				$(".phone-loggedout").toggle();
-				$("#send-loggedout").click(function() {
-					// This is ridiculous. Need a way to check client-side if logged in.
-				})
-				// Open box for number
-				console.log(response);
-			}
-			else {
-				// Alert message sent
-				console.log(response);
-			};
+				displayResultStatus(response.status, response.message, "#phone-sent");
 		}
 	);
+}
+
+function checkLoggedIn() {
+	if (loggedIn == "True") {
+		sendMessage(null);
+	}
+	else {
+		$(".phone-loggedin").toggle();
+		$("#phone-loggedout").toggle();
+		$("#send-loggedout").click(function() {
+			user_phone = $("#phone-input").val();
+			sendMessage(user_phone);
+		});
+	}
 }
 
 function addStop() {

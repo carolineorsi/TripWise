@@ -15,35 +15,45 @@ app.secret_key = 'kbegw*^6^Fhjkh'
 @app.route("/")
 def index():
     """This is the 'cover' page of the site"""
-    return render_template("directions.html")
+    if 'id' in session:
+        user_status = True
+    else:
+        user_status = False
+
+    return render_template("directions.html", user_status=user_status)
 
 
 @app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
-    if 'id' not in flask_session:
-        return "No Num"
-    else:
+    response = {"status": "warning"}
+
+    if 'id' in flask_session:
         user = model.session.query(model.User).filter_by(id=flask_session['id']).first()
         phone_num = user.phone
+    else:
+        phone_num = request.args.get('phone')
 
-        message = request.args.get('message')
-        start = request.args.get('start')
-        end = request.args.get('destination')
-        places = json.loads(request.args.get('places'))
-        directionsmode = request.args.get('directionsmode')
+    message = request.args.get('message')
+    start = request.args.get('start')
+    end = request.args.get('destination')
+    places = json.loads(request.args.get('places'))
+    directionsmode = request.args.get('directionsmode')
 
-        addresses = [start]
-        for i in range(len(places.keys())):
-            key = unicode(i)
-            addresses.append(places[key])
-        addresses.append(end)
+    addresses = [start]
+    for i in range(len(places.keys())):
+        key = unicode(i)
+        addresses.append(places[key])
+    addresses.append(end)
 
-        for i in range(len(addresses) - 1):
-            url = phone.build_url(addresses[i], addresses[i + 1], directionsmode)
-            message = "Leg %d: " % (i + 1)
-            phone.send_message(message, url, phone_num)
+    for i in range(len(addresses) - 1):
+        url = phone.build_url(addresses[i], addresses[i + 1], directionsmode)
+        message = "Leg %d: " % (i + 1)
+        phone.send_message(message, url, phone_num)
+
+    response["status"] = "success"
+    response["message"] = "Route Sent!"
         
-        return "Sent"
+    return jsonify(response)
 
 
 # @app.route("/login", methods=["GET"])

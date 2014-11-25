@@ -26,6 +26,7 @@ function handleLogin(evt) {
 					$(".logged-in").show();
 					$(".logged-out").hide();
 					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
+					loggedIn = "True";
 				}, 1000);
 			}
 		}
@@ -59,6 +60,7 @@ function handleCreate(evt) {
 					$(".logged-out").hide();
 					$("#user-firstname").html("<a>Hi " + response.firstname + "!</a>");
 				}, 1000);
+				var loggedIn = $("#logged-status").text();
 			}
 		}
 	);
