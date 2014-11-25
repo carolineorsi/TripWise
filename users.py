@@ -62,3 +62,8 @@ def get_routes_by_user(user_id):
 
 	return routes
 
+
+def validate_phone(phone):
+	
+	pass
+

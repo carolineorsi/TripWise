@@ -31,7 +31,7 @@ def send_to_phone():
         user = model.session.query(model.User).filter_by(id=flask_session['id']).first()
         phone_num = user.phone
     else:
-        phone_num = request.args.get('phone')
+        phone_num = request.args.get('phone').replace(".","").replace("-","")
 
     message = request.args.get('message')
     start = request.args.get('start')
