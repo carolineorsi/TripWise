@@ -101,7 +101,7 @@ function clearMap(){
 	search = null;
 	route = null;
 
-	$("#get-more-results").hide();
+	$("#start-over-div").hide();
 	$(".initial-search").show();
 }
 

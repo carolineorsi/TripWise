@@ -202,6 +202,7 @@ function returnTopTen (route, requestList) {
 
 function displayTopTen () {
 	$("#list-container").show();
+	$("#start-over-div").show();
 	// Checks if there are fewer than 10 results remaining. If so, removes
 	// "Get More Results" button from results div.
 	if (search.sortedPlaces.length < 10) {

@@ -56,10 +56,6 @@ html, body, #map-container {
 	line-height: 10px;
 }
 
-.sidebar-input {
-	margin-bottom: 10px;
-}
-
 .list-item {
 	padding: 5px;
 }
@@ -222,6 +218,16 @@ li.logged-in {
 }
 
 #start-over-div {
+	display: none;
 	text-align: center;
 	border-top: 2px solid #EEE;
 }
+
+#directions-form {
+	margin-bottom: 0px;
+}
+
+.form-group, .sidebar-input {
+	margin-bottom: 0px;
+}
+
