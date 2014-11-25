@@ -2,14 +2,7 @@
 {% block body %}
 
 
-
 		<div id="control-bar">
-			{% if start %}
-				<div id="route_start_from_server">{{ start }}</div>
-				<div id="route_end_from_server">{{ end }}</div>
-				<div id="route_travelmode_from_server">{{ travel_mode }}</div>
-				<div id="route_waypointlist_from_server">{{ waypoints }}</div>
-			{% endif %}
 			<div id="list-container">
         	</div>
 
@@ -70,6 +63,16 @@
 			<div id="start-over-div">
 				<button class="btn btn-default" type="reset" id="reset">Start Over</button>
 			</div>
+		</div>
+
+		<div style="display:none">
+			{% if start %}
+				<div id="route_start_from_server">{{ start }}</div>
+				<div id="route_end_from_server">{{ end }}</div>
+				<div id="route_travelmode_from_server">{{ travel_mode }}</div>
+				<div id="route_waypointlist_from_server">{{ waypoints }}</div>
+				<div id="route_waypointnames_from_server">{{ waypoint_names }}</div>
+			{% endif %}
 		</div>
 
 <!--         <div id="map-container">

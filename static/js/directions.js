@@ -237,7 +237,7 @@ function displayTopTen () {
 	}
 }
 
-function displayDirections (place) {
+function displayDirections () {
 	// This function is called to show new directions in the control bar.
 
 	route.getDirections()
@@ -328,13 +328,17 @@ function rebuildSavedRoute() {
 	var savedEnd = $("#route_end_from_server").text();
 	var savedTravelMode = $("#route_travelmode_from_server").text();
 	var savedWaypoints = $("#route_waypointlist_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
+	var savedWaypointNames = $("#route_waypointnames_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
 
 	route = new Route(savedStart, savedEnd, savedTravelMode);
 
 	for (var i = 0; i < savedWaypoints.length; i++) {
-		waypoint = new Waypoint(savedWaypoints[i]);
-		route.waypoints.push(waypoint);	
+		route.waypoints.push(new Waypoint(savedWaypoints[i]));
+		route.places.push(new Waypoint(savedWaypoints[i]));
+		route.places[i].name = savedWaypointNames[i];
 	}
 
-	route.getDirections();
+	displayDirections();
+	$(".initial-search").hide();
 }
+

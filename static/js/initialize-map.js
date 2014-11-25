@@ -38,7 +38,9 @@ $(document).ready(function () {
 
 	$(".nav-bar-hide").hide();
 
-	rebuildSavedRoute();
+	if ($("#route_start_from_server").text() != "") {
+		rebuildSavedRoute();
+	};
 
 	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
 	// 	route.getpolyline;

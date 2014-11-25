@@ -161,15 +161,18 @@ def get_route(route_id):
     # route_data['travel_mode'] = route.travel_mode
     
     waypoints = []
+    waypoint_names = []
     # waypoints = "yo"
     for waypoint in route.waypoints:
         waypoints.append(waypoint.address)
+        waypoint_names.append(waypoint.name)
 
     return render_template("directions.html",
                             start=route.start,
                             end=route.end,
                             travel_mode=route.travel_mode,
-                            waypoints=waypoints)
+                            waypoints=waypoints,
+                            waypoint_names=waypoint_names)
 
 
 
