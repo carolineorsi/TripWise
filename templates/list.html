@@ -1,18 +1,27 @@
 {% extends 'base.html' %}
 {% block body %}
+
 	<div id="route-list">
+		<h3>Your Trips</h3>
 			{% for route in route_list %}
-			<div id="{{ route.id }}" class="saved-route-list"><h4>{{ route.name }}</h4>
-				<strong>{{ route.start }} to {{ route.end }}</strong>
-				<ul>
-					{% for waypoint in route.waypoints %}
-					<li>{{ waypoint.name }}</li>
-					{% endfor %}
-				</ul>
+			<div id="{{ route.id }}" class="saved-route-list list-group">
+				<a href="/get_route/{{ route.id }}" class="list-group-item">
+					<h4 class="list-group-item-heading">{{ route.name }}</h4>
+					<strong>{{ route.start }} to {{ route.end }}</strong>
+					<p class="list-group-item-text">
+						<ul>
+							{% for waypoint in route.waypoints %}
+							<li>{{ waypoint.name }}</li>
+							{% endfor %}
+						</ul>
+					</p>
+				</a>
 			</div>
 			{% endfor %}
 	</div>
-
-
+<!-- 
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/list.js"></script> -->
 
 {% endblock %}

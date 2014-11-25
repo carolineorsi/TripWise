@@ -151,6 +151,22 @@ def list_routes():
     return render_template("list.html", route_list=route_list)
 
 
+@app.route("/get_route/<int:route_id>")
+def get_route(route_id):
+    route = model.session.query(model.Route).filter_by(id=route_id).first()
+    route_data = {}
+
+    route_data['start'] = route.start
+    route_data['end'] = route.end
+    route_data['travel_mode'] = route.travel_mode
+    
+    route_data['waypoints'] = []
+    for waypoint in route.waypoints:
+        route_data['waypoints'].append(waypoint.address)
+
+    return render_template("directions.html")
+
+
 
 @app.route("/logout")
 def logout():

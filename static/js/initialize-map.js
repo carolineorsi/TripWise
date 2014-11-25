@@ -89,6 +89,34 @@ function initializeMap() {
 
 	// Create instance of map object, specifying the <div> container and map options
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
+
+	// var styles = [
+	//     {
+	//       stylers: [
+	//         { hue: "#00ffe6" },
+	//         { saturation: -20 }
+	//       ]
+	//     },{
+	//       featureType: "road",
+	//       elementType: "geometry",
+	//       stylers: [
+	//         { lightness: 100 },
+	//         { visibility: "simplified" }
+	//       ]
+	//     },{
+	//       featureType: "road",
+	//       elementType: "labels",
+	//       stylers: [
+	//         { visibility: "off" }
+	//       ]
+	//     }
+	//   ];
+
+	//   var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"})
+
+	// // map.mapTypes.set("watercolor", new google.maps.StamenMapType("watercolor"));
+	// map.mapTypes.set('map-style', styledMap);
+	// map.setMapTypeID('map-style');
 }
 
 

@@ -7,6 +7,11 @@ html, body, #map-container {
 	overflow: hidden;
 }
 
+#map-container-watercolor {
+	height: 500px;
+	width: 500px;
+}
+
 .btn {
 	margin: 5px 0 5px 0;
 }
@@ -194,9 +199,19 @@ span.stars span {
 	margin-top: 50px;
 }
 
-#route-list div {
-	border-bottom: 2px solid #EEE;
-	padding-left: 10px;
+#route-list {
+	position: absolute;
+	left: 500px;
+	top: calc(3% + 40px);
+	z-index: 10;
+	background-color: white;
+	/*opacity: 0.5;*/
+	padding: 10px;
+	width: 50%;
+	max-height: calc(94% - 40px); 
+	overflow-y: scroll;
+	box-shadow: 2px 2px 2px #888;
+	border-radius: 10px;
 }
 
 #sent-login, #sent-create, #sent-save, #phone-sent {
