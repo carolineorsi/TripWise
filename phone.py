@@ -11,6 +11,8 @@ TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 app = Flask(__name__)
 
 def send_message(msg, url, phone_num):
+    """ Sends message via Twilio to a user's phone number. """
+
     client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     number_to_text = "+1" + phone_num
     text_body = msg + url
@@ -20,10 +22,18 @@ def send_message(msg, url, phone_num):
                                     body=text_body)
 
 def build_url(saddr, daddr, directionsmode):
+    """ Creates the Google Maps iOS app URL to send in text message. """
+
     saddr = saddr.replace(" ", "+")
     daddr = daddr.replace(" ", "+")
     url = ("comgooglemaps://?saddr=%s&daddr=%s&directionsmode=%s") % (saddr, daddr, directionsmode)
     return url
+
+
+def validate_phone(phone):
+
+    pass
+
 
 if __name__ == "__main__":
     app.run(debug=True)

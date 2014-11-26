@@ -4,6 +4,8 @@ import json
 
 
 def create_new_user(firstname, lastname, email, password, phone):
+	""" Queries db to ensure user does not already exist. If it does not, creates new user in db. """
+
 	if model.session.query(model.User).filter_by(email = email).first() is not None:
 		return None
 	else:
@@ -20,15 +22,14 @@ def create_new_user(firstname, lastname, email, password, phone):
 
 
 def save_route_to_db(name, start, end, travel_mode, user):
+	""" Creates new route object and appends to db. """
 
 	# Create new route
 	route = model.Route()
 	route.name = name
 	route.user_id = user
 	route.start = start
-	# route.start = start.title()
 	route.end = end
-	# route.end = end.title()
 	route.travel_mode = travel_mode
 	model.session.add(route)
 	model.session.commit()
@@ -61,9 +62,4 @@ def get_routes_by_user(user_id):
 	routes = user.routes
 
 	return routes
-
-
-def validate_phone(phone):
-	
-	pass
 

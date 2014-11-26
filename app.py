@@ -14,7 +14,8 @@ app.secret_key = 'kbegw*^6^Fhjkh'
 
 @app.route("/")
 def index():
-    """This is the 'cover' page of the site"""
+    """ This is the 'cover' page of the site """
+
     if 'id' in session:
         user_status = True
     else:
@@ -23,8 +24,11 @@ def index():
     return render_template("directions.html", user_status=user_status)
 
 
+
 @app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
+    """ Takes and processes data to send to cell phone. """
+
     response = {"status": "warning"}
 
     if 'id' in flask_session:
@@ -33,16 +37,14 @@ def send_to_phone():
     else:
         phone_num = request.args.get('phone').replace(".","").replace("-","")
 
-    message = request.args.get('message')
     start = request.args.get('start')
-    end = request.args.get('destination')
+    end = request.args.get('end')
     places = json.loads(request.args.get('places'))
     directionsmode = request.args.get('directionsmode')
 
     addresses = [start]
     for i in range(len(places.keys())):
-        key = unicode(i)
-        addresses.append(places[key])
+        addresses.append(places[unicode(i)])
     addresses.append(end)
 
     for i in range(len(addresses) - 1):
@@ -56,13 +58,11 @@ def send_to_phone():
     return jsonify(response)
 
 
-# @app.route("/login", methods=["GET"])
-# def show_login():
-#     return render_template("login.html")
-
 
 @app.route("/login", methods=["POST"])
 def login():
+    """ Logs user into session and returns user data and success message. """
+
     email = request.form.get("email").lower()
     response = {"status": "warning"}
     if email == "":
@@ -85,11 +85,13 @@ def login():
             response["message"] = "Invalid password."
     
     return jsonify(response)
-    # return redirect(url_for("index"))
+
 
 
 @app.route("/create", methods=["POST"])
 def create_account():
+    """ Creates new user account and saves to database. """
+
     firstname = request.form.get("firstname").title()
     lastname = request.form.get("lastname").title()
     email = request.form.get("email").lower() 
@@ -121,13 +123,11 @@ def create_account():
     return jsonify(response)
 
 
-# @app.route("/save", methods=["GET"])
-# def show_save():
-#     return render_template("save.html")
-
 
 @app.route("/save", methods=["POST"])
 def save_route():
+    """ Saves user route to database. """
+
     response = {"status": "warning"}
     if request.form.get("name") == "":
         response["message"] = "Please enter a name for your trip."
@@ -145,14 +145,10 @@ def save_route():
     return jsonify(response)
 
 
-# @app.route("/mytrips")
-# def list_routes():
-#     route_list = users.get_routes_by_user(flask_session['id'])
-#     return render_template("list.html", route_list=route_list)
-
-
 @app.route("/mytrips")
 def list_routes():
+    """ Queries database for routes saved by logged in user and returns route data. """
+
     route_list = users.get_routes_by_user(flask_session['id'])
     response = {}
     routes_to_return = []
@@ -176,32 +172,10 @@ def list_routes():
 
 
 
-# @app.route("/get_route/<int:route_id>")
-# def get_route(route_id):
-#     route = model.session.query(model.Route).filter_by(id=route_id).first()
-#     # route_data = {}
-
-#     # route_data['start'] = route.start
-#     # route_data['end'] = route.end
-#     # route_data['travel_mode'] = route.travel_mode
-    
-#     waypoints = []
-#     waypoint_names = []
-    
-#     for waypoint in route.waypoints:
-#         waypoints.append(waypoint.address)
-#         waypoint_names.append(waypoint.name)
-
-#     return render_template("directions.html",
-#                             start=route.start,
-#                             end=route.end,
-#                             travel_mode=route.travel_mode,
-#                             waypoints=waypoints,
-#                             waypoint_names=waypoint_names)
-
-
 @app.route("/get_route")
 def get_route():
+    """ Queries database for a saved route and returns route data """
+
     route_id = request.args.get("route_id")
     route = model.session.query(model.Route).filter_by(id=route_id).first()
 
@@ -221,10 +195,9 @@ def get_route():
 
 @app.route("/logout")
 def logout():
+    """ Logs user out of session. """
     flask_session.clear()
     return redirect(url_for("index"))
-
-
 
 
 if __name__ == "__main__":

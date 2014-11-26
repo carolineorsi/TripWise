@@ -230,10 +230,14 @@ function populatePlaceDetails(place) {
 		.then(
 			function(response) {
 				if (place.website) {
-					var content = "<a href=" + place.website + ">" + place.name  + "</a><br>" + place.phone + "<br>" + place.address + "<span class='stars'><span>" + place.rating + "</span></span>";
+					var content = "<a href=" + place.website + ">" + place.name  + 
+					"</a><br>" + place.phone + "<br>" + place.address + 
+					"<span class='stars'><span>" + place.rating + "</span></span>";
 				}
 				else {
-					var content = place.name  + "<br>" + place.phone + "<br>" + place.address + "<span class='stars'><span>" + place.rating + "</span></span>";
+					var content = place.name  + "<br>" + place.phone + "<br>" + 
+					place.address + "<span class='stars'><span>" + 
+					place.rating + "</span></span>";
 				}
 
 				place.infoWindow.setContent(content);

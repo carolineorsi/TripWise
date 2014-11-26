@@ -105,7 +105,7 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
 		Math.sin(dLon/2) * Math.sin(dLon/2); 
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-	var d = R * c; // Distance in km
+	var d = R * c;
 	return d;
 }
 
@@ -154,7 +154,7 @@ function callDistanceMatrix() {
 			distanceAPI.getDistanceMatrix(requestEnd, function(response, status) {
 				if (status == google.maps.DistanceMatrixStatus.OK) {
 					processDistancesToEnd(response, requestList);
-					returnTopTen(route, requestList);
+					returnTopTen(requestList);
 				}
 			});
 		}
@@ -165,10 +165,8 @@ function callDistanceMatrix() {
 function processDistancesFromStart (response, requestList) {
 	// Stores distance and duration from start point in places object.
 	for (var i = 0; i < requestList.length; i++) {
-		var distance = response.rows[0].elements[i].distance.value;
-		var duration = response.rows[0].elements[i].duration.value;
-		search.places[requestList[i]]['duration'] = duration;
-		search.places[requestList[i]]['distance'] = distance;
+		search.places[requestList[i]]['duration'] = response.rows[0].elements[i].duration.value;
+		search.places[requestList[i]]['distance'] = response.rows[0].elements[i].distance.value;
 	}
 }
 
@@ -186,12 +184,12 @@ function processDistancesToEnd (response, requestList) {
 }
 
 
-function returnTopTen (route, requestList) {
-	// Sorts results returned from distance matrix request.
-	search.sortedPlaces = [];
-	for (var i = 0; i < requestList.length; i++) {
-		search.sortedPlaces.push([search.places[requestList[i]].duration, search.places[requestList[i]].place.location]);
-	}
+function returnTopTen (requestList) {
+	// Sorts results returned from distance matrix request.	
+	search.sortedPlaces = _.map(requestList, function(item) {
+		return [search.places[item].duration, search.places[item].place.location];
+	});
+
 	search.sortedPlaces.sort(function(a, b) {
 		return a[0] - b[0];
 	});
@@ -203,6 +201,7 @@ function returnTopTen (route, requestList) {
 function displayTopTen () {
 	$("#list-container").show();
 	$("#start-over-div").show();
+	
 	// Checks if there are fewer than 10 results remaining. If so, removes
 	// "Get More Results" button from results div.
 	if (search.sortedPlaces.length < 10) {
@@ -223,17 +222,17 @@ function displayTopTen () {
 
 		if (durationAdded <= 0) {
 			$("#list-container")
-				// .append("<div class='list-item' id='" + place.id + "'><div class='place-desc'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div><button class='btn btn-default select-button' type='button'>Add</button></div>");
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>No travel time added.</em></div>");
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + 
+					place.name + "</strong><br><em>No travel time added.</em></div>");
 		}
 		else {
 			$("#list-container")
-				// .append("<div class='list-item' id='" + place.id + "'><div class='place-desc'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div><button class='btn btn-default select-button' type='button'>Add</button></div>");
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + place.name + "</strong><br><em>" + durationAdded + " min added to route.</em></div>");
+				.append("<div class='list-item' id='" + place.id + "'><strong>" + 
+					place.name + "</strong><br><em>" + durationAdded + 
+					" min added to route.</em></div>");
 		}
 
 		displayPlace(place.location, i * 100, place);
-
 	}
 }
 
@@ -256,14 +255,18 @@ function displayDirections () {
 
 					var steps = response.routes[0].legs[i].steps;
 					for (var j = 0; j < steps.length; j++) {
-						$("#directions").append("<div class=step-instructions>" + (j + 1) + ") " + steps[j].instructions + "</div>");
+						$("#directions").append("<div class=step-instructions>" + 
+							(j + 1) + ") " + steps[j].instructions + "</div>");
 					}
 
 					if (i < route.places.length) {
-						$("#directions").append("<div class='waypoint' id=dir-" + route.places[i].id + "><h5>" + alpha[i] + ": " + route.places[i].name + "</h5></div>");
+						$("#directions").append("<div class='waypoint' id=dir-" + 
+							route.places[i].id + "><h5>" + alpha[i] + ": " + 
+							route.places[i].name + "</h5></div>");
 					}
 					else {
-						$("#directions").append("<div class='waypoint'><h5>" + alpha[i] + ": " + route.end +"</h5></div>");
+						$("#directions").append("<div class='waypoint'><h5>" + 
+							alpha[i] + ": " + route.end +"</h5></div>");
 					}
 				}
 
@@ -276,14 +279,13 @@ function displayDirections () {
 }
 
 function sendMessage(user_phone) {
-	// TODO: send waypoints to create link to/from waypoints instead of route start and end.
 	var places = {};
 	for (var i = 0; i < route.places.length; i++) {
 		places[i] = route.places[i].address;
 	}
 
 	var route_data = {'start' : route.start,
-		'destination' : route.end,
+		'end' : route.end,
 		'directionsmode' : route.travelMode,
 		'places': JSON.stringify(places)}
 
