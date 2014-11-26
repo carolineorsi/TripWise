@@ -44,15 +44,15 @@ function checkTravelMode() {
 	}
 }
 
-function processPlaces(results) {
-	_.each(results, function(item) {
+function processPlaces(placeRequestResults) {
+	_.each(placeRequestResults, function(place) {
 		var latlng = new google.maps.LatLng(
-			item.geometry.location.k, 
-			item.geometry.location.B
+			place.geometry.location.k, 
+			place.geometry.location.B
 		);
 
-		if (item.rating) {
-			var rating = item.rating;
+		if (place.rating) {
+			var rating = place.rating;
 		}
 		else {
 			var rating = "Unrated";
@@ -60,11 +60,11 @@ function processPlaces(results) {
 
 		search.places[latlng] = {};
 		search.places[latlng]["place"] = new Place(
-			item.name, 
-			item.placeID,
-			item.geometry.location.k,
-			item.geometry.location.B,
-			item.geometry.location,
+			place.name, 
+			place.place_id,
+			place.geometry.location.k,
+			place.geometry.location.B,
+			place.geometry.location,
 			latlng,
 			rating
 		);
@@ -164,10 +164,10 @@ function callDistanceMatrix() {
 
 function processDistancesFromStart (response, requestList) {
 	// Stores distance and duration from start point in places object.
-	for (var i = 0; i < requestList.length; i++) {
-		search.places[requestList[i]]['duration'] = response.rows[0].elements[i].duration.value;
-		search.places[requestList[i]]['distance'] = response.rows[0].elements[i].distance.value;
-	}
+	_.each(requestList, function(item, index) {
+		search.places[item]['duration'] = response.rows[0].elements[index].duration.value;
+		search.places[item]['distance'] = response.rows[0].elements[index].distance.value;
+	});
 }
 
 
@@ -175,12 +175,12 @@ function processDistancesToEnd (response, requestList) {
 	// Adds distance and duration to end point to distance and duration from 
 	// start point, getting the total route distance and duration. This is used
 	// to compare new route with waypoint from the user's original route.
-	for (var i = 0; i < response.rows.length; i++) {
-		var distance = response.rows[i].elements[0].distance.value;
-		var duration = response.rows[i].elements[0].duration.value;
-		search.places[requestList[i]]['duration'] = search.places[requestList[i]]['duration'] + duration;
-		search.places[requestList[i]]['distance'] = search.places[requestList[i]]['distance'] + distance;
-	}
+	_.each(requestList, function(item, index) {
+		var distance = response.rows[index].elements[0].distance.value;
+		var duration = response.rows[index].elements[0].duration.value;
+		search.places[item]['duration'] = search.places[item]['duration'] + duration;
+		search.places[item]['distance'] = search.places[item]['distance'] + distance;
+	});
 }
 
 
@@ -251,24 +251,25 @@ function displayDirections () {
 				var alpha = "BCDEFGHIJKLMNOPQRSTUVWYXZ"
 
 				var legs = response.routes[0].legs;
-				for (var i = 0; i < legs.length; i++) {
+				_.each(legs, function(leg, legIndex) {
+					var steps = response.routes[0].legs[legIndex].steps;
+					_.each(steps, function(step, stepIndex) {
+						$("#directions").append("<div class='step-instructions'>" +
+							(stepIndex + 1) + ") " + step.instructions + "</div>");
+					})
 
-					var steps = response.routes[0].legs[i].steps;
-					for (var j = 0; j < steps.length; j++) {
-						$("#directions").append("<div class=step-instructions>" + 
-							(j + 1) + ") " + steps[j].instructions + "</div>");
+					if (legIndex < route.places.length) {
+						$("#directions").append("<div class='waypoint' id='dir-" +
+							route.places[legIndex].id + "'><h5>" + alpha[legIndex] + 
+							": " + route.places[legIndex].name + "</h5></div>");
 					}
 
-					if (i < route.places.length) {
-						$("#directions").append("<div class='waypoint' id=dir-" + 
-							route.places[i].id + "><h5>" + alpha[i] + ": " + 
-							route.places[i].name + "</h5></div>");
-					}
 					else {
 						$("#directions").append("<div class='waypoint'><h5>" + 
-							alpha[i] + ": " + route.end +"</h5></div>");
+							alpha[legIndex] + ": " + route.end +"</h5></div>");
 					}
-				}
+
+				});
 
 				$("#directions-todo").show();
 			},
