@@ -176,29 +176,47 @@ def list_routes():
 
 
 
-@app.route("/get_route/<int:route_id>")
-def get_route(route_id):
-    route = model.session.query(model.Route).filter_by(id=route_id).first()
-    # route_data = {}
+# @app.route("/get_route/<int:route_id>")
+# def get_route(route_id):
+#     route = model.session.query(model.Route).filter_by(id=route_id).first()
+#     # route_data = {}
 
-    # route_data['start'] = route.start
-    # route_data['end'] = route.end
-    # route_data['travel_mode'] = route.travel_mode
+#     # route_data['start'] = route.start
+#     # route_data['end'] = route.end
+#     # route_data['travel_mode'] = route.travel_mode
     
-    waypoints = []
-    waypoint_names = []
-    # waypoints = "yo"
+#     waypoints = []
+#     waypoint_names = []
+    
+#     for waypoint in route.waypoints:
+#         waypoints.append(waypoint.address)
+#         waypoint_names.append(waypoint.name)
+
+#     return render_template("directions.html",
+#                             start=route.start,
+#                             end=route.end,
+#                             travel_mode=route.travel_mode,
+#                             waypoints=waypoints,
+#                             waypoint_names=waypoint_names)
+
+
+@app.route("/get_route")
+def get_route():
+    route_id = request.args.get("route_id")
+    route = model.session.query(model.Route).filter_by(id=route_id).first()
+
+    route_data = {}
+    route_data['start'] = route.start
+    route_data['end'] = route.end
+    route_data['travel_mode'] = route.travel_mode
+    route_data['waypoints'] = []
+    route_data['waypoint_names'] = []
+    
     for waypoint in route.waypoints:
-        waypoints.append(waypoint.address)
-        waypoint_names.append(waypoint.name)
+        route_data['waypoints'].append(waypoint.address)
+        route_data['waypoint_names'].append(waypoint.name)
 
-    return render_template("directions.html",
-                            start=route.start,
-                            end=route.end,
-                            travel_mode=route.travel_mode,
-                            waypoints=waypoints,
-                            waypoint_names=waypoint_names)
-
+    return jsonify(route_data)
 
 
 @app.route("/logout")

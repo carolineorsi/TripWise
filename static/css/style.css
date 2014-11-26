@@ -53,6 +53,7 @@ html, body, #map-container {
 	/*width: 18%;*/
 	width: auto;
 	min-width: 18%;
+	max-width: 22%;
 	max-height: calc(94% - 40px); 
 	overflow-y: scroll;
 	box-shadow: 2px 2px 2px #888;
@@ -90,7 +91,7 @@ html, body, #map-container {
 }
 
 .waypoint {
-	color: blue;
+	color: darkblue;
 }
 
 .travel-mode {
@@ -197,7 +198,7 @@ span.stars span {
 	float: none; 
 }
 
-#route-list {
+#route-popup {
 	display: none;
 	margin: 0px auto 0px auto;
 	position: absolute;
@@ -255,7 +256,7 @@ ol {
 }
 
 .addresses {
-	color: steelblue;
+	color: #123674;
 	font-style: italic;
 }
 
@@ -263,5 +264,13 @@ ol {
 	background-color: white;
 }
 
+h4.list-group-item-heading {
+	background-color: #B3D1FF;
+	padding: 2px;
+	border-radius: 2px;
+}
 
+#route-popup h3 {
+ 	margin-top: 10px;
+ }
 

@@ -323,22 +323,43 @@ function addStop() {
 }
 
 
-function rebuildSavedRoute() {
-	var savedStart = $("#route_start_from_server").text();
-	var savedEnd = $("#route_end_from_server").text();
-	var savedTravelMode = $("#route_travelmode_from_server").text();
-	var savedWaypoints = $("#route_waypointlist_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
-	var savedWaypointNames = $("#route_waypointnames_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
+function rebuildSavedRoute(routeID) {
+	$.get("/get_route",
+		{"route_id": routeID},
+		function(response) {
+			console.log(response);
+			route = new Route(response.start, response.end, response.travel_mode);
 
-	route = new Route(savedStart, savedEnd, savedTravelMode);
+			for (var i = 0; i < response.waypoints.length; i++) {
+				route.waypoints.push(new Waypoint(response.waypoints[i]));
+				route.places[i] = {};
+				route.places[i].location = response.waypoints[i];
+				route.places[i].name = response.waypoint_names[i];
+			}
 
-	for (var i = 0; i < savedWaypoints.length; i++) {
-		route.waypoints.push(new Waypoint(savedWaypoints[i]));
-		route.places.push(new Waypoint(savedWaypoints[i]));
-		route.places[i].name = savedWaypointNames[i];
-	}
-
-	displayDirections();
-	$(".initial-search").hide();
+		displayDirections();
+		$(".initial-search").hide();
+		}
+	);
 }
 
+
+// function rebuildSavedRoute() {
+
+// 	// var savedStart = $("#route_start_from_server").text();
+// 	// var savedEnd = $("#route_end_from_server").text();
+// 	// var savedTravelMode = $("#route_travelmode_from_server").text();
+// 	// var savedWaypoints = $("#route_waypointlist_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
+// 	// var savedWaypointNames = $("#route_waypointnames_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
+
+// 	// route = new Route(savedStart, savedEnd, savedTravelMode);
+
+// 	// for (var i = 0; i < savedWaypoints.length; i++) {
+// 	// 	route.waypoints.push(new Waypoint(savedWaypoints[i]));
+// 	// 	route.places.push(new Waypoint(savedWaypoints[i]));
+// 	// 	route.places[i].name = savedWaypointNames[i];
+// 	// }
+
+// 	// displayDirections();
+// 	// $(".initial-search").hide();
+// }
