@@ -55,7 +55,7 @@ The app will take input from the user (starting point, ending point, and a keywo
   - ~~Fix button alignment~~
   - Add button to redo search if don't like results (without clearing the map/route)
   - Make list of saved trip pop up in main screen
-  - When clicking on saved trip, rebuild route
+  - ~~When clicking on saved trip, rebuild route~~
   - When saving trip, ask if want to overwrite existing trip or save as new trip
   - ~~Use user's phone number to send to phone if logged in, otherwise prompt user for phone.~~
   - ~~Keep user logged in when page reloads.~~

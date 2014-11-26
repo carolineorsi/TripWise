@@ -50,7 +50,9 @@ html, body, #map-container {
 	z-index: 10;
 	background-color: white;
 	padding: 10px;
-	width: 18%;
+	/*width: 18%;*/
+	width: auto;
+	min-width: 18%;
 	max-height: calc(94% - 40px); 
 	overflow-y: scroll;
 	box-shadow: 2px 2px 2px #888;
@@ -196,18 +198,15 @@ span.stars span {
 }
 
 #route-list {
-	margin-top: 50px;
-}
-
-#route-list {
+	margin: 0px auto 0px auto;
 	position: absolute;
-	left: 500px;
 	top: calc(3% + 40px);
+	left: calc(50% - 20em);
 	z-index: 10;
 	background-color: white;
-	/*opacity: 0.5;*/
+	/*opacity: 0.7;*/
 	padding: 10px;
-	width: 50%;
+	width: 40em;
 	max-height: calc(94% - 40px); 
 	overflow-y: scroll;
 	box-shadow: 2px 2px 2px #888;
@@ -247,3 +246,20 @@ span.stars span {
 #send-button-div {
 	text-align: right;
 }
+
+ol {
+	margin-bottom: 0;
+	list-style-type: none;
+}
+
+.addresses {
+	color: steelblue;
+	font-style: italic;
+}
+
+.saved-route-list {
+	background-color: white;
+}
+
+
+
