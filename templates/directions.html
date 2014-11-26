@@ -26,17 +26,17 @@
 
 					<div class="initial-search">
 						<label for="start">Start</label>
-						<input type="text" id="start" class="form-control" value="3896 19th St, San Francisco, CA"><br>
+						<input type="text" id="start" class="form-control" placeholder="Enter start of trip" value="3896 19th St, San Francisco, CA"><br>
 					</div>
 					
 					<div class="initial-search">
 						<label for="end">End</label>
-						<input type="text" id="end" class="form-control" value="Santa Rosa, CA"><br>
+						<input type="text" id="end" class="form-control" placeholder="Enter end of trip" value="Santa Rosa, CA"><br>
 					</div>
 					
 					<div class="initial-search">
 						<label for="keyword">Keyword</label>
-						<input type="text" id="keyword" class="form-control" value="Brewpub"><br>
+						<input type="text" id="keyword" class="form-control" placeholder="Enter keyword" value="Coffee"><br>
 					</div>
 					
 					<div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
@@ -74,9 +74,6 @@
 				<div id="route_waypointnames_from_server">{{ waypoint_names }}</div>
 			{% endif %}
 		</div>
-
-<!--         <div id="map-container">
-        </div> -->
 
 
 {% endblock %}

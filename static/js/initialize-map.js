@@ -1,14 +1,17 @@
 $(document).ready(function () {
 	initializeMap();
-	loggedIn = $("#logged-status").text();
 
-	// When "Get Current Location" checked, calls geolocation API
+	// Checks for login status from jinja template.
+	loggedIn = $("#logged-status").text();		
+
+	// When "Get Current Location" is checked, calls geolocation API
+	// Note: not currently used.
 	$("#geolocation").on('click', getLocation);
 
 	// Call jQuery Geocomplete to add autocomplete to start and end fields
 	$("#start, #end").geocomplete({details: "form"});
 
-	// Instantiate Google Directions API
+	// Instantiate Google Directions API and declare global variables.
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer({draggable: true});
 	markersArray = [];
@@ -17,23 +20,21 @@ $(document).ready(function () {
 	// When form submitted, initiates Place search
 	$("#directions-form").submit(findPlaces);
 
-	// When "Get More Results" button clicked, calls function to get next
-	// ten results
-	$("#get-more-results").on('click', callDistanceMatrix);
-	$("#reset").on('click', clearMap);
-	$("#send-button").on('click', checkLoggedIn);
-	$("#add-stop").on('click', function () {
+	// Handle button clicks
+	$("#get-more-results").click(callDistanceMatrix);
+	$("#reset").click(clearMap);
+	$("#send-button").click(checkLoggedIn);
+	$("#add-stop").click(function () {
 		addStop();
 		$(".initial-search").show();
 	});
 
-	$("#nav-login").on('click', function() {
+	$("#nav-login").click(function() {
 		$("#login").toggle();
 	})
 
 	$("#testlink").click(function() {
 		$("#navigation-bar").load();
-		console.log("check");
 	})
 
 	$(".nav-bar-hide").hide();
@@ -93,34 +94,6 @@ function initializeMap() {
 
 	// Create instance of map object, specifying the <div> container and map options
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
-
-	// var styles = [
-	//     {
-	//       stylers: [
-	//         { hue: "#00ffe6" },
-	//         { saturation: -20 }
-	//       ]
-	//     },{
-	//       featureType: "road",
-	//       elementType: "geometry",
-	//       stylers: [
-	//         { lightness: 100 },
-	//         { visibility: "simplified" }
-	//       ]
-	//     },{
-	//       featureType: "road",
-	//       elementType: "labels",
-	//       stylers: [
-	//         { visibility: "off" }
-	//       ]
-	//     }
-	//   ];
-
-	//   var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"})
-
-	// // map.mapTypes.set("watercolor", new google.maps.StamenMapType("watercolor"));
-	// map.mapTypes.set('map-style', styledMap);
-	// map.setMapTypeID('map-style');
 }
 
 
@@ -298,21 +271,20 @@ function getPlaceDetails (place) {
 }
 
 function showStars() {
-
 	$(".stars span")
-	.each(function() {
-		var val = parseFloat($(this).html());
-		if (val > 0 || val < 5) {
-			var size = Math.max(0, (Math.min(5, val))) * 16;
-			$(this).empty();
-			$(this).css({"width" : size, "display" : "block"});
-		}
-		else {
-			$(this).html("<strong>Unrated</strong>");
-			$(this).css({"background" : "none", "margin-left" : 16.5});
-			$(this).show();
-		}
-	});
+		.each(function() {
+			var val = parseFloat($(this).html());
+			if (val > 0 || val < 5) {
+				var size = Math.max(0, (Math.min(5, val))) * 16;
+				$(this).empty()
+					.css({"width" : size, "display" : "block"});
+			}
+			else {
+				$(this).html("<strong>Unrated</strong>")
+					.css({"background" : "none", "margin-left" : 16.5})
+					.show();
+			}
+		});
 	$(".stars").css({"display" : "block"});
 }
 

@@ -1,6 +1,5 @@
 function findPlaces(evt) {
 	event.preventDefault();
-	// clearMap();
 
 	if (!route) {
 		// Create route object based on user's input.
@@ -9,7 +8,6 @@ function findPlaces(evt) {
 			document.getElementById('end').value,
 			checkTravelMode()
 		);
-		// $("#start, #end").attr("disabled", "disabled");
 	}
 
 	// Create search object based on user's input.
@@ -24,14 +22,14 @@ function findPlaces(evt) {
 				// route.reorderWaypoints(response.routes[0].waypoint_order);
 				route.getPolyline(response);
 				return search.getSearchPoints(route);
-				// TODO: add intermediate button to confirm route and add keyword before calling getPlaces
 			}
 		)
 		.then(function () {
 				search.getPlaces();
 			}
 		);
-}
+};
+
 
 function checkTravelMode() {
 	// Checks form radio buttons to set travel mode.
@@ -47,31 +45,34 @@ function checkTravelMode() {
 }
 
 function processPlaces(results) {
-	// For each place return, create new Place object and add to allPlaces
-	for (var j = 0; j < results.length; j++) {
-		
-		var placeID = results[j].place_id;
-		var name = results[j].name;
-		var lat = results[j].geometry.location.k;
-		var lng = results[j].geometry.location.B; 
-		var location = results[j].geometry.location;
-		var latlng = new google.maps.LatLng(lat, lng);
+	_.each(results, function(item) {
+		var latlng = new google.maps.LatLng(
+			item.geometry.location.k, 
+			item.geometry.location.B
+		);
 
-		if (results[j].rating) {
-			var rating = results[j].rating;
+		if (item.rating) {
+			var rating = item.rating;
 		}
 		else {
 			var rating = "Unrated";
 		}
 
 		search.places[latlng] = {};
-		search.places[latlng]["place"] = new Place(name, placeID, lat, lng, location, rating);
+		search.places[latlng]["place"] = new Place(
+			item.name, 
+			item.placeID,
+			item.geometry.location.k,
+			item.geometry.location.B,
+			item.geometry.location,
+			latlng,
+			rating
+		);
 
 		rank(search.places[latlng]["place"]);
-
 		// displayPlace(results[j].geometry.location);
-	}
-}
+	});
+};
 
 
 function rank(place) {
@@ -126,10 +127,9 @@ function getAddedDistance() {
 		return a.rank - b.rank;
 	})
 
-	search.unreturnedPlaces = [];
-	for (i = 0; i < search.placeList.length; i++) {
-		search.unreturnedPlaces.push(new google.maps.LatLng(search.placeList[i].location.k, search.placeList[i].location.B));
-	}
+	search.unreturnedPlaces = _.map(search.placeList, function(item) {
+		return new google.maps.LatLng(item.location.k, item.location.B);
+	})
 
 	callDistanceMatrix();
 }
@@ -341,25 +341,4 @@ function rebuildSavedRoute(routeID) {
 		$(".initial-search").hide();
 		}
 	);
-}
-
-
-// function rebuildSavedRoute() {
-
-// 	// var savedStart = $("#route_start_from_server").text();
-// 	// var savedEnd = $("#route_end_from_server").text();
-// 	// var savedTravelMode = $("#route_travelmode_from_server").text();
-// 	// var savedWaypoints = $("#route_waypointlist_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
-// 	// var savedWaypointNames = $("#route_waypointnames_from_server").text().replace("[u'", "").replace("']", "").split("', u'");
-
-// 	// route = new Route(savedStart, savedEnd, savedTravelMode);
-
-// 	// for (var i = 0; i < savedWaypoints.length; i++) {
-// 	// 	route.waypoints.push(new Waypoint(savedWaypoints[i]));
-// 	// 	route.places.push(new Waypoint(savedWaypoints[i]));
-// 	// 	route.places[i].name = savedWaypointNames[i];
-// 	// }
-
-// 	// displayDirections();
-// 	// $(".initial-search").hide();
-// }
+};
