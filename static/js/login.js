@@ -2,6 +2,7 @@ $(document).ready(function () {
 	$("#login-user-dropdown").submit(handleLogin);
 	$("#create-new-user").submit(handleCreate);
 	$("#save-route").submit(handleSaveRoute);
+	$("#my-trips-link").click(showSavedTrips);
 
 	$("#logout").click(function() {
 		$(".logged-in").hide();
@@ -131,5 +132,38 @@ function selectFromList() {
 	});
 }
 
+function showSavedTrips() {
+
+	$.get("/mytrips",
+		function(response) {
+			$("#route-list").show();
+			for (var i = 0; i < response.object.length; i++) {
+				$("#route-list").append(
+					"<div id='" + response.object[i].id + "' class='saved-route-list list-group'>" +
+						"<a href='/get_route/" + response.object[i].id + "' class='list-group-item'>" +
+							"<h4 class='list-group-item-heading'>" + response.object[i].name + "</h4>" +
+							"<strong>Start:</strong> <span class='addresses'>" + response.object[i].start + "</span>" +
+							"<p class='list-group-item-text'>" +
+								"<ol>" +
+									// {% set count = 1 %}
+									// {% for waypoint in route.waypoints %}
+									// <li>Stop {{ count }}: {{ waypoint.name }}</li>
+									// {% set count = count + 1 %}
+									// {% endfor %}
+								"</ol>" +
+							"<strong>End:</strong> <span class='addresses'>" + response.object[i].end + "</span>" +
+						"</a>" +
+					"</div>"
+				);
+
+				for (var j = 0; j < response.object[i].waypoints.length; j++) {
+					$("#" + response.object[i].id + " ol").append(
+						"<li> Stop " + (j + 1) + ": " + response.object[i].waypoints[j] + "</li>"
+					);
+				}
+			}
+		}
+	);
+}
 
 

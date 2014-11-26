@@ -45,7 +45,8 @@
                             </div>
                         </li>
 
-                        <li id="my-trips" class="logged-in"><a href="/mytrips">My Trips</a>
+                        <li id="my-trips" class="logged-in"><a href="#"><span id="my-trips-link">My Trips</span></a>
+                        <!-- <li id="my-trips" class="logged-in"><a href="/mytrips">My Trips</a> -->
                         </li>
                          
                         <li id="logout" class="logged-in"><a href="/logout">Log Out</a></li>
@@ -106,6 +107,27 @@
         </div>
     
         {% block body %}{% endblock %}
+
+        <div id="route-list">
+          <h3>Your Trips</h3>
+            {% for route in route_list %}
+            <div id="{{ route.id }}" class="saved-route-list list-group">
+              <a href="/get_route/{{ route.id }}" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ route.name }}</h4>
+                <strong>Start:</strong> <span class="addresses">{{ route.start }}</span>
+                <p class="list-group-item-text">
+                  <ol list-group>
+                    {% set count = 1 %}
+                    {% for waypoint in route.waypoints %}
+                    <li>Stop {{ count }}: {{ waypoint.name }}</li>
+                    {% set count = count + 1 %}
+                    {% endfor %}
+                  </ol>
+                <strong>End:</strong> <span class="addresses">{{ route.end }}</span>
+              </a>
+            </div>
+            {% endfor %}
+        </div>
 
         <div id="map-container">
         </div>

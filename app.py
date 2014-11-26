@@ -145,10 +145,34 @@ def save_route():
     return jsonify(response)
 
 
+# @app.route("/mytrips")
+# def list_routes():
+#     route_list = users.get_routes_by_user(flask_session['id'])
+#     return render_template("list.html", route_list=route_list)
+
+
 @app.route("/mytrips")
 def list_routes():
     route_list = users.get_routes_by_user(flask_session['id'])
-    return render_template("list.html", route_list=route_list)
+    response = {}
+    routes_to_return = []
+
+    for route in route_list:
+        route_data = {}
+        route_data['id'] = route.id
+        route_data['name'] = route.name
+        route_data['start'] = route.start
+        route_data['end'] = route.end
+        route_data['waypoints'] = []
+
+        for waypoint in route.waypoints:
+            route_data['waypoints'].append(waypoint.name)
+
+        routes_to_return.append(route_data)
+
+    response['object'] = routes_to_return
+
+    return jsonify(response)
 
 
 
