@@ -53,10 +53,13 @@ def send_to_phone():
     for i in range(len(addresses) - 1):
         url = phone.build_url(addresses[i], addresses[i + 1], directionsmode)
         message = "Leg %d: " % (i + 1)
-        phone.send_message(message, url, phone_num)
+        twilio_response = phone.send_message(message, url, phone_num)
 
-    response["status"] = "success"
-    response["message"] = "Route Sent!"
+    if twilio_response == "success":
+        response["status"] = "success"
+        response["message"] = "Route Sent!"
+    else:
+        response["message"] = "Message not sent. Please confirm the phone number."
         
     return jsonify(response)
 
@@ -99,7 +102,7 @@ def create_account():
     lastname = request.form.get("lastname").title()
     email = request.form.get("email").lower() 
     password = request.form.get("password")
-    phone = request.form.get("phone").replace(".","").replace("-","")
+    phone_num = request.form.get("phone").replace(".","").replace("-","")
 
     response = {"status": "warning"}
 
@@ -109,9 +112,11 @@ def create_account():
         response["message"] = "Please enter an email address."
     elif password == "":
         response["message"] = "Please enter a password."
+    elif not phone.validate_phone(phone_num):
+        response["message"] = "Not a valid phone number."
     else:
         hashed_password = sha256_crypt.encrypt(password)
-        new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone)
+        new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone_num)
 
         if new_user:
             response["status"] = "success"

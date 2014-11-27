@@ -17,9 +17,15 @@ def send_message(msg, url, phone_num):
     number_to_text = "+1" + phone_num
     text_body = msg + url
 
-    message = client.messages.create(from_=TWILIO_NUMBER,
-                                    to=number_to_text,
-                                    body=text_body)
+    try:
+        message = client.messages.create(from_=TWILIO_NUMBER,
+                                        to=number_to_text,
+                                        body=text_body)
+
+        return "success"
+    except:
+        return "failure"
+
 
 def build_url(saddr, daddr, directionsmode):
     """ Creates the Google Maps iOS app URL to send in text message. """
