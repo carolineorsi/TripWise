@@ -21,8 +21,6 @@ $(document).ready(function () {
 	$("#directions-form").submit(findPlaces);
 
 	// Handle button clicks
-	$("#get-more-results").click(callDistanceMatrix);
-	$("#reset").click(clearMap);
 	$("#send-button").click(checkLoggedIn);
 	$("#add-stop").click(function () {
 		addStop();

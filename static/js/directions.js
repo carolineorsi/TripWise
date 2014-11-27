@@ -4,15 +4,16 @@ function findPlaces(evt) {
 	if (!route) {
 		// Create route object based on user's input.
 		route = new Route(
-			document.getElementById('start').value,
-			document.getElementById('end').value,
+			$("#start").val(),
+			$("#end").val(),
 			checkTravelMode()
 		);
 	}
 
 	// Create search object based on user's input.
 	search = new Search(
-		document.getElementById('keyword').value
+		$("#keyword").val(),
+		$("#results-sort").find(":selected").text()
 	);
 
 	// Get initial directions and use returned value to find Places.
@@ -64,18 +65,23 @@ function processPlaces(placeRequestResults) {
 			place.place_id,
 			place.geometry.location.k,
 			place.geometry.location.B,
-			place.geometry.location,
+			// place.geometry.location,
 			latlng,
 			rating
 		);
 
-		rank(search.places[latlng]["place"]);
+		if (search.sortby == "Distance From Route") {
+			rankByDistance(search.places[latlng]["place"]);
+		}
+		else if (search.sortby == "Highest Rated") {
+			rankByRating(search.places[latlng]["place"])
+		}
 		// displayPlace(results[j].geometry.location);
 	});
 };
 
 
-function rank(place) {
+function rankByDistance(place) {
 	// Rank place based on direct distance from route polyline. Uses
 	// getDistanceFromLatLonInKm to calculate distance.
 	place.rank = 1000;
@@ -91,6 +97,15 @@ function rank(place) {
 		if (distanceFromPolyline < place.rank) {
 			place.rank = distanceFromPolyline;
 		}
+	}
+}
+
+function rankByRating(place) {
+	if (place.rating == "Unrated") {
+		place.rank = 5.0;
+	}
+	else {
+		place.rank = 5.0 - place.rating;
 	}
 }
 
@@ -190,9 +205,11 @@ function returnTopTen (requestList) {
 		return [search.places[item].duration, search.places[item].place.location];
 	});
 
-	search.sortedPlaces.sort(function(a, b) {
-		return a[0] - b[0];
-	});
+	if (search.sortby == "Distance From Route") {
+		search.sortedPlaces.sort(function(a, b) {
+			return a[0] - b[0];
+		});
+	}
 
 	displayTopTen();
 }

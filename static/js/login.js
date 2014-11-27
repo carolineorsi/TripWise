@@ -2,13 +2,10 @@ $(document).ready(function () {
 	$("#login-user-dropdown").submit(handleLogin);
 	$("#create-new-user").submit(handleCreate);
 	$("#save-route").submit(handleSaveRoute);
-	// $("#my-trips-link").on('mouseenter', showSavedTrips).on('mouseleave', function() {
-
-	// });
 
 	$("#my-trips-link").click(function() {
 		if ($("#route-popup").css('display') == 'none') {
-			showSavedTrips();
+			getSavedTrips();
 		}
 		else {
 			$("#route-popup").hide();
@@ -134,43 +131,38 @@ function displayResultStatus(status, resultMsg, alertID) {
 }
 
 
-function selectFromList() {
-	$(".saved-route-list").on('hover', function() {
-		$(this).css({"background-color":"lightblue"});
-	});
-	$(".saved-route-list").on('click', function() {
-		$(this).html("Selected");
-	});
+function getSavedTrips() {
+	$("#route-list").empty();
+	$.get("/mytrips")
+	.done(populateSavedRouteList);
 }
 
-function showSavedTrips() {
-	$("#route-list").empty();
-	$.get("/mytrips",
-		function(response) {
-			$("#route-popup").show();
-			for (var i = 0; i < response.object.length; i++) {
-				$("#route-list").append(
-					"<div id='" + response.object[i].id + "' class='saved-route-list list-group' onclick='rebuildSavedRoute(this.id)'>" +
-						// "<a href='/get_route/" + response.object[i].id + "' class='list-group-item'>" +
-						"<a class='list-group-item'>" +
-							"<h4 class='list-group-item-heading'>" + response.object[i].name + "</h4>" +
-							"<strong>Start:</strong> <span class='addresses'>" + response.object[i].start + "</span>" +
-							"<p class='list-group-item-text'>" +
-								"<ol>" +
-								"</ol>" +
-							"<strong>End:</strong> <span class='addresses'>" + response.object[i].end + "</span>" +
-						"</a>" +
-					"</div>"
-				);
 
-				for (var j = 0; j < response.object[i].waypoints.length; j++) {
-					$("#" + response.object[i].id + " ol").append(
-						"<li> Stop " + (j + 1) + ": " + response.object[i].waypoints[j] + "</li>"
-					);
-				}
-			}
-		}
-	);
+function populateSavedRouteList(savedTripList) {
+	$("#route-popup").show();
+
+	_.each(savedTripList.object, function(savedTrip) {
+		$("#route-list").append(
+			"<div id='" + savedTrip.id + "' class='saved-route-list list-group' onclick='rebuildSavedRoute(this.id)'>" +
+				// "<a href='/get_route/" + response.object[i].id + "' class='list-group-item'>" +
+				"<a class='list-group-item'>" +
+					"<h4 class='list-group-item-heading'>" + savedTrip.name + "</h4>" +
+					"<strong>Start:</strong> <span class='addresses'>" + savedTrip.start + "</span>" +
+					"<p class='list-group-item-text'>" +
+						"<ol>" +
+						"</ol>" +
+					"<strong>End:</strong> <span class='addresses'>" + savedTrip.end + "</span>" +
+				"</a>" +
+			"</div>"
+		);
+
+		_.each(savedTrip.waypoints, function(waypoint, index) {
+			$("#" + savedTrip.id + " ol").append(
+				"<li> Stop " + (index + 1) + ": " + waypoint + "</li>"
+			);
+
+		});
+	});
 }
 
 

@@ -54,14 +54,22 @@
 						<label for="opennow" class="travel-mode">Walk</label><br>
 					</div>
 
+					<div class="initial-search">
+						<label for="results-sort">Sort By</filter>
+						<select id="results-sort">
+							<option value="distance">Distance From Route</option>
+							<option value="rating">Highest Rated</option>
+						</select>
+					</div>
+
 					<div id="submit-buttons" class="control-buttons">
 						<button class="btn btn-default initial-search" type="submit">Go!</button>
-						<button class="btn btn-default control-buttons" id="get-more-results" type="button">More Results</button>
+						<button class="btn btn-default control-buttons" id="get-more-results" type="button" onclick="callDistanceMatrix()">More Results</button>
 					</div>
 				</form>
 			</div>
 			<div id="start-over-div">
-				<button class="btn btn-default" type="reset" id="reset">Start Over</button>
+				<button class="btn btn-default" type="reset" id="reset" onclick="clearMap()">Start Over</button>
 			</div>
 		</div>
 

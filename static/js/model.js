@@ -63,8 +63,9 @@ function Place(name, id, lat, lng, location, rating) {
 	this.rating = rating;
 }
 
-function Search(keyword, opennow) {
+function Search(keyword, sortby, opennow) {
 	this.keyword = keyword;		// User's search keyword
+	this.sortby = sortby;
 	this.places = {}; 			// Contains Place objects
 	this.placeList = [];  		// List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
@@ -97,6 +98,7 @@ function Search(keyword, opennow) {
 
 		// Find places for each search point. When the increment variable
 		// exceeds the number of search points, end the loop.
+
 		for (var i = 0; i < numSearches; i++){
 			var request = new placesRequest(this.searchPoints[i], this.radius, this.keyword);
 			// displayPoint(this.searchPoints[i], this.radius);
