@@ -36,6 +36,9 @@ def send_to_phone():
         phone_num = user.phone
     else:
         phone_num = request.args.get('phone').replace(".","").replace("-","")
+        if not phone.validate_phone(phone_num):
+            response["message"] = "Not a valid phone number"
+            return jsonify(response)
 
     start = request.args.get('start')
     end = request.args.get('end')

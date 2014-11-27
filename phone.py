@@ -31,8 +31,18 @@ def build_url(saddr, daddr, directionsmode):
 
 
 def validate_phone(phone):
+    valid_num = True
 
-    pass
+    if len(phone) != 10:
+        valid_num = False
+
+    else:
+        for character in phone:
+            if not character.isdigit():
+                valid_num = False
+                break
+
+    return valid_num
 
 
 if __name__ == "__main__":

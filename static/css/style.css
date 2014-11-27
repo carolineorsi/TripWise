@@ -290,3 +290,7 @@ h4.list-group-item-heading {
 	margin-bottom: 5px;
 }
 
+#extra-search-criteria label {
+	font-size: 0.8em;
+}
+
