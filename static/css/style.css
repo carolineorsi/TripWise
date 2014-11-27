@@ -274,3 +274,19 @@ h4.list-group-item-heading {
  	margin-top: 10px;
  }
 
+#extra-search-criteria, #submit-buttons {
+	display: inline-block;
+}
+
+#extra-search-criteria {
+	float: left;
+}
+
+#submit-buttons {
+	float: right;
+}
+
+#extra-search-criteria div {
+	margin-bottom: 5px;
+}
+

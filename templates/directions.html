@@ -39,31 +39,35 @@
 						<input type="text" id="keyword" class="form-control" placeholder="Enter keyword" value="Coffee"><br>
 					</div>
 					
-					<div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
-						<label for="opennow">Open Now</label>
+					<div id="extra-search-criteria">
+						<div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
+							<label for="opennow">Open Now</label>
+						</div>
+
+						<div class="initial-search">
+							<input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
+							<label for="opennow" class="travel-mode">Drive</label>
+
+							<input type="radio" name="travel-mode" class="travel-mode" id="biking">
+							<label for="opennow" class="travel-mode">Bike</label>
+
+							<input type="radio" name="travel-mode" class="travel-mode" id="walking">
+							<label for="opennow" class="travel-mode">Walk</label><br>
+						</div>
+
+						<div class="initial-search">
+							<label for="results-sort">Sort By</filter>
+							<select id="results-sort">
+								<option value="distance">Distance From Route</option>
+								<option value="rating">Highest Rated</option>
+							</select>
+						</div>
 					</div>
-
-					<div class="initial-search">
-						<input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
-						<label for="opennow" class="travel-mode">Drive</label>
-
-						<input type="radio" name="travel-mode" class="travel-mode" id="biking">
-						<label for="opennow" class="travel-mode">Bike</label>
-
-						<input type="radio" name="travel-mode" class="travel-mode" id="walking">
-						<label for="opennow" class="travel-mode">Walk</label><br>
-					</div>
-
-					<div class="initial-search">
-						<label for="results-sort">Sort By</filter>
-						<select id="results-sort">
-							<option value="distance">Distance From Route</option>
-							<option value="rating">Highest Rated</option>
-						</select>
-					</div>
-
+					
 					<div id="submit-buttons" class="control-buttons">
 						<button class="btn btn-default initial-search" type="submit">Go!</button>
+					</div>
+					<div class="control-buttons">
 						<button class="btn btn-default control-buttons" id="get-more-results" type="button" onclick="callDistanceMatrix()">More Results</button>
 					</div>
 				</form>

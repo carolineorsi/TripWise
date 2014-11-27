@@ -110,6 +110,7 @@ function clearMap(){
 	$("#start-over-div").hide();
 	$(".initial-search").show();
 	$("#phone-loggedout").hide();
+	$("#get-more-results").hide();
 }
 
 function removeMarkers() {
