@@ -88,6 +88,7 @@ function Search(keyword, sortby, opennow) {
 		this.searchPoints = [];
 		for (i = 0; i < pointsInPolyline; i = i + increment) {
 			this.searchPoints.push(route.polyline[i]);
+			// displayPoint(route.polyline[i], this.radius);
 		}
 	};
 
@@ -109,7 +110,7 @@ function Search(keyword, sortby, opennow) {
 					processPlaces(results); 
 				}
 				else {
-					console.log(status);
+					// console.log(status);
 				}
 
 				// Counter tracks whether all Places requests have returned.

@@ -52,7 +52,7 @@ html, body, #map-container {
 	padding: 10px;
 	/*width: 18%;*/
 	width: auto;
-	min-width: 18%;
+	min-width: 19%;
 	max-width: 22%;
 	max-height: calc(94% - 40px); 
 	overflow-y: scroll;
@@ -235,7 +235,7 @@ span.stars span {
 #start-over-div {
 	display: none;
 	text-align: center;
-	border-top: 2px solid #EEE;
+	/*border-top: 2px solid #EEE;*/
 }
 
 #directions-form {
@@ -284,6 +284,7 @@ h4.list-group-item-heading {
 
 #submit-buttons {
 	float: right;
+	padding-left: 5px;
 }
 
 #extra-search-criteria div {
@@ -294,3 +295,21 @@ h4.list-group-item-heading {
 	font-size: 0.8em;
 }
 
+#radios div {
+	display: inline-block;
+	width: 50px;
+	margin-bottom: 0;
+}
+
+#form-bottom {
+	vertical-align: bottom;
+}
+
+#geolocation {
+	margin: 0 0 5px 0;
+	font-size: 0.8em;
+}
+/*
+#start-field {
+	line-height: 8px;
+}*/

@@ -45,6 +45,7 @@ function checkTravelMode() {
 	}
 }
 
+
 function processPlaces(placeRequestResults) {
 	_.each(placeRequestResults, function(place) {
 		var latlng = new google.maps.LatLng(
@@ -65,7 +66,6 @@ function processPlaces(placeRequestResults) {
 			place.place_id,
 			place.geometry.location.k,
 			place.geometry.location.B,
-			// place.geometry.location,
 			latlng,
 			rating
 		);
@@ -76,7 +76,6 @@ function processPlaces(placeRequestResults) {
 		else if (search.sortby == "Highest Rated") {
 			rankByRating(search.places[latlng]["place"])
 		}
-		// displayPlace(results[j].geometry.location);
 	});
 };
 
