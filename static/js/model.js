@@ -73,7 +73,7 @@ function Search(keyword, sortby, opennow) {
 	this.sortedPlaces = [];		// List of sorted places returned from distance matrix request
 	this.unreturnedPlaces = []; // List of latlng objects, sorted by rank, that have not yet been returned to the user
 
-	this.getSearchPoints = function (route) {
+	this.getSearchPoints = function(route) {
 		// Identifies 10 points along polyline for Places search, stored in search object
 		var NUMPOINTS = 10;
 
@@ -88,7 +88,7 @@ function Search(keyword, sortby, opennow) {
 		this.searchPoints = [];
 		for (i = 0; i < pointsInPolyline; i = i + increment) {
 			this.searchPoints.push(route.polyline[i]);
-			// displayPoint(route.polyline[i], this.radius);
+			displayPoint(route.polyline[i], this.radius);
 		}
 	};
 

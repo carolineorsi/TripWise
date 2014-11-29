@@ -60,7 +60,8 @@ The app will take input from the user (starting point, ending point, and a keywo
   - ~~Use user's phone number to send to phone if logged in, otherwise prompt user for phone.~~
   - ~~Keep user logged in when page reloads.~~
   - Front end: remove item from directions.
-  - Validate phone number to ensure it is right format to send message.
+  - ~~Validate phone number to ensure it is right format to send message.~~
+  - Optimize search points.
 
 ####Additional Features to Add:
 - ~~Autocomplete of input fields~~
