@@ -1,6 +1,9 @@
 function findPlaces(evt) {
 	event.preventDefault();
 
+	$(".loading").show();
+	$(".initial-search").hide();
+
 	if (!route) {
 		// Create route object based on user's input.
 		route = new Route(
@@ -215,6 +218,7 @@ function returnTopTen (requestList) {
 
 
 function displayTopTen () {
+	$(".loading").hide();
 	$("#list-container").show();
 	$("#start-over-div").show();
 	
@@ -229,7 +233,7 @@ function displayTopTen () {
 		$("#get-more-results").show();
 	}
 
-	$(".initial-search").hide();
+	// $(".initial-search").hide();
 
 	// For each of ten places, display in results div and add to map.
 	for (var i = 0; i < maxResult; i++) {

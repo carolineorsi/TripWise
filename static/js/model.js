@@ -114,11 +114,15 @@ function Search(keyword, sortby, opennow) {
 
 			if ((distanceBetweenPoints * 1000) > (0.9 * this.radius)) {
 				this.searchPoints.push(route.polyline[i]);
-				displayPoint(route.polyline[i], this.radius);
 			}
 		}
 		this.searchPoints.push(route.polyline[route.polyline.length - 1]);
-		console.log(this.searchPoints.length);
+		
+		// Uncomment this to show search radii:
+		// console.log(this.searchPoints.length);
+		// for (var i = 0; i < this.searchPoints.length; i++) {
+		// 	displayPoint(this.searchPoints[i], this.radius);
+		// }
 	};
 
 	// this.getPlaces = function () {
