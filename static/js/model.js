@@ -75,25 +75,6 @@ function Search(keyword, sortby, opennow) {
 	this.counter = null;
 	this.numSearches = null;
 
-	// this.getSearchPoints = function(route) {
-	// 	// Identifies 10 points along polyline for Places search, stored in search object
-	// 	var NUMPOINTS = 10;
-
-	// 	pointsInPolyline = route.polyline.length;
-	// 	increment = Math.ceil(pointsInPolyline / NUMPOINTS);
-
-	// 	this.radius = route.initialDistance / 8;
-	// 	if (this.radius > 50000) {
-	// 		this.radius = 50000;
-	// 	}
-
-	// 	this.searchPoints = [];
-	// 	for (i = 0; i < pointsInPolyline; i = i + increment) {
-	// 		this.searchPoints.push(route.polyline[i]);
-	// 		displayPoint(route.polyline[i], this.radius);
-	// 	}
-	// };
-
 	this.getSearchPoints = function(route) {
 		pointsInPolyline = route.polyline.length;
 		// increment = Math.ceil(pointsInPolyline / NUMPOINTS);
@@ -124,45 +105,6 @@ function Search(keyword, sortby, opennow) {
 		// 	displayPoint(this.searchPoints[i], this.radius);
 		// }
 	};
-
-	// this.getPlaces = function () {
-	// 	var placesService = new google.maps.places.PlacesService(map);
-	// 	var numSearches = this.searchPoints.length;
-	// 	var counter = 0;
-
-	// 	// Find places for each search point. When the increment variable
-	// 	// exceeds the number of search points, end the loop.
-
-	// 	for (var i = 0; i < numSearches; i++){
-	// 		var request = new placesRequest(this.searchPoints[i], this.radius, this.keyword);
-	// 		// displayPoint(this.searchPoints[i], this.radius);
-
-	// 		placesService.nearbySearch(request, function(results, status) {
-	// 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-	// 				// console.log(results);
-	// 				processPlaces(results); 
-	// 			}
-	// 			else {
-	// 				// console.log(status);
-	// 			}
-
-	// 			// Counter tracks whether all Places requests have returned.
-	// 			counter++;
-	// 			if (counter >= numSearches) {
-	// 				// Checks if there are search results:
-	// 				if (Object.keys(search.places).length == 0) {
-	// 					$("#list-container")
-	// 						.append("<strong>There are no places that match your search.</strong>")
-	// 						.addClass("text-alert");
-	// 				}
-	// 				else {
-	// 					getAddedDistance(route);
-	// 				}
-	// 			}
-	// 		});
-	// 	}
-	// }
-
 
 	this.getPlaces = function () {
 		this.numSearches = this.searchPoints.length;
