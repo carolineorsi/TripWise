@@ -65,7 +65,7 @@ function Place(name, id, lat, lng, location, rating) {
 
 function Search(keyword, sortby, opennow) {
 	this.keyword = keyword;		// User's search keyword
-	this.sortby = sortby;
+	this.sortby = sortby;		// User's sorting choice
 	this.places = {}; 			// Contains Place objects
 	this.placeList = [];  		// List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
@@ -77,13 +77,15 @@ function Search(keyword, sortby, opennow) {
 
 	this.getSearchPoints = function(route) {
 		pointsInPolyline = route.polyline.length;
-		// increment = Math.ceil(pointsInPolyline / NUMPOINTS);
 
+		// Sets search radius and checks that it doesn't exceed Google Maps API 50km limit
 		this.radius = route.initialDistance / 7;
-		if (this.radius > 50000) {
+		if (this.radius > 50000) {		
 			this.radius = 50000;
 		}
 
+		// Creates list of search points. Search points are spaced at a distance
+		// equal to the search radius.
 		this.searchPoints.push(route.polyline[0]);
 		for (i = 0; i < pointsInPolyline; i++) {
 			distanceBetweenPoints = getDistanceFromLatLonInKm(
@@ -99,7 +101,7 @@ function Search(keyword, sortby, opennow) {
 		}
 		this.searchPoints.push(route.polyline[route.polyline.length - 1]);
 		
-		// Uncomment this to show search radii:
+		// Uncomment this to show search bubbles:
 		// console.log(this.searchPoints.length);
 		// for (var i = 0; i < this.searchPoints.length; i++) {
 		// 	displayPoint(this.searchPoints[i], this.radius);
@@ -110,6 +112,8 @@ function Search(keyword, sortby, opennow) {
 		this.numSearches = this.searchPoints.length;
 		this.counter = 0;
 
+		// Sets delay to throttle Google Places API calls so as not to exceeding
+		// query rate limits.
 		if (this.numSearches < 35) {
 			var delay = this.numSearches * 13;
 		}
@@ -117,10 +121,10 @@ function Search(keyword, sortby, opennow) {
 			var delay = 450;
 		}
 
+		// For each search point, call Places API.
 		for (var i = 0; i < this.numSearches; i++){
 			setTimeout(function() {
 				var placesService = new google.maps.places.PlacesService(map);
-
 				var request = new placesRequest(search.searchPoints.pop(), search.radius, search.keyword);
 
 				placesService.nearbySearch(request, function(results, status) {
@@ -135,7 +139,8 @@ function Search(keyword, sortby, opennow) {
 					// Counter tracks whether all Places requests have returned.
 					search.counter++;
 					if (search.counter >= search.numSearches) {
-						// Checks if there are search results:
+
+						// Check if there are search results:
 						if (Object.keys(search.places).length == 0) {
 							$("#list-container")
 								.append("<strong>There are no places that match your search.</strong>")
@@ -148,37 +153,6 @@ function Search(keyword, sortby, opennow) {
 				});
 			}, i * delay);
 		}
-	};
-
-	this.makePlacesRequests = function() {
-		var placesService = new google.maps.places.PlacesService(map);
-
-		var request = new placesRequest(this.searchPoints.pop(), this.radius, this.keyword);
-	// displayPoint(this.searchPoints[i], this.radius);
-
-	placesService.nearbySearch(request, function(results, status) {
-		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			// console.log(results);
-			processPlaces(results); 
-		}
-		else {
-			console.log(status);
-		}
-
-		// Counter tracks whether all Places requests have returned.
-		this.counter++;
-		if (this.counter >= this.numSearches) {
-			// Checks if there are search results:
-			if (Object.keys(search.places).length == 0) {
-				$("#list-container")
-					.append("<strong>There are no places that match your search.</strong>")
-					.addClass("text-alert");
-			}
-			else {
-				getAddedDistance(route);
-			}
-		}
-	});
 	}
 }
 

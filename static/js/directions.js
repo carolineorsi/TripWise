@@ -347,6 +347,7 @@ function addStop() {
 
 
 function rebuildSavedRoute(routeID) {
+	removeMarkers();
 	$.get("/get_route",
 		{"route_id": routeID},
 		function(response) {
@@ -365,34 +366,3 @@ function rebuildSavedRoute(routeID) {
 		}
 	);
 };
-
-// function makePlacesRequests() {
-// 	var placesService = new google.maps.places.PlacesService(map);
-
-// 	var request = new placesRequest(search.searchPoints.pop(), search.radius, search.keyword);
-// 	// displayPoint(this.searchPoints[i], this.radius);
-
-// 	placesService.nearbySearch(request, function(results, status) {
-// 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-// 			// console.log(results);
-// 			processPlaces(results); 
-// 		}
-// 		else {
-// 			console.log(status);
-// 		}
-
-// 		// Counter tracks whether all Places requests have returned.
-// 		search.counter++;
-// 		if (search.counter >= search.numSearches) {
-// 			// Checks if there are search results:
-// 			if (Object.keys(search.places).length == 0) {
-// 				$("#list-container")
-// 					.append("<strong>There are no places that match your search.</strong>")
-// 					.addClass("text-alert");
-// 			}
-// 			else {
-// 				getAddedDistance(route);
-// 			}
-// 		}
-// 	});
-// }
