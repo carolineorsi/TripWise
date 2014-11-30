@@ -112,7 +112,7 @@ function Search(keyword, sortby, opennow) {
 				this.searchPoints[this.searchPoints.length - 1].B
 			);
 
-			if ((distanceBetweenPoints * 1000) > (0.9 * this.radius)) {
+			if ((distanceBetweenPoints * 1000) > (this.radius)) {
 				this.searchPoints.push(route.polyline[i]);
 			}
 		}
@@ -168,20 +168,75 @@ function Search(keyword, sortby, opennow) {
 		this.numSearches = this.searchPoints.length;
 		this.counter = 0;
 
-		// Find places for each search point. When the increment variable
-		// exceeds the number of search points, end the loop.
-
-		// for (var i = 0; i < Math.ceil(this.numSearches / 10); i++){
-		// 	setTimeout(function() {
-		// 		makePlacesRequests();
-		// 	}, i * 2000);
-		// }
+		if (this.numSearches < 35) {
+			var delay = this.numSearches * 13;
+		}
+		else {
+			var delay = 450;
+		}
 
 		for (var i = 0; i < this.numSearches; i++){
 			setTimeout(function() {
-				makePlacesRequests();
-			}, i * this.numSearches * 13);
+				var placesService = new google.maps.places.PlacesService(map);
+
+				var request = new placesRequest(search.searchPoints.pop(), search.radius, search.keyword);
+
+				placesService.nearbySearch(request, function(results, status) {
+					if (status == google.maps.places.PlacesServiceStatus.OK) {
+						// console.log(results);
+						processPlaces(results); 
+					}
+					else {
+						console.log(status);
+					}
+
+					// Counter tracks whether all Places requests have returned.
+					search.counter++;
+					if (search.counter >= search.numSearches) {
+						// Checks if there are search results:
+						if (Object.keys(search.places).length == 0) {
+							$("#list-container")
+								.append("<strong>There are no places that match your search.</strong>")
+								.addClass("text-alert");
+						}
+						else {
+							getAddedDistance(route);
+						}
+					}
+				});
+			}, i * delay);
 		}
+	};
+
+	this.makePlacesRequests = function() {
+		var placesService = new google.maps.places.PlacesService(map);
+
+		var request = new placesRequest(this.searchPoints.pop(), this.radius, this.keyword);
+	// displayPoint(this.searchPoints[i], this.radius);
+
+	placesService.nearbySearch(request, function(results, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			// console.log(results);
+			processPlaces(results); 
+		}
+		else {
+			console.log(status);
+		}
+
+		// Counter tracks whether all Places requests have returned.
+		this.counter++;
+		if (this.counter >= this.numSearches) {
+			// Checks if there are search results:
+			if (Object.keys(search.places).length == 0) {
+				$("#list-container")
+					.append("<strong>There are no places that match your search.</strong>")
+					.addClass("text-alert");
+			}
+			else {
+				getAddedDistance(route);
+			}
+		}
+	});
 	}
 }
 
