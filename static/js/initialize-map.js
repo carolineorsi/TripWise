@@ -22,7 +22,11 @@ $(document).ready(function () {
 
 	// Handle button clicks
 	$("#send-button").click(checkLoggedIn);
-	$("#add-stop").click(addStop);
+	$("#add-stop").click(clearMap);
+	$("#reset").click(function() {
+		clearMap();
+		clearSearch();
+	});
 
 	// Checks for route data from Jinja template and calls rebuild function
 	// if there is a saved route from the server.
@@ -40,32 +44,6 @@ $(document).ready(function () {
 });
 
 
-function getLocation() {
-	// Checks for geolocation capabilities, gets location, and calls function
-	// to set the location in start field.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(setAsStart);
-    } 
-    else { 
-        alert("Geolocation is not supported by this browser.");
-    }
-}
-
-function setAsStart(position) {
-	// Takes position from geolocation API and reverse geocodes the 
-	// lat and lng to populate the "start" field with an address.
-	var geocoder = new google.maps.Geocoder();
-	var latlng = new google.maps.LatLng(
-		position.coords.latitude,
-		position.coords.longitude);
-	geocoder.geocode( 
-		{'latLng' : latlng}, 
-		function (response, status) {
-			document.getElementById("start").value = (response[0].formatted_address);
-		});
-}
-
-
 function initializeMap() {
 	
 	// Set initial map options
@@ -81,37 +59,36 @@ function initializeMap() {
 
 	// Create instance of map object, specifying the <div> container and map options
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
-}
+};
 
 
 function clearMap(){
-	// Clears directions and markers from map, empties control bar results,
-	// and clears search object.
-	directionsDisplay.setMap(null);
+	// Clears markers from map and resets search bar.
 	removeMarkers();
-	$("#list-container").empty().removeClass("text-alert");
-	$("#directions").empty().removeClass("text-alert");
-	$("#directions-todo").hide();
-	$("#start, #end").removeAttr("disabled");
+	$("#list-container, #directions").empty().removeClass("text-alert");
+	$("#directions-todo, #start-over-div, #phone-loggedout, #get-more-results").hide();
+	$(".initial-search").show();
+};
+
+
+function clearSearch() {
+	// Clears directions and resets search and route objects.
+	directionsDisplay.setMap(null);
 	search = null;
 	route = null;
+};
 
-	$("#start-over-div").hide();
-	$(".initial-search").show();
-	$("#phone-loggedout").hide();
-	$("#get-more-results").hide();
-}
 
 function removeMarkers() {
 	for (var i = 0; i < markersArray.length; i++) {
 		markersArray[i].setMap(null);
 	}
 	markersArray.length = 0;
-}
+};
 
 
-function displayPoint(point, radius) {
-	// Displays search points for purposes of testing.
+function displaySearchPoint(point, radius) {
+	// Displays search bubbles for purposes of testing.
 	var circle = {
 			fillColor: '#000',
 			fillOpacity: 0.3,
@@ -122,16 +99,17 @@ function displayPoint(point, radius) {
 		}
 	pointRadius = new google.maps.Circle(circle);
 	markersArray.push(pointRadius);	
-}
+};
 
 
 function displayPlace(location, delay, place) {
 	// Creates and sets marker object for each place.
+
 	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|8AB8E6";
 	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|2E3D4C";
 
 	// Sets timeout to stagger animation of pin drops.
-	setTimeout ( function() {
+	setTimeout (function() {
 		var marker = new google.maps.Marker({
 			position: location,
 			animation: google.maps.Animation.DROP,
@@ -139,24 +117,26 @@ function displayPlace(location, delay, place) {
 			icon: inactive
 		});
 
-		// Adds marker to global marker array and adds to associated place object.
+		// Adds marker to global marker array and to associated place object.
 		markersArray.push(marker);
 		place.marker = marker;
 
 		// Add info window to each marker.
 		addInfoWindow(place);
 
+		// On mouseover event, opens info window.
 		google.maps.event.addListener(marker, 'mouseover', function(evt) {
 			place.infoWindow.open(map, marker);
 			marker.setIcon(active);
 			$("#"+place.id).css({"background-color": "#EEE"});
 
+			// If place details have not already been populated, calls
+			// function that makes request to Google Places API for details
 			if (!place.address) {
 				populatePlaceDetails(place);
 			}
 
 			showStars();
-
 		});
 
 		google.maps.event.addListener(marker, 'mouseout', function(evt) {
@@ -174,14 +154,14 @@ function displayPlace(location, delay, place) {
 
 		handleListHover(place, marker);
 	}, delay);
-}
+};
 
 
 function addWaypoint(place) {
 	var waypoint = new Waypoint(place.location)
 	route.waypoints.push(waypoint);
 	route.places.push(place);
-}
+};
 
 
 function handleListHover(place, marker) {
@@ -214,33 +194,38 @@ function handleListHover(place, marker) {
 }
 
 function populatePlaceDetails(place) {
-	getPlaceDetails(place)
-		.then(
-			function(response) {
-				if (place.website) {
-					var content = "<a href=" + place.website + ">" + place.name  + 
-					"</a><br>" + place.phone + "<br>" + place.address + 
-					"<span class='stars'><span>" + place.rating + "</span></span>";
-				}
-				else {
-					var content = place.name  + "<br>" + place.phone + "<br>" + 
-					place.address + "<span class='stars'><span>" + 
-					place.rating + "</span></span>";
-				}
+	// Calls function to retrieve place details and then creates content for
+	// icon infowindows.
 
-				place.infoWindow.setContent(content);
+	getPlaceDetails(place)
+	.then(
+		function(response) {
+			if (place.website) {
+				var content = "<a href=" + place.website + ">" + place.name  + 
+				"</a><br>" + place.phone + "<br>" + place.address + 
+				"<span class='stars'><span>" + place.rating + "</span></span>";
 			}
-		);
-}
+			else {
+				var content = place.name  + "<br>" + place.phone + "<br>" + 
+				place.address + "<span class='stars'><span>" + 
+				place.rating + "</span></span>";
+			}
+
+			place.infoWindow.setContent(content);
+		}
+	);
+};
 
 function addInfoWindow (place) {
 	// Create infowindow and open on marker hover.
 	place.infoWindow = new google.maps.InfoWindow(
 		{ content: "" });			
-}
+};
 
 
 function getPlaceDetails (place) {
+	// Call to Google Places Detail API
+
 	var deferred = Q.defer();
 	var detailService = new google.maps.places.PlacesService(map);
 	var request = {
@@ -260,9 +245,11 @@ function getPlaceDetails (place) {
 	})
 
 	return deferred.promise;
-}
+};
 
 function showStars() {
+	// Shows stars div and resizes based on numeric rating.
+
 	$(".stars span")
 		.each(function() {
 			var val = parseFloat($(this).html());
@@ -279,4 +266,29 @@ function showStars() {
 		});
 	$(".stars").css({"display" : "block"});
 }
+
+function getLocation() {
+	// Checks for geolocation capabilities, gets location, and calls function
+	// to set the location in start field.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(setAsStart);
+    } 
+    else { 
+        alert("Geolocation is not supported by this browser.");
+    }
+};
+
+function setAsStart(position) {
+	// Takes position from geolocation API and reverse geocodes the 
+	// lat and lng to populate the "start" field with an address.
+	var geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng(
+		position.coords.latitude,
+		position.coords.longitude);
+	geocoder.geocode( 
+		{'latLng' : latlng}, 
+		function (response, status) {
+			document.getElementById("start").value = (response[0].formatted_address);
+		});
+};
 

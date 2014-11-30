@@ -323,9 +323,9 @@ function sendMessage(user_phone) {
 }
 
 function checkLoggedIn() {
-
 	// When sending route to phone, first checks if user is logged in.
 	// If not, prompts for phone number.
+	
 	if (loggedIn == "True") {
 		sendMessage(null);
 	}
@@ -336,14 +336,6 @@ function checkLoggedIn() {
 			sendMessage(user_phone);
 		});
 	}
-}
-
-function addStop() {
-	// Clears map and resets search bar.
-	removeMarkers();
-	$(".initial-search").show();
-	$("#list-container, #directions").empty().removeClass("text-alert");
-	$("#directions-todo, #get-more-results").hide();
 };
 
 

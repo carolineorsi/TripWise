@@ -104,7 +104,7 @@ function Search(keyword, sortby, opennow) {
 		// Uncomment this to show search bubbles:
 		// console.log(this.searchPoints.length);
 		// for (var i = 0; i < this.searchPoints.length; i++) {
-		// 	displayPoint(this.searchPoints[i], this.radius);
+		// 	displaySearchPoint(this.searchPoints[i], this.radius);
 		// }
 	};
 
