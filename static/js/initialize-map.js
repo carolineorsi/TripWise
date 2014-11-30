@@ -22,7 +22,12 @@ $(document).ready(function () {
 
 	// Handle button clicks
 	$("#send-button").click(checkLoggedIn);
-	$("#add-stop").click(clearMap);
+	
+	$("#add-stop").click(function() {
+		$("#start, #end").attr("disabled", "disabled");
+		clearMap();
+	});
+	
 	$("#reset").click(function() {
 		clearMap();
 		clearSearch();
@@ -66,7 +71,7 @@ function clearMap(){
 	// Clears markers from map and resets search bar.
 	removeMarkers();
 	$("#list-container, #directions").empty().removeClass("text-alert");
-	$("#directions-todo, #start-over-div, #phone-loggedout, #get-more-results").hide();
+	$("#directions-todo, #phone-loggedout, #get-more-results").hide();
 	$(".initial-search").show();
 };
 
@@ -76,6 +81,8 @@ function clearSearch() {
 	directionsDisplay.setMap(null);
 	search = null;
 	route = null;
+	$("#start, #end, #keyword").removeAttr("disabled").val("");
+	$("#start-over-div").hide();
 };
 
 

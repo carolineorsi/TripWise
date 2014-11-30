@@ -50,7 +50,7 @@ function Route(start, end, travelMode) {
 		}
 		this.places = templist;
 	};
-}
+};
 
 
 function Place(name, id, lat, lng, location, rating) {
@@ -61,7 +61,7 @@ function Place(name, id, lat, lng, location, rating) {
 	this.location = location;	// Google latlng object
 	this.rank = null;			// Rank based on distance from route
 	this.rating = rating;
-}
+};
 
 function Search(keyword, sortby, opennow) {
 	this.keyword = keyword;		// User's search keyword
@@ -145,6 +145,8 @@ function Search(keyword, sortby, opennow) {
 							$("#list-container")
 								.append("<strong>There are no places that match your search.</strong>")
 								.addClass("text-alert");
+							$(".text-alert, #start-over-div").show();
+							$(".loading").hide();
 						}
 						else {
 							getAddedDistance(route);
@@ -154,7 +156,7 @@ function Search(keyword, sortby, opennow) {
 			}, i * delay);
 		}
 	}
-}
+};
 
 
 function distanceMatrixRequest(origins, destinations) {
@@ -162,7 +164,7 @@ function distanceMatrixRequest(origins, destinations) {
 	this.origins = origins;
 	this.destinations = destinations;
 	this.travelMode = route.travelMode;
-}
+};
 
 
 function placesRequest(location, radius, keyword) {
@@ -172,7 +174,7 @@ function placesRequest(location, radius, keyword) {
 	this.rankby = google.maps.places.RankBy.PROMINENCE;
 	this.keyword = keyword;
 	this.openNow = document.getElementById('opennow').checked;
-}
+};
 
 
 function directionsRequest(origin, destination, waypoints) {
@@ -182,12 +184,12 @@ function directionsRequest(origin, destination, waypoints) {
 	this.travelMode = route.travelMode;
 	this.waypoints = waypoints;
 	this.optimizeWaypoints = true;
-}
+};
 
 
 function Waypoint(location) {
 	// Waypoint object; created when user chooses a Place
 	this.location = location;
 	this.stopover = true;
-}
+};
 
