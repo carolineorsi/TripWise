@@ -25,6 +25,11 @@ function Route(start, end, travelMode) {
 			}
 			else {
 				console.log(status);
+				$("#list-container")
+					.append("<strong>There was an error with your search. Please try again.</strong>")
+					.addClass("text-alert");
+				$(".text-alert, #start-over-div").show();
+				$(".loading").hide();
             	deferred.reject(status);
 			}
 		});

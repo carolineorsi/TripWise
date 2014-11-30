@@ -325,7 +325,7 @@ function sendMessage(user_phone) {
 function checkLoggedIn() {
 	// When sending route to phone, first checks if user is logged in.
 	// If not, prompts for phone number.
-	
+
 	if (loggedIn == "True") {
 		sendMessage(null);
 	}
