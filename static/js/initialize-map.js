@@ -124,15 +124,15 @@ function removeMarkers() {
 function displayPoint(point, radius) {
 	// Displays search points for purposes of testing.
 	var circle = {
-			fillColor: '#555',
-			fillOpacity: 0.5,
+			fillColor: '#000',
+			fillOpacity: 0.3,
 			strokeWeight: 0.0,
 			map: map,
 			center: point,
 			radius: radius
 		}
 	pointRadius = new google.maps.Circle(circle);
-	// markersArray.push(circle);	
+	markersArray.push(pointRadius);	
 }
 
 
