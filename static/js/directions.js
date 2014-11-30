@@ -323,12 +323,14 @@ function sendMessage(user_phone) {
 }
 
 function checkLoggedIn() {
+
+	// When sending route to phone, first checks if user is logged in.
+	// If not, prompts for phone number.
 	if (loggedIn == "True") {
 		sendMessage(null);
 	}
 	else {
-		$(".phone-loggedin").toggle();
-		$("#phone-loggedout").toggle();
+		$(".phone-loggedin, #phone-loggedout").toggle();
 		$("#send-loggedout").click(function() {
 			user_phone = $("#phone-input").val();
 			sendMessage(user_phone);
@@ -337,13 +339,12 @@ function checkLoggedIn() {
 }
 
 function addStop() {
+	// Clears map and resets search bar.
 	removeMarkers();
-	$("#list-container").empty().removeClass("text-alert");
-	$("#directions").empty().removeClass("text-alert");
-	$("#directions-todo").hide();
-
-	$("#get-more-results").hide();
-}
+	$(".initial-search").show();
+	$("#list-container, #directions").empty().removeClass("text-alert");
+	$("#directions-todo, #get-more-results").hide();
+};
 
 
 function rebuildSavedRoute(routeID) {

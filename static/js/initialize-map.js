@@ -22,21 +22,10 @@ $(document).ready(function () {
 
 	// Handle button clicks
 	$("#send-button").click(checkLoggedIn);
-	$("#add-stop").click(function () {
-		addStop();
-		$(".initial-search").show();
-	});
+	$("#add-stop").click(addStop);
 
-	$("#nav-login").click(function() {
-		$("#login").toggle();
-	})
-
-	$("#testlink").click(function() {
-		$("#navigation-bar").load();
-	})
-
-	$(".nav-bar-hide").hide();
-
+	// Checks for route data from Jinja template and calls rebuild function
+	// if there is a saved route from the server.
 	if ($("#route_start_from_server").text() != "") {
 		rebuildSavedRoute();
 	};
