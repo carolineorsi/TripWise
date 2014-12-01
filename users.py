@@ -44,7 +44,6 @@ def save_waypoints_to_db(route, places, user):
 	for stopnum, place in places_dict.iteritems():
 		waypoint = model.Waypoint()
 		waypoint.name = place['name']
-		waypoint.address = place['address']
 		waypoint.route_id = route.id
 		waypoint.user_id = user
 		waypoint.lat = place['lat']
@@ -52,6 +51,12 @@ def save_waypoints_to_db(route, places, user):
 		waypoint.google_id = place['id']
 		waypoint.stopnum = int(stopnum) + 1
 		waypoint.stopover = place['stopover']
+
+		if 'address' in place:
+			waypoint.address = place['address']
+		else:
+			waypoint.address = ""
+
 		model.session.add(waypoint)
 
 	model.session.commit()
