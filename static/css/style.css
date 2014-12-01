@@ -33,7 +33,7 @@ html, body, #map-container {
 	padding-top: 10px;
 }
 
-#reset {
+#start-over-div button {
 	/*background-color: #C4E8FF;*/
 	background-color: #EEE;
 	margin: 10px auto auto auto;
@@ -234,7 +234,7 @@ span.stars span {
 
 #start-over-div {
 	display: none;
-	text-align: center;
+	text-align: right;
 	/*border-top: 2px solid #EEE;*/
 }
 
@@ -303,6 +303,11 @@ h4.list-group-item-heading {
 
 #form-bottom {
 	vertical-align: bottom;
+}
+
+#site-name {
+	color: #E68A00;
+	font-size: 1.8em;
 }
 
 #geolocation {

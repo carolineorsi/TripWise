@@ -24,7 +24,12 @@ $(document).ready(function () {
 	$("#send-button").click(checkLoggedIn);
 	
 	$("#add-stop").click(function() {
-		$("#start, #end").attr("disabled", "disabled");
+		$("#start, #end, #driving, #biking, #walking").attr("disabled", "disabled");
+		clearMap();
+	});
+
+	$("#revise-search").click(function() {
+		$("#start, #end, #driving, #biking, #walking").attr("disabled", "disabled");
 		clearMap();
 	});
 	
@@ -54,7 +59,7 @@ function initializeMap() {
 	// Set initial map options
 	var mapOptions = {
 		center: {lat: 37.779372, lng: -122.423356},
-		zoom: 14,
+		zoom: 12,
 		zoomControl: true,
 		zoomControlOptions: {
 			position: google.maps.ControlPosition.RIGHT_TOP
@@ -81,7 +86,7 @@ function clearSearch() {
 	directionsDisplay.setMap(null);
 	search = null;
 	route = null;
-	$("#start, #end, #keyword").removeAttr("disabled").val("");
+	$("#start, #end, #keyword, #driving, #biking, #walking").removeAttr("disabled").val("");
 	$("#start-over-div").hide();
 };
 

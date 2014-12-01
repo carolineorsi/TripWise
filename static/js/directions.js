@@ -268,7 +268,7 @@ function displayDirections () {
 				$("#directions").append("<h4>Directions</h4>");
 				$("#directions").append("<div class='waypoint'><h5>A: " + route.start + "</h5></div>");
 
-				var alpha = "BCDEFGHIJKLMNOPQRSTUVWYXZ"
+				var alpha = "BCDEFGHIJKLMNOPQRSTUVWYXZ";
 
 				var legs = response.routes[0].legs;
 				_.each(legs, function(leg, legIndex) {
