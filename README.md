@@ -29,15 +29,18 @@ TripWise uses numerous tools from the Google Maps JavaScript API suite to search
 ##### Build Route with Multiple Stops:
 The data structures used by the app allow users to complete multiple searches to build a journey with numerous destinations. As each new stop is chosen, the app creates a new Waypoint object that is stored within an array in the Route object. The app then makes a new call to the Directions API, passing the new waypoint object along with the original search parameters. If there are multiple waypoints, the Directions API optimizes the route and returns the waypoint order in an array. The reorderWaypoints function uses the waypoint order array to sort the waypoints that are stored in the route object.
 
-##### Create Account, Log In, and Trip saving.
+##### Create Account, Log In, and Trip Saving:
 The Create Account and Log In features are included as drop-down items on the site's navigation bar for easy access. Upon submittal, the app makes an AJAX request to the server, and the database is queried or updated as appropriate. Once logged in, the app updates the navigation bar using JQuery.
 
 While logged in, users may save a trip or access previously saved trips using anchors on the site navigation bar. When Save Trip is clicked, an appropriate AJAX call is made to the server to create the database records. A route record is stored that references the user ID, a unique route ID, and other key route details such as starting and ending points. The associated Waypoints are stored in a waypoints table and reference back to the route using the route ID. SQLAlchemy is used to create, query, and update the database, and to define relationships between tables.
 
 When the user clicks to retrieve saved trips, the database is queried for routes associated with the user ID, and for waypoints associated with the user's routes. The server returns an object that contains the route details. JQuery is used to show and populate the saved trip list.
 
+##### Send Trip to Phone:
+TripWise employs the Twilio API to send route links to a user's phone. A request to the API begins when the user clicks the "Send to Phone" button. If the user is logged in, the app will set the request phone number to the user's stored number; otherwise, the app prompts the user for a phone number. The Twilio API is called from the server-side (Python) script. The send_to_phone function calls the Twilio API once for each waypoint in the route. Each message contains a URL for directions to the waypoint from the prior point. The URL is specially formatted to open in the Google Maps app for navigation.
 
-##### Error Handling
+
+##### Error Handling and User Input Verification:
 
 
 
