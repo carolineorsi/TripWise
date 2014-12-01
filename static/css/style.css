@@ -143,6 +143,10 @@ span.stars span {
     /*width: 62px;*/
 }
 
+.stars {
+	display: block;
+}
+
 .form-signin, .form-create {
   max-width: 330px;
   padding: 15px;

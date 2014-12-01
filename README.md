@@ -53,7 +53,7 @@ The app will take input from the user (starting point, ending point, and a keywo
 
 8. Remaining To Dos:
   - ~~Fix button alignment~~
-  - Add button to redo search if don't like results (without clearing the map/route)
+  - ~~Add button to redo search if don't like results (without clearing the map/route)~~
   - ~~Make list of saved trip pop up in main screen~~
   - ~~When clicking on saved trip, rebuild route~~
   - When saving trip, ask if want to overwrite existing trip or save as new trip
@@ -61,7 +61,7 @@ The app will take input from the user (starting point, ending point, and a keywo
   - ~~Keep user logged in when page reloads.~~
   - Front end: remove item from directions.
   - ~~Validate phone number to ensure it is right format to send message.~~
-  - Optimize search points.
+  - ~~Optimize search points.~~
 
 ####Additional Features to Add:
 - ~~Autocomplete of input fields~~

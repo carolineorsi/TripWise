@@ -35,7 +35,7 @@ def send_to_phone():
         user = model.session.query(model.User).filter_by(id=flask_session['id']).first()
         phone_num = user.phone
     else:
-        phone_num = request.args.get('phone').replace(".","").replace("-","")
+        phone_num = request.args.get('phone').replace(".","").replace("-","").replace("(","").replace(")","")
         if not phone.validate_phone(phone_num):
             response["message"] = "Not a valid phone number"
             return jsonify(response)
@@ -102,7 +102,7 @@ def create_account():
     lastname = request.form.get("lastname").title()
     email = request.form.get("email").lower() 
     password = request.form.get("password")
-    phone_num = request.form.get("phone").replace(".","").replace("-","")
+    phone_num = request.form.get("phone").replace(".","").replace("-","").replace("(","").replace(")","")
 
     response = {"status": "warning"}
 

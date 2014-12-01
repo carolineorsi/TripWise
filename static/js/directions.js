@@ -1,5 +1,5 @@
-function findPlaces(evt) {
-	event.preventDefault();
+function findPlaces() {
+	// event.preventDefault();
 
 	$(".loading").show();
 	$(".initial-search").hide();
@@ -32,6 +32,24 @@ function findPlaces(evt) {
 				search.getPlaces();
 			}
 		);
+
+	// 
+	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+	// 	if (route.firstSearch == 1) {
+	// 		console.log("check");
+	// 		var waypoint = new Waypoint(directionsDisplay.directions.lc.waypoints[0].location);
+	// 		waypoint.stopover = false;
+	// 		route.waypoints.push(waypoint);
+	// 		route.getPolyline(directionsDisplay.directions);
+	// 		console.log("check2");
+	// 		removeMarkers();
+	// 		search.getSearchPoints(route);
+	// 		search.getPlaces();
+	// 		console.log("check3");
+	// 		// route.getPolyline;
+
+	// 	}
+	// });
 };
 
 
@@ -219,8 +237,7 @@ function returnTopTen (requestList) {
 
 function displayTopTen () {
 	$(".loading").hide();
-	$("#list-container").show();
-	$("#start-over-div").show();
+	$("#list-container, #start-over-div").show();
 	
 	// Checks if there are fewer than 10 results remaining. If so, removes
 	// "Get More Results" button from results div.
@@ -249,11 +266,12 @@ function displayTopTen () {
 			$("#list-container")
 				.append("<div class='list-item' id='" + place.id + "'><strong>" + 
 					place.name + "</strong><br><em>" + durationAdded + 
-					" min added to route.</em></div>");
+					" min added to your trip.</em></div>");
 		}
 
 		displayPlace(place.location, i * 100, place);
 	}
+	route.firstSearch = 1;
 }
 
 function displayDirections () {
@@ -262,8 +280,7 @@ function displayDirections () {
 	route.getDirections()
 		.then(
 			function (response) {
-				$("#list-container").empty();
-				$("#directions").empty();
+				$("#list-container, #directions").empty();
 				$("#get-more-results").hide();
 				$("#directions").append("<h4>Directions</h4>");
 				$("#directions").append("<div class='waypoint'><h5>A: " + route.start + "</h5></div>");
@@ -282,6 +299,8 @@ function displayDirections () {
 						$("#directions").append("<div class='waypoint' id='dir-" +
 							route.places[legIndex].id + "'><h5>" + alpha[legIndex] + 
 							": " + route.places[legIndex].name + "</h5></div>");
+							// "<button class='btn btn-default remove-btn' type='button' id='rem-" +
+							// route.places[legIndex].id + "' onclick='removeWaypoint(this.id)'>Remove</button>");
 					}
 
 					else {
@@ -359,3 +378,10 @@ function rebuildSavedRoute(routeID) {
 		}
 	);
 };
+
+// function removeWaypoint(waypointID) {
+// 	console.log(route.places);
+// 	delete route.places.waypointID;
+// 	console.log(route.places);
+
+// }

@@ -18,7 +18,10 @@ $(document).ready(function () {
 	route = null;
 
 	// When form submitted, initiates Place search
-	$("#directions-form").submit(findPlaces);
+	$("#directions-form").submit(function(event) {
+		event.preventDefault();
+		findPlaces();
+	});
 
 	// Handle button clicks
 	$("#send-button").click(checkLoggedIn);
@@ -43,13 +46,6 @@ $(document).ready(function () {
 	if ($("#route_start_from_server").text() != "") {
 		rebuildSavedRoute();
 	};
-
-	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
-	// 	route.getpolyline;
-	// 	search.getSearchPoints(route);
-	// 	search.getPlaces();
-	// 	console.log("echeck");
-	// });
 
 });
 
@@ -276,7 +272,8 @@ function showStars() {
 					.show();
 			}
 		});
-	$(".stars").css({"display" : "block"});
+	$(".stars").show();
+
 }
 
 function getLocation() {

@@ -7,6 +7,7 @@ function Route(start, end, travelMode) {
 	this.polyline = [];				// Array of latlngs that comprise the route polyline
 	this.initialDuration = null;	// Initial route duration
 	this.initialDistance = null;	// Initial route distance
+	this.firstSearch = 0;
 
 	this.getDirections = function getDirections() {
 		// Build and send directions request 
@@ -33,6 +34,7 @@ function Route(start, end, travelMode) {
             	deferred.reject(status);
 			}
 		});
+
 		return deferred.promise;
 	};
 
@@ -81,6 +83,10 @@ function Search(keyword, sortby, opennow) {
 	this.numSearches = null;
 
 	this.getSearchPoints = function(route) {
+		// this.searchPoints = [];
+		// this.places = {};
+		// this.placeList = [];
+		// this.unreturnedPlaces = [];
 		pointsInPolyline = route.polyline.length;
 
 		// Sets search radius and checks that it doesn't exceed Google Maps API 50km limit
