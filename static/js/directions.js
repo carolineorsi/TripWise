@@ -249,8 +249,6 @@ function displayTopTen () {
 		$('#get-more-results').show();
 	}
 
-	// $(".initial-search").hide();
-
 	// For each of ten places, display in results div and add to map.
 	for (var i = 0; i < maxResult; i++) {
 		place = search.places[search.sortedPlaces[i][1]].place;
