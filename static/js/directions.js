@@ -1,60 +1,40 @@
 function findPlaces() {
 	// event.preventDefault();
 
-	$(".loading").show();
-	$(".initial-search").hide();
+	$('.loading').show();
+	$('.initial-search').hide();
 
 	if (!route) {
-		// Create route object based on user's input.
+		// Creates route object based on user's input.
 		route = new Route(
-			$("#start").val(),
-			$("#end").val(),
+			$('#start').val(),
+			$('#end').val(),
 			checkTravelMode()
 		);
 	}
 
-	// Create search object based on user's input.
+	// Creates search object based on user's input.
 	search = new Search(
-		$("#keyword").val(),
-		$("#results-sort").find(":selected").text()
+		$('#keyword').val(),
+		$('#results-sort').find(':selected').text()
 	);
 
-	// Get initial directions and use returned value to find Places.
+	// Gets initial directions and use returned value to find Places.
 	route.getDirections()
-		.then(
-			function (response) {
-				// route.reorderWaypoints(response.routes[0].waypoint_order);
-				route.getPolyline(response);
-				return search.getSearchPoints(route);
-			}
-		)
-		.then(function () {
-				search.getPlaces();
-			}
-		);
-
-	
-	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
-	// 	if (route.firstSearch == 1) {
-	// 		console.log("check");
-	// 		var waypoint = new Waypoint(directionsDisplay.directions.lc.waypoints[0].location);
-	// 		waypoint.stopover = false;
-	// 		route.waypoints.push(waypoint);
-	// 		removeMarkers();
-	// 		route.getPolyline(directionsDisplay.directions);
-	// 		console.log("check2");
-	// 		search.getSearchPoints(route);
-	// 		search.getPlaces();
-	// 		console.log("check3");
-	// 		// route.getPolyline;
-
-	// 	}
-	// });
+		.then(function(response) {
+			// route.reorderWaypoints(response.routes[0].waypoint_order);
+			route.getPolyline(response);
+			return search.getSearchPoints(route);
+		})
+		.then(function() {
+			search.getPlaces();
+		});
 };
 
 
 function checkTravelMode() {
 	// Checks form radio buttons to set travel mode.
+
 	if (document.getElementById('driving').checked) {
 		return google.maps.TravelMode.DRIVING;
 	}
@@ -64,10 +44,14 @@ function checkTravelMode() {
 	else if (document.getElementById('biking').checked) {
 		return google.maps.TravelMode.BICYCLING;
 	}
-}
+};
 
 
 function processPlaces(placeRequestResults) {
+	/*	Once place lists are received from the Google Places API, creates place
+		objects which are appended to the search object. The Google place IDs are
+		used as keys within the search.places object to remove duplicates. */
+
 	_.each(placeRequestResults, function(place) {
 		var latlng = new google.maps.LatLng(
 			place.geometry.location.k, 
@@ -78,11 +62,11 @@ function processPlaces(placeRequestResults) {
 			var rating = place.rating;
 		}
 		else {
-			var rating = "Unrated";
+			var rating = 'Unrated';
 		}
 
 		search.places[latlng] = {};
-		search.places[latlng]["place"] = new Place(
+		search.places[latlng]['place'] = new Place(
 			place.name, 
 			place.place_id,
 			place.geometry.location.k,
@@ -91,19 +75,20 @@ function processPlaces(placeRequestResults) {
 			rating
 		);
 
-		if (search.sortby == "Distance From Route") {
-			rankByDistance(search.places[latlng]["place"]);
+		if (search.sortby == 'Distance From Route') {
+			rankByDistance(search.places[latlng]['place']);
 		}
-		else if (search.sortby == "Highest Rated") {
-			rankByRating(search.places[latlng]["place"])
+		else if (search.sortby == 'Highest Rated') {
+			rankByRating(search.places[latlng]['place'])
 		}
 	});
 };
 
 
 function rankByDistance(place) {
-	// Rank place based on direct distance from route polyline. Uses
-	// getDistanceFromLatLonInKm to calculate distance.
+	/* 	Ranks place based on direct distance from route polyline. Uses
+		getDistanceFromLatLonInKm to calculate distance. */
+
 	place.rank = 1000;
 	var polylineLength = route.polyline.length;
 	
@@ -118,20 +103,25 @@ function rankByDistance(place) {
 			place.rank = distanceFromPolyline;
 		}
 	}
-}
+};
 
 function rankByRating(place) {
-	if (place.rating == "Unrated") {
+	// Ranks places by Google business rating (provided in Places API response)
+
+	if (place.rating == 'Unrated') {
 		place.rank = 5.0;
 	}
 	else {
 		place.rank = 5.0 - place.rating;
 	}
-}
+};
 
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-	// Taken from http://stackoverflow.com/questions/27928/how-do-i-calculate-distance-between-two-latitude-longitude-points
+	/* 	Calculates distance between two points. Formula borrowed from 
+		http://stackoverflow.com/questions/27928/how-do-i-calculate-distance
+		-between-two-latitude-longitude-points */
+
 	var R = 6371; 					// Radius of the earth in km
 	var dLat = deg2rad(lat2-lat1);  
 	var dLon = deg2rad(lon2-lon1); 
@@ -142,17 +132,18 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c;
 	return d;
-}
+};
 
 function deg2rad(deg) {
 	return deg * (Math.PI/180)
-}
+};
 
 
 function getAddedDistance() {
-	// Create complete place list and sort by rank. Use sorted list to populated
-	// the unreturned places list, which tracks which places have already been 
-	// shown to user (displayed on map and results list).
+	/* 	Creates complete place list and sort by rank. Use sorted list to populated
+		the unreturned places list, which tracks which places have already been 
+	 	shown to user (displayed on map and results list). */
+
 	search.placeList = [];
 	$.each(search.places, function(latlng, Place) {
 		search.placeList.push(Place.place);
@@ -167,14 +158,15 @@ function getAddedDistance() {
 	})
 
 	callDistanceMatrix();
-}
+};
 
 
 function callDistanceMatrix() {
-	// Distance matrix request to calculate the time and distance
-	// of each place from the start and to the end points. These values are
-	// used to calculate the added time the new waypoint adds to the user's 
-	// original route.
+	/* 	Makes distance matrix request to calculate the time and distance
+		of each place from the start and to the end points. These values are
+		used to calculate the added time the new waypoint adds to the user's 
+		original route. */
+
 	requestList = search.unreturnedPlaces.splice(0,10);
 
 	var distanceAPI = new google.maps.DistanceMatrixService();
@@ -194,38 +186,43 @@ function callDistanceMatrix() {
 			});
 		}
 	});
-}
+};
 
 
-function processDistancesFromStart (response, requestList) {
-	// Stores distance and duration from start point in places object.
+function processDistancesFromStart(response, requestList) {
+	// Stores distance and duration of waypoint from trip start point in places object.
+
 	_.each(requestList, function(item, index) {
 		search.places[item]['duration'] = response.rows[0].elements[index].duration.value;
 		search.places[item]['distance'] = response.rows[0].elements[index].distance.value;
 	});
-}
+};
 
 
-function processDistancesToEnd (response, requestList) {
-	// Adds distance and duration to end point to distance and duration from 
-	// start point, getting the total route distance and duration. This is used
-	// to compare new route with waypoint from the user's original route.
+function processDistancesToEnd(response, requestList) {
+	/*	Sums:
+		1) distance and duration from the waypoint to the trip end point  
+		2) distance and duration to the waypoint from the trip start point
+		Resulting in the revised trip total route distance and duration. This is
+		used to compare new route with waypoint from the user's original route. */
+
 	_.each(requestList, function(item, index) {
 		var distance = response.rows[index].elements[0].distance.value;
 		var duration = response.rows[index].elements[0].duration.value;
 		search.places[item]['duration'] = search.places[item]['duration'] + duration;
 		search.places[item]['distance'] = search.places[item]['distance'] + distance;
 	});
-}
+};
 
 
 function returnTopTen (requestList) {
-	// Sorts results returned from distance matrix request.	
+	// Sorts results returned from distance matrix request by amount of time added.
+
 	search.sortedPlaces = _.map(requestList, function(item) {
 		return [search.places[item].duration, search.places[item].place.location];
 	});
 
-	if (search.sortby == "Distance From Route") {
+	if (search.sortby == 'Distance From Route') {
 		search.sortedPlaces.sort(function(a, b) {
 			return a[0] - b[0];
 		});
@@ -236,18 +233,20 @@ function returnTopTen (requestList) {
 
 
 function displayTopTen () {
-	$(".loading").hide();
-	$("#list-container, #start-over-div").show();
+	// Updates sidebar to show the first ten sorted results.
+
+	$('.loading').hide();
+	$('#list-container, #start-over-div').show();
 	
-	// Checks if there are fewer than 10 results remaining. If so, removes
-	// "Get More Results" button from results div.
+	/*	Checks if there are fewer than 10 results remaining. If so, removes
+		"Get More Results" button from results div. */
 	if (search.sortedPlaces.length < 10) {
 		var maxResult = search.sortedPlaces.length;
-		$("#get-more-results").hide();
+		$('#get-more-results').hide();
 	}
 	else {
 		var maxResult = 10;
-		$("#get-more-results").show();
+		$('#get-more-results').show();
 	}
 
 	// $(".initial-search").hide();
@@ -258,73 +257,75 @@ function displayTopTen () {
 		var durationAdded = Math.ceil((search.sortedPlaces[i][0] - route.initialDuration) / 60);
 
 		if (durationAdded <= 0) {
-			$("#list-container")
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + 
-					place.name + "</strong><br><em>No travel time added.</em></div>");
+			$('#list-container')
+				.append('<div class="list-item" id="' + place.id + '"><strong>' + 
+					place.name + '</strong><br><em>No travel time added.</em></div>');
 		}
 		else {
-			$("#list-container")
-				.append("<div class='list-item' id='" + place.id + "'><strong>" + 
-					place.name + "</strong><br><em>" + durationAdded + 
-					" min added to your trip.</em></div>");
+			$('#list-container')
+				.append('<div class="list-item" id="' + place.id + '"><strong>' + 
+					place.name + '</strong><br><em>' + durationAdded + 
+					' min added to your trip.</em></div>');
 		}
 
 		displayPlace(place.location, i * 100, place);
 	}
-	route.firstSearch = 1;
-}
+};
 
-function displayDirections () {
+function displayDirections() {
 	// This function is called to show new directions in the control bar.
 
 	route.getDirections()
 		.then(
-			function (response) {
-				$("#list-container, #directions").empty();
-				$("#get-more-results").hide();
-				$("#directions").append("<h4>Directions</h4>");
-				$("#directions").append("<div class='waypoint'><h5>A: " + route.start + "</h5></div>");
+			function(response) {
+				$('#list-container, #directions').empty();
+				$('#get-more-results').hide();
+				$('#directions').append('<h4>Directions</h4>');
+				$('#directions').append('<div class="waypoint"><h5>A: ' + route.start + '</h5></div>');
 
-				var alpha = "BCDEFGHIJKLMNOPQRSTUVWYXZ";
+				var alpha = 'BCDEFGHIJKLMNOPQRSTUVWYXZ';
 
 				var legs = response.routes[0].legs;
 				_.each(legs, function(leg, legIndex) {
 					var steps = response.routes[0].legs[legIndex].steps;
 					_.each(steps, function(step, stepIndex) {
-						$("#directions").append("<div class='step-instructions'>" +
-							(stepIndex + 1) + ") " + step.instructions + "</div>");
+						$('#directions').append('<div class="step-instructions">' +
+							(stepIndex + 1) + ') ' + step.instructions + '</div>');
 					})
 
 					if (legIndex < route.places.length) {
-						$("#directions").append("<div class='waypoint' id='dir-" +
-							route.places[legIndex].id + "'><h5>" + alpha[legIndex] + 
-							": " + route.places[legIndex].name + "</h5></div>");
-							// "<button class='btn btn-default remove-btn' type='button' id='rem-" +
-							// route.places[legIndex].id + "' onclick='removeWaypoint(this.id)'>Remove</button>");
+						$('#directions').append('<div class="waypoint" id="dir-' +
+							route.places[legIndex].id + '"><h5>' + alpha[legIndex] + 
+							': ' + route.places[legIndex].name + '</h5></div>');
 					}
 
 					else {
-						$("#directions").append("<div class='waypoint'><h5>" + 
-							alpha[legIndex] + ": " + route.end +"</h5></div>");
+						$('#directions').append('<div class="waypoint"><h5>' + 
+							alpha[legIndex] + ': ' + route.end +'</h5></div>');
 					}
 
 				});
 
-				$("#directions-todo").show();
+				$('#directions-todo').show();
 			},
-			function (status) {
-				console.log(status);
+			function(status) {
+				// Uncomment for troubleshooting purposes:
+				// console.log(status);
 			}
 		);
-}
+};
 
 function sendMessage(user_phone) {
+	/* 	Builds route data object and sends AJAX GET request to server-side 
+		Twilio API function. */
+		 
 	var places = {};
 	for (var i = 0; i < route.places.length; i++) {
 		places[i] = route.places[i].address;
 	}
 
-	var route_data = {'start' : route.start,
+	var route_data = {
+		'start' : route.start,
 		'end' : route.end,
 		'directionsmode' : route.travelMode,
 		'places': JSON.stringify(places)}
@@ -333,25 +334,25 @@ function sendMessage(user_phone) {
 		route_data['phone'] = user_phone;	
 	}
 
-	$.get("/send_to_phone", 
+	$.get('/send_to_phone', 
 		route_data,
 		function(response) {
-				displayResultStatus(response.status, response.message, "#phone-sent");
+			displayResultStatus(response.status, response.message, '#phone-sent');
 		}
 	);
-}
+};
 
 function checkLoggedIn() {
 	// When sending route to phone, first checks if user is logged in.
 	// If not, prompts for phone number.
 
-	if (loggedIn == "True") {
+	if (loggedIn == 'True') {
 		sendMessage(null);
 	}
 	else {
-		$(".phone-loggedin, #phone-loggedout").toggle();
-		$("#send-loggedout").click(function() {
-			user_phone = $("#phone-input").val();
+		$('.phone-loggedin, #phone-loggedout').toggle();
+		$('#send-loggedout').click(function() {
+			user_phone = $('#phone-input').val();
 			sendMessage(user_phone);
 		});
 	}
@@ -359,9 +360,11 @@ function checkLoggedIn() {
 
 
 function rebuildSavedRoute(routeID) {
+	// Takes saved route data from server and refreshes the map to show the route.
+
 	removeMarkers();
-	$.get("/get_route",
-		{"route_id": routeID},
+	$.get('/get_route',
+		{'route_id': routeID},
 		function(response) {
 			console.log(response);
 			route = new Route(response.start, response.end, response.travel_mode);
@@ -374,14 +377,7 @@ function rebuildSavedRoute(routeID) {
 			}
 
 		displayDirections();
-		$(".initial-search").hide();
+		$('.initial-search').hide();
 		}
 	);
 };
-
-// function removeWaypoint(waypointID) {
-// 	console.log(route.places);
-// 	delete route.places.waypointID;
-// 	console.log(route.places);
-
-// }

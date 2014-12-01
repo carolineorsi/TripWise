@@ -5,19 +5,19 @@ function Route(start, end, travelMode) {
 	this.waypoints = [];			// Waypoints along route; populated when user chooses a Place
 	this.places = [];				// Chosen places along route
 	this.polyline = [];				// Array of latlngs that comprise the route polyline
-	this.initialDuration = null;	// Initial route duration
-	this.initialDistance = null;	// Initial route distance
-	this.firstSearch = 0;
+	this.initialDuration;			// Initial route duration provided by directions response
+	this.initialDistance;			// Initial route distance provided by directions response
 
 	this.getDirections = function getDirections() {
-		// Build and send directions request 
+		// Builds and sends directions request to Google Maps API
+
 		var request = new directionsRequest(route.start, route.end, route.waypoints);
 		var deferred = Q.defer();
 
 		directionsService.route(request, function(response, status){
 			if (status == google.maps.DirectionsStatus.OK) {
 
-				// Displays route on map.
+				// Displays route on map
 				directionsDisplay.setMap(map);
 				directionsDisplay.setDirections(response);
 				route.reorderWaypoints(response.routes[0].waypoint_order);
@@ -26,11 +26,11 @@ function Route(start, end, travelMode) {
 			}
 			else {
 				console.log(status);
-				$("#list-container")
-					.append("<strong>There was an error with your search. Please try again.</strong>")
-					.addClass("text-alert");
-				$(".text-alert, #start-over-div").show();
-				$(".loading").hide();
+				$('#list-container')
+					.append('<strong>There was an error with your search. Please try again.</strong>')
+					.addClass('text-alert');
+				$('.text-alert, #start-over-div').show();
+				$('.loading').hide();
             	deferred.reject(status);
 			}
 		});
@@ -40,6 +40,7 @@ function Route(start, end, travelMode) {
 
 	this.getPolyline = function getPolyline(directions) {
 		// Decodes directions polyline and identifies search points and radius
+
 		this.polyline = google.maps.geometry.encoding.decodePath(directions.routes[0].overview_polyline);
 		this.initialDuration = 0;
 		this.initialDistance = 0;
@@ -51,24 +52,31 @@ function Route(start, end, travelMode) {
 	};
 
 	this.reorderWaypoints = function reorderWaypoints(order) {
+		/* 	Uses waypoint_order array from the Google Maps API directions response
+			to reorder the route's waypoint list. Waypoints are ordered to optimize
+			routing. */
+
 		var templist = [];
 		for (var i = 0; i < order.length; i++) {
 			templist.push(this.places[order[i]]);
 		}
-		this.places = templist;
+		this.places = templist.slice();
 	};
 };
 
 
 function Place(name, id, lat, lng, location, rating) {
+	// The Place object stores information about each place returned by Google.
+
 	this.name = name;			// Place name from Places response
 	this.id = id;				// Unique place ID
 	this.lat = lat;
 	this.lng = lng;
 	this.location = location;	// Google latlng object
-	this.rank = null;			// Rank based on distance from route
-	this.rating = rating;
+	this.rank;					// Rank based on distance from route
+	this.rating = rating;		// Business rating from Google Places response
 };
+
 
 function Search(keyword, sortby, opennow) {
 	this.keyword = keyword;		// User's search keyword
@@ -76,17 +84,13 @@ function Search(keyword, sortby, opennow) {
 	this.places = {}; 			// Contains Place objects
 	this.placeList = [];  		// List of places, sorted by rank
 	this.searchPoints = []; 	// List of points from route that are used for Places API call
-	this.radius = null;			// Radius of Places search
+	this.radius;				// Radius of Places search
 	this.sortedPlaces = [];		// List of sorted places returned from distance matrix request
 	this.unreturnedPlaces = []; // List of latlng objects, sorted by rank, that have not yet been returned to the user
-	this.counter = null;
-	this.numSearches = null;
+	this.counter;				// Used to track whether all responses from the Places API have been returned
+	this.numSearches;			// Compared with counter to track whether all responses have been returned
 
 	this.getSearchPoints = function(route) {
-		// this.searchPoints = [];
-		// this.places = {};
-		// this.placeList = [];
-		// this.unreturnedPlaces = [];
 		pointsInPolyline = route.polyline.length;
 
 		// Sets search radius and checks that it doesn't exceed Google Maps API 50km limit
@@ -119,12 +123,11 @@ function Search(keyword, sortby, opennow) {
 		// }
 	};
 
-	this.getPlaces = function () {
+	this.getPlaces = function() {
 		this.numSearches = this.searchPoints.length;
 		this.counter = 0;
 
-		// Sets delay to throttle Google Places API calls so as not to exceeding
-		// query rate limits.
+		// Sets delay to throttle Google Places API calls so as not to exceeding query rate limits.
 		if (this.numSearches < 35) {
 			var delay = this.numSearches * 13;
 		}
@@ -132,32 +135,34 @@ function Search(keyword, sortby, opennow) {
 			var delay = 450;
 		}
 
-		// For each search point, call Places API.
-		for (var i = 0; i < this.numSearches; i++){
+		// For each search point, calls Places API.
+		for (var i = 0; i < this.numSearches; i++) {
 			setTimeout(function() {
 				var placesService = new google.maps.places.PlacesService(map);
-				var request = new placesRequest(search.searchPoints.pop(), search.radius, search.keyword);
+				var request = new placesRequest(search.searchPoints.pop(), 
+												search.radius, 
+												search.keyword);
 
 				placesService.nearbySearch(request, function(results, status) {
 					if (status == google.maps.places.PlacesServiceStatus.OK) {
-						// console.log(results);
 						processPlaces(results); 
 					}
 					else {
-						console.log(status);
+						// Uncomment for troubleshooting:
+						// console.log(status);
 					}
 
 					// Counter tracks whether all Places requests have returned.
 					search.counter++;
 					if (search.counter >= search.numSearches) {
 
-						// Check if there are search results:
+						// Checks if there are search results and alerts user if not.
 						if (Object.keys(search.places).length == 0) {
-							$("#list-container")
-								.append("<strong>There are no places that match your search.</strong>")
-								.addClass("text-alert");
-							$(".text-alert, #start-over-div").show();
-							$(".loading").hide();
+							$('#list-container')
+								.append('<strong>There are no places that match your search.</strong>')
+								.addClass('text-alert');
+							$('.text-alert, #start-over-div').show();
+							$('.loading').hide();
 						}
 						else {
 							getAddedDistance(route);
@@ -171,7 +176,8 @@ function Search(keyword, sortby, opennow) {
 
 
 function distanceMatrixRequest(origins, destinations) {
-	// Build distance matrix API request
+	// Distance matrix API request object
+
 	this.origins = origins;
 	this.destinations = destinations;
 	this.travelMode = route.travelMode;
@@ -179,7 +185,8 @@ function distanceMatrixRequest(origins, destinations) {
 
 
 function placesRequest(location, radius, keyword) {
-	// Build places API request
+	// Places API request object
+
 	this.location = location;
 	this.radius = radius;
 	this.rankby = google.maps.places.RankBy.PROMINENCE;
@@ -189,7 +196,8 @@ function placesRequest(location, radius, keyword) {
 
 
 function directionsRequest(origin, destination, waypoints) {
-	// Build directions API request
+	// Directions API request object
+
 	this.origin = origin;
 	this.destination = destination;
 	this.travelMode = route.travelMode;

@@ -1,49 +1,45 @@
-$(document).ready(function () {
+$(document).ready(function() {
 	initializeMap();
 
 	// Checks for login status from jinja template.
-	loggedIn = $("#logged-status").text();		
+	loggedIn = $('#logged-status').text();		
 
 	// When "Get Current Location" is checked, calls geolocation API
 	// Note: not currently used.
-	$("#geolocation").on('click', getLocation);
+	$('#geolocation').on('click', getLocation);
 
-	// Call jQuery Geocomplete to add autocomplete to start and end fields
-	$("#start, #end").geocomplete({details: "form"});
+	// Calls jQuery Geocomplete to add autocomplete to start and end fields
+	$('#start, #end').geocomplete({details: 'form'});
 
-	// Instantiate Google Directions API and declare global variables.
+	// Instantiates Google Directions API and declares global variables.
 	directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer({draggable: true});
 	markersArray = [];
 	route = null;
 
 	// When form submitted, initiates Place search
-	$("#directions-form").submit(function(event) {
+	$('#directions-form').submit(function(event) {
 		event.preventDefault();
 		findPlaces();
 	});
 
-	// Handle button clicks
-	$("#send-button").click(checkLoggedIn);
+	// Handles button clicks
+	$('#send-button').click(checkLoggedIn);
 	
-	$("#add-stop").click(function() {
-		$("#start, #end, #driving, #biking, #walking").attr("disabled", "disabled");
-		clearMap();
-	});
-
-	$("#revise-search").click(function() {
-		$("#start, #end, #driving, #biking, #walking").attr("disabled", "disabled");
+	// Resets search bar based on button clicks.
+	$('#add-stop, #revise-search').click(function() {
+		$('#start, #end, #driving, #biking, #walking').attr('disabled', 'disabled');
 		clearMap();
 	});
 	
-	$("#reset").click(function() {
+	$('#reset').click(function() {
 		clearMap();
 		clearSearch();
 	});
 
 	// Checks for route data from Jinja template and calls rebuild function
 	// if there is a saved route from the server.
-	if ($("#route_start_from_server").text() != "") {
+	if ($('#route_start_from_server').text() != '') {
 		rebuildSavedRoute();
 	};
 
@@ -51,8 +47,7 @@ $(document).ready(function () {
 
 
 function initializeMap() {
-	
-	// Set initial map options
+	// Sets initial map options
 	var mapOptions = {
 		center: {lat: 37.779372, lng: -122.423356},
 		zoom: 12,
@@ -63,31 +58,35 @@ function initializeMap() {
 		panControl: false
 	};
 
-	// Create instance of map object, specifying the <div> container and map options
+	// Creates instance of map object, specifying the <div> container and map options
 	map = new google.maps.Map(document.getElementById('map-container'), mapOptions);
 };
 
 
 function clearMap(){
 	// Clears markers from map and resets search bar.
+
 	removeMarkers();
-	$("#list-container, #directions").empty().removeClass("text-alert");
-	$("#directions-todo, #phone-loggedout, #get-more-results").hide();
-	$(".initial-search").show();
+	$('#list-container, #directions').empty().removeClass('text-alert');
+	$('#directions-todo, #phone-loggedout, #get-more-results').hide();
+	$('.initial-search').show();
 };
 
 
 function clearSearch() {
 	// Clears directions and resets search and route objects.
+
 	directionsDisplay.setMap(null);
 	search = null;
 	route = null;
-	$("#start, #end, #keyword, #driving, #biking, #walking").removeAttr("disabled").val("");
-	$("#start-over-div").hide();
+	$('#start, #end, #keyword, #driving, #biking, #walking').removeAttr('disabled').val('');
+	$('#start-over-div').hide();
 };
 
 
 function removeMarkers() {
+	// Removes all marker objects displayed on map.
+
 	for (var i = 0; i < markersArray.length; i++) {
 		markersArray[i].setMap(null);
 	}
@@ -97,6 +96,7 @@ function removeMarkers() {
 
 function displaySearchPoint(point, radius) {
 	// Displays search bubbles for purposes of testing.
+
 	var circle = {
 			fillColor: '#000',
 			fillOpacity: 0.3,
@@ -104,7 +104,7 @@ function displaySearchPoint(point, radius) {
 			map: map,
 			center: point,
 			radius: radius
-		}
+		};
 	pointRadius = new google.maps.Circle(circle);
 	markersArray.push(pointRadius);	
 };
@@ -113,8 +113,8 @@ function displaySearchPoint(point, radius) {
 function displayPlace(location, delay, place) {
 	// Creates and sets marker object for each place.
 
-	inactive = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|8AB8E6";
-	active = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|2E3D4C";
+	inactive = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|8AB8E6';
+	active = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|2E3D4C';
 
 	// Sets timeout to stagger animation of pin drops.
 	setTimeout (function() {
@@ -136,7 +136,7 @@ function displayPlace(location, delay, place) {
 		google.maps.event.addListener(marker, 'mouseover', function(evt) {
 			place.infoWindow.open(map, marker);
 			marker.setIcon(active);
-			$("#"+place.id).css({"background-color": "#EEE"});
+			$('#'+place.id).css({'background-color': '#EEE'});
 
 			// If place details have not already been populated, calls
 			// function that makes request to Google Places API for details
@@ -147,13 +147,14 @@ function displayPlace(location, delay, place) {
 			showStars();
 		});
 
+		// When mouse leaves the marker, closes info window
 		google.maps.event.addListener(marker, 'mouseout', function(evt) {
 			place.infoWindow.close(map, marker);
 			marker.setIcon(inactive);
-			$("#"+place.id).css({"background-color": "transparent"});
+			$('#'+place.id).css({'background-color': 'transparent'});
 		});			
 
-		// When marker clicked, directions are updated with marker location/place as waypoint
+		// When marker clicked, updates directions with marker location/place as waypoint
 		google.maps.event.addListener(marker, 'click', function(evt) {
 			addWaypoint(place);
 			displayDirections(place);
@@ -166,19 +167,24 @@ function displayPlace(location, delay, place) {
 
 
 function addWaypoint(place) {
-	var waypoint = new Waypoint(place.location)
+	// Creates new Waypoint object and stores in route object
+
+	var waypoint = new Waypoint(place.location);
 	route.waypoints.push(waypoint);
 	route.places.push(place);
 };
 
 
 function handleListHover(place, marker) {
-	// When mouse hovers on list item, changes marker properties to highlight associated marker.
-	$("#"+place.id)
+	/* 	When mouse hovers on list item, changes marker properties to highlight 
+		associated marker. On click, add waypoint to the route and display new
+		directions */
+		
+
+	$('#'+place.id)
 		.mouseenter(function () {
-			// marker.setAnimation(google.maps.Animation.BOUNCE);
 			marker.setIcon(active);
-			$(this).css({"background-color": "#EEE"});
+			$(this).css({'background-color': '#EEE'});
 
 			if (!place.address) {
 				populatePlaceDetails(place);
@@ -188,10 +194,9 @@ function handleListHover(place, marker) {
 			showStars();
 		})
 		.mouseleave(function () {
-			// marker.setAnimation(null);
 			marker.setIcon(inactive);
-			$(this).css({"background-color": "transparent"});
-			$("#details-"+place.id).hide();
+			$(this).css({'background-color': 'transparent'});
+			$('#details-'+place.id).hide();
 			place.infoWindow.close(map, marker);
 		})
 		.click(function() {
@@ -202,21 +207,21 @@ function handleListHover(place, marker) {
 }
 
 function populatePlaceDetails(place) {
-	// Calls function to retrieve place details and then creates content for
-	// icon infowindows.
+	/* 	Calls function to retrieve place details and then creates content for
+		icon infowindows. */
 
 	getPlaceDetails(place)
 	.then(
 		function(response) {
 			if (place.website) {
-				var content = "<a href=" + place.website + ">" + place.name  + 
-				"</a><br>" + place.phone + "<br>" + place.address + 
-				"<span class='stars'><span>" + place.rating + "</span></span>";
+				var content = '<a href=' + place.website + '>' + place.name  + 
+				'</a><br>' + place.phone + '<br>' + place.address + 
+				'<span class="stars"><span>' + place.rating + '</span></span>';
 			}
 			else {
-				var content = place.name  + "<br>" + place.phone + "<br>" + 
-				place.address + "<span class='stars'><span>" + 
-				place.rating + "</span></span>";
+				var content = place.name  + '<br>' + place.phone + '<br>' + 
+				place.address + '<span class="stars"><span>' + 
+				place.rating + '</span></span>';
 			}
 
 			place.infoWindow.setContent(content);
@@ -224,14 +229,16 @@ function populatePlaceDetails(place) {
 	);
 };
 
-function addInfoWindow (place) {
+function addInfoWindow(place) {
 	// Create infowindow and open on marker hover.
+
 	place.infoWindow = new google.maps.InfoWindow(
-		{ content: "" });			
+		{ content: '' }
+	);			
 };
 
 
-function getPlaceDetails (place) {
+function getPlaceDetails(place) {
 	// Call to Google Places Detail API
 
 	var deferred = Q.defer();
@@ -250,7 +257,7 @@ function getPlaceDetails (place) {
 
 			deferred.resolve(response);
 		}
-	})
+	});
 
 	return deferred.promise;
 };
@@ -258,38 +265,40 @@ function getPlaceDetails (place) {
 function showStars() {
 	// Shows stars div and resizes based on numeric rating.
 
-	$(".stars span")
+	$('.stars span')
 		.each(function() {
 			var val = parseFloat($(this).html());
 			if (val > 0 || val < 5) {
 				var size = Math.max(0, (Math.min(5, val))) * 16;
 				$(this).empty()
-					.css({"width" : size, "display" : "block"});
+					.css({'width' : size, 'display' : 'block'});
 			}
 			else {
-				$(this).html("<strong>Unrated</strong>")
-					.css({"background" : "none", "margin-left" : 16.5})
+				$(this).html('<strong>Unrated</strong>')
+					.css({'background' : 'none', 'margin-left' : 16.5})
 					.show();
 			}
 		});
-	$(".stars").show();
+	$('.stars').show();
 
 }
 
 function getLocation() {
-	// Checks for geolocation capabilities, gets location, and calls function
-	// to set the location in start field.
+	/*	Checks for geolocation capabilities, gets location, and calls function
+		to set the location in start field. */
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(setAsStart);
     } 
     else { 
-        alert("Geolocation is not supported by this browser.");
+        alert('Geolocation is not supported by this browser.');
     }
 };
 
 function setAsStart(position) {
-	// Takes position from geolocation API and reverse geocodes the 
-	// lat and lng to populate the "start" field with an address.
+	/* Takes position from geolocation API and reverse geocodes the 
+		lat and lng to populate the "start" field with an address. */
+
 	var geocoder = new google.maps.Geocoder();
 	var latlng = new google.maps.LatLng(
 		position.coords.latitude,
@@ -297,7 +306,8 @@ function setAsStart(position) {
 	geocoder.geocode( 
 		{'latLng' : latlng}, 
 		function (response, status) {
-			document.getElementById("start").value = (response[0].formatted_address);
-		});
+			document.getElementById('start').value = (response[0].formatted_address);
+		}
+	);
 };
 
