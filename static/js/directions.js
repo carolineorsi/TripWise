@@ -33,16 +33,16 @@ function findPlaces() {
 			}
 		);
 
-	// 
+	
 	// google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
 	// 	if (route.firstSearch == 1) {
 	// 		console.log("check");
 	// 		var waypoint = new Waypoint(directionsDisplay.directions.lc.waypoints[0].location);
 	// 		waypoint.stopover = false;
 	// 		route.waypoints.push(waypoint);
+	// 		removeMarkers();
 	// 		route.getPolyline(directionsDisplay.directions);
 	// 		console.log("check2");
-	// 		removeMarkers();
 	// 		search.getSearchPoints(route);
 	// 		search.getPlaces();
 	// 		console.log("check3");

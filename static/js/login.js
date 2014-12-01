@@ -20,6 +20,7 @@ $(document).ready(function () {
 
 
 function handleLogin(evt) {
+	// Sends AJAX GET request to server to log in the user.
 	evt.preventDefault();
 
 	var email = $("#email").val();
@@ -44,6 +45,8 @@ function handleLogin(evt) {
 
 
 function handleCreate(evt) {
+	// Sends AJAX POST request to server to create a new user account.
+
 	evt.preventDefault();
 	$("#login-alert").html("");
 
@@ -76,6 +79,7 @@ function handleCreate(evt) {
 }
 
 function handleSaveRoute(evt) {
+	// Sends AJAX POST request to create a new trip in the database.
 	evt.preventDefault();
 
 	if (route == null) {
@@ -105,6 +109,9 @@ function handleSaveRoute(evt) {
 			'places': JSON.stringify(places)},
 			function(response){
 				displayResultStatus(response.status, response.message, "#sent-save");
+				if (response.status == "success") {
+					$("#route-name").val("");
+				}
 			}
 		);
 	}
