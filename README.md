@@ -4,7 +4,7 @@
 TripWise is a trip-planning app that allows travelers to search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
 
 #### Technologies Used:
-JavaScript, Google Maps JavaScript APIs (Directions, Places, Distance Matrix, and Geocoding), JQuery, Underscore.js, HTML, CSS, Python, SQLite, SQLAlchemy, Twilio API
+JavaScript, Google Maps JavaScript APIs (Directions, Places, Distance Matrix, and Geocoding), JQuery, Underscore.js, HTML, CSS, Flask, Python, Jinja ,SQLite, SQLAlchemy, Twilio API
 
 #### Detailed Description of Features:
 
@@ -30,7 +30,7 @@ TripWise uses numerous tools from the Google Maps JavaScript API suite to search
 The data structures used by the app allow users to complete multiple searches to build a journey with numerous destinations. As each new stop is chosen, the app creates a new Waypoint object that is stored within an array in the Route object. The app then makes a new call to the Directions API, passing the new waypoint object along with the original search parameters. If there are multiple waypoints, the Directions API optimizes the route and returns the waypoint order in an array. The reorderWaypoints function uses the waypoint order array to sort the waypoints that are stored in the route object.
 
 ##### Create Account, Log In, and Trip Saving:
-The Create Account and Log In features are included as drop-down items on the site's navigation bar for easy access. Upon submittal, the app makes an AJAX request to the server, and the database is queried or updated as appropriate. Once logged in, the app updates the navigation bar using JQuery.
+The Create Account and Log In features are included as drop-down items on the site's navigation bar for easy access. Upon submittal, the app makes an AJAX request to the server, and the database is queried or updated as appropriate. Passlib, a Python password hashing library, is used to store and verify passwords in the database. Once logged in, the app updates the navigation bar using JQuery. The user's ID is stored in the Flask session.
 
 While logged in, users may save a trip or access previously saved trips using anchors on the site navigation bar. When Save Trip is clicked, an appropriate AJAX call is made to the server to create the database records. A route record is stored that references the user ID, a unique route ID, and other key route details such as starting and ending points. The associated Waypoints are stored in a waypoints table and reference back to the route using the route ID. SQLAlchemy is used to create, query, and update the database, and to define relationships between tables.
 
@@ -39,10 +39,12 @@ When the user clicks to retrieve saved trips, the database is queried for routes
 ##### Send Trip to Phone:
 TripWise employs the Twilio API to send route links to a user's phone. A request to the API begins when the user clicks the "Send to Phone" button. If the user is logged in, the app will set the request phone number to the user's stored number; otherwise, the app prompts the user for a phone number. The Twilio API is called from the server-side (Python) script. The send_to_phone function calls the Twilio API once for each waypoint in the route. Each message contains a URL for directions to the waypoint from the prior point. The URL is specially formatted to open in the Google Maps app for navigation.
 
-
 ##### Error Handling and User Input Verification:
-
-
-
+Because TripWise is interactive and accepts a significant amount of user input, input verification and error handling have been built in to prevent improper input.
+  * If the user does not input required search parameters (start, end, and keyword), they will be prompted to verify their inputs.
+  * If the Google Directions API is not able to provide results based on the provided start and end points, the user will be prompted to verify their inputs.
+  * If no results are returned by the Places API request, an alert will inform the user that no places were found to match their search keyword.
+  * If the user does not provide required inputs when creating an account, logging in, or saving a route, an alert will prompt them to verify their inputs. An alert will also be shown if the login password is incorrect, or if the user tries to create an account with an email already in the user database.
+  * When sending a message to a smartphone, the app parses and validates the phone number format before sending the request to the Twilio API. If the message send still fails, the user is prompted to verify the entered phone number.
 
 
