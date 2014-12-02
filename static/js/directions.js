@@ -22,7 +22,6 @@ function findPlaces() {
 	// Gets initial directions and use returned value to find Places.
 	route.getDirections()
 		.then(function(response) {
-			// route.reorderWaypoints(response.routes[0].waypoint_order);
 			route.getPolyline(response);
 			return search.getSearchPoints(route);
 		})

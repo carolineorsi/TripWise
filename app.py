@@ -1,4 +1,5 @@
-from flask import Flask, request, session, render_template, g, redirect, url_for, flash, jsonify, make_response
+from flask import Flask, request, session, render_template, g, redirect
+from flask import url_for, flash, jsonify, make_response
 from flask import session as flask_session
 from passlib.hash import sha256_crypt
 import jinja2
@@ -12,6 +13,7 @@ import json
 app = Flask(__name__)
 app.secret_key = 'kbegw*^6^Fhjkh'
 
+
 @app.route("/")
 def index():
     """ This is the 'cover' page of the site """
@@ -24,7 +26,6 @@ def index():
     return render_template("directions.html", user_status=user_status)
 
 
-
 @app.route("/send_to_phone", methods=["GET"])
 def send_to_phone():
     """ Takes and processes data to send to cell phone. """
@@ -32,10 +33,16 @@ def send_to_phone():
     response = {"status": "warning"}
 
     if 'id' in flask_session:
-        user = model.session.query(model.User).filter_by(id=flask_session['id']).first()
+        user = (model.session.query(model.User)
+                .filter_by(id=flask_session['id'])
+                .first())
         phone_num = user.phone
     else:
-        phone_num = request.args.get('phone').replace(".","").replace("-","").replace("(","").replace(")","")
+        phone_num = (request.args.get('phone')
+                            .replace(".", "")
+                            .replace("-", "")
+                            .replace("(", "")
+                            .replace(")", ""))
         if not phone.validate_phone(phone_num):
             response["message"] = "Not a valid phone number"
             return jsonify(response)
@@ -59,10 +66,10 @@ def send_to_phone():
         response["status"] = "success"
         response["message"] = "Route Sent!"
     else:
-        response["message"] = "Message not sent. Please confirm the phone number."
-        
-    return jsonify(response)
+        response["message"] = ("Message not sent. "
+                               "Please confirm the phone number.")
 
+    return jsonify(response)
 
 
 @app.route("/login", methods=["POST"])
@@ -79,7 +86,7 @@ def login():
 
         if user is None:
             response["message"] = "There is no user with that email address."
-        
+
         elif sha256_crypt.verify(request.form.get("password"), user.password):
             flask_session['id'] = user.id
             flask_session['firstname'] = user.firstname
@@ -89,9 +96,8 @@ def login():
             response["user"] = user.id
         else:
             response["message"] = "Invalid password."
-    
-    return jsonify(response)
 
+    return jsonify(response)
 
 
 @app.route("/create", methods=["POST"])
@@ -100,9 +106,13 @@ def create_account():
 
     firstname = request.form.get("firstname").title()
     lastname = request.form.get("lastname").title()
-    email = request.form.get("email").lower() 
+    email = request.form.get("email").lower()
     password = request.form.get("password")
-    phone_num = request.form.get("phone").replace(".","").replace("-","").replace("(","").replace(")","")
+    phone_num = (request.form.get("phone")
+                 .replace(".", "")
+                 .replace("-", "")
+                 .replace("(", "")
+                 .replace(")", ""))
 
     response = {"status": "warning"}
 
@@ -116,7 +126,11 @@ def create_account():
         response["message"] = "Not a valid phone number."
     else:
         hashed_password = sha256_crypt.encrypt(password)
-        new_user = users.create_new_user(firstname, lastname, email, hashed_password, phone_num)
+        new_user = users.create_new_user(firstname,
+                                         lastname,
+                                         email,
+                                         hashed_password,
+                                         phone_num)
 
         if new_user:
             response["status"] = "success"
@@ -131,7 +145,6 @@ def create_account():
     return jsonify(response)
 
 
-
 @app.route("/save", methods=["POST"])
 def save_route():
     """ Saves user route to database. """
@@ -142,11 +155,13 @@ def save_route():
 
     else:
         route = users.save_route_to_db(request.form.get("name"),
-                                    request.form.get("start"),
-                                    request.form.get("end"),
-                                    request.form.get("travel_mode"),
-                                    flask_session['id'])
-        users.save_waypoints_to_db(route, request.form.get("places"), flask_session['id'])
+                                       request.form.get("start"),
+                                       request.form.get("end"),
+                                       request.form.get("travel_mode"),
+                                       flask_session['id'])
+        users.save_waypoints_to_db(route,
+                                   request.form.get("places"),
+                                   flask_session['id'])
         response["status"] = "success"
         response["message"] = "Trip has been saved!"
 
@@ -155,7 +170,8 @@ def save_route():
 
 @app.route("/mytrips")
 def list_routes():
-    """ Queries database for routes saved by logged in user and returns route data. """
+    """ Queries database for routes saved by logged in user
+    and returns route data. """
 
     route_list = users.get_routes_by_user(flask_session['id'])
     response = {}
@@ -179,7 +195,6 @@ def list_routes():
     return jsonify(response)
 
 
-
 @app.route("/get_route")
 def get_route():
     """ Queries database for a saved route and returns route data """
@@ -193,7 +208,7 @@ def get_route():
     route_data['travel_mode'] = route.travel_mode
     route_data['waypoints'] = []
     route_data['waypoint_names'] = []
-    
+
     for waypoint in route.waypoints:
         route_data['waypoints'].append(waypoint.address)
         route_data['waypoint_names'].append(waypoint.name)
