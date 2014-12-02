@@ -38,11 +38,16 @@ def send_to_phone():
                 .first())
         phone_num = user.phone
     else:
-        phone_num = (request.args.get('phone')
-                            .replace(".", "")
-                            .replace("-", "")
-                            .replace("(", "")
-                            .replace(")", ""))
+        try:
+            phone_num = (request.args.get('phone')
+                                .replace(".", "")
+                                .replace("-", "")
+                                .replace("(", "")
+                                .replace(")", ""))
+        except:
+            response['message'] = "Please enter a phone number."
+            return jsonify(response)
+
         if not phone.validate_phone(phone_num):
             response["message"] = "Not a valid phone number"
             return jsonify(response)
