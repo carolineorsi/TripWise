@@ -22,7 +22,7 @@ TripWise uses numerous tools from the Google Maps JavaScript API suite to search
   5. The places are ranked using one of two ranking algorithms, depending on the user's selection:
     * Sort By Highest Rating compares business rating details provided in the Places API response and sorts higher-rated businesses to the beginning of the list.
     * Sort by Distance From Route calculates the distance of each place to the points in the polyline array and sorts closer places to the beginning of the list.
-  6. The app calls the Distance Matrix API to retrieve the travel durations to each waypoint from the start, and from each waypoint to the trip end, sums the values, and compares the total to the original trip duration in order to determine the total time that the stop will add to the trip. (Note: In order to prevent exceedance of Google API query limits, only the top ten ranked places are sent to the API in the initial request. Additional calls are sent for the remaining items as the user requests "More Results".)
+  6. The app calls the Distance Matrix API to retrieve the travel durations to each waypoint from the start, and from each waypoint to the trip end, sums the values, and compares the total to the original trip duration in order to determine the total time that the stop will add to the trip. (Note: In order to prevent exceedance of Google API query limits, only the top ten ranked places are sent to the API in the initial request. Additional calls are sent for the remaining items as the user requests "More Results.")
   7. The app adds marker objects to the map corresponding to the top ten results and returns a list of the results to the user, using JQuery to change the DOM.
 
 **Additional Search Inputs**<br>
