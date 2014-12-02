@@ -3,6 +3,8 @@
 #### Basic Description:
 TripWise is a trip-planning app that allows travelers to search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
 
+![alt tag](https://raw.githubusercontent.com/carolineorsi/TripWise/master/screenshots/Infowindows.png =250px)
+
 #### Technologies Used:
 JavaScript, Google Maps JavaScript APIs (Directions, Places, Distance Matrix, and Geocoding), JQuery, Underscore.js, HTML, CSS, Flask, Python, Jinja ,SQLite, SQLAlchemy, Twilio API
 
