@@ -1,131 +1,141 @@
 <html>
-    <head>
-        <title>TripWise</title>
-        <link rel="shortcut icon" href="/static/img/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/static/css/style.css" />
-        
-        <style>
-        {% if 'id' in session %}
+  <head>
+    <title>TripWise</title>
+    <link rel="shortcut icon" href="/static/img/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    
+    <style>
+      {% if 'id' in session %}
 
         li.logged-out {
           display: none;
         }
-        {% else %}
+      {% else %}
         li.logged-in {
           display: none;  
         }
-        {% endif %}
-        </style>
-    </head>
-    <body>
-        <div id="logged-status" style="display:none">{{ user_status }}</div>
-        <div class="navbar navbar-default navbar-fixed-top" id="navigation-bar">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" id="site-name" href="/">TripWise</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    
-                        <li id="user-firstname" class="logged-in">
-                          {% if 'id' in session %}
-                            <a>Hi {{ session.firstname }}!</a>
-                          {% endif %}
-                        </li>
-                        
-                        <li id="save-trip" class="logged-in"><a>Save Trip</a>
-                            <div class="form-signin dropdown">
-                              <form class="form-signin" id="save-route" method="POST">
-                              <h4>Save Route</h4>
-                                <div class="form-group">
-                                  <input type="text" name="route-name" class="form-control" id="route-name" placeholder="Enter route name">
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
-                                <p id="sent-save" class="alert alert-success"></p>
-                              </form>
-                            </div>
-                        </li>
+      {% endif %}
+    </style>
+  </head>
 
-                        <li id="my-trips" class="logged-in"><a href="#"><span id="my-trips-link">My Trips</span></a>
-                        </li>
-                         
-                        <li id="logout" class="logged-in"><a href="/logout">Log Out</a></li>
-                    
-                        <li id="login" class="logged-out"><a>Log In</a>
-                            <div class="form-signin dropdown">
-                              <form class="form-signin" id="login-user-dropdown" method="POST">
-                              <h4>Log In</h4>
-                                <div class="form-group">
-                                  <label for="email">Email Address</label>
-                                  <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
-                                </div>
-                                <div class="form-group" >
-                                  <label for="password">Password</label>
-                                  <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
-                                <p id="sent-login" class="alert alert-success"></p>
-                              </form>
-                            </div>
-                        </li>
-                    
-                        <li id="create-account" class="logged-out"><a>Create Account</a>
-                            <div class="form-create dropdown">
-                              <form class="form-create" id="create-new-user" method="POST">
-                              <h4>Create Account</h4>
-                                <div class="form-group">
-                                  <label for="first-name">First Name</label>
-                                  <input type="text" name="first-name" class="form-control" id="first-name" placeholder="First Name">
-                                </div>
-                                <div class="form-group">
-                                  <label for="last-name">Last Name</label>
-                                  <input type="text" name="last-name" class="form-control" id="last-name" placeholder="Last Name">
-                                </div>
-                                <div class="form-group">
-                                  <label for="email">Email Address</label>
-                                  <input type="email" name="email" class="form-control" id="new-email" placeholder="Enter email">
-                                </div>
-                                <div class="form-group" >
-                                  <label for="password">Password</label>
-                                  <input type="password" name="password" class="form-control" id="new-password" placeholder="Password">
-                                </div>
-                                <div class="form-group" >
-                                  <label for="phone">Cell Phone Number</label>
-                                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone">
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
-                                <p id="sent-create" class="alert alert-success"></p>
-                              </form>
-                            </div>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-    
-        {% block body %}{% endblock %}
-
-        <div id="route-popup">
-          <h3>Saved Trips</h3>
-          <div id="route-list">
-          </div>
+  <body>
+    <div id="logged-status" style="display:none">{{ user_status }}</div>
+    <div class="navbar navbar-default navbar-fixed-top" id="navigation-bar">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" id="site-name" href="/">TripWise</a>
         </div>
 
-        <div id="map-container">
-        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+                
+            <li id="user-firstname" class="logged-in">
+              {% if 'id' in session %}
+                <a>Hi {{ session.firstname }}!</a>
+              {% endif %}
+            </li>
+            
+            <li id="save-trip" class="logged-in"><a>Save Trip</a>
+              <div class="form-signin dropdown">
+                <form class="form-signin" id="save-route" method="POST">
+                  <h4>Save Route</h4>
+                    <div class="form-group">
+                      <input type="text" name="route-name" class="form-control" id="route-name" placeholder="Enter route name">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <p id="sent-save" class="alert alert-success"></p>
+                </form>
+              </div>
+            </li>
 
-            <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
-            <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script src="/static/js/json2.js"></script>
-            <script src="/static/js/underscore.js"></script>
-            <script src="/static/js/initialize-map.js"></script>
-            <script src="/static/js/directions.js"></script>
-            <script src="/static/js/model.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
-            <script src="/static/js/jquery.geocomplete.js"></script> 
-            <script src="/static/js/login.js"></script>
-    </body>
+            <li id="my-trips" class="logged-in"><a href="#"><span id="my-trips-link">My Trips</span></a>
+            </li>
+             
+            <li id="logout" class="logged-in"><a href="/logout">Log Out</a></li>
+        
+            <li id="login" class="logged-out"><a>Log In</a>
+              <div class="form-signin dropdown">
+                <form class="form-signin" id="login-user-dropdown" method="POST">
+                  <h4>Log In</h4>
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
+                    </div>
+                    
+                    <div class="form-group" >
+                      <label for="password">Password</label>
+                      <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <p id="sent-login" class="alert alert-success"></p>
+                </form>
+              </div>
+            </li>
+                
+            <li id="create-account" class="logged-out"><a>Create Account</a>
+              <div class="form-create dropdown">
+                <form class="form-create" id="create-new-user" method="POST">
+                  <h4>Create Account</h4>
+                    <div class="form-group">
+                      <label for="first-name">First Name</label>
+                      <input type="text" name="first-name" class="form-control" id="first-name" placeholder="First Name">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="last-name">Last Name</label>
+                      <input type="text" name="last-name" class="form-control" id="last-name" placeholder="Last Name">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" name="email" class="form-control" id="new-email" placeholder="Enter email">
+                    </div>
+                    
+                    <div class="form-group" >
+                      <label for="password">Password</label>
+                      <input type="password" name="password" class="form-control" id="new-password" placeholder="Password">
+                    </div>
+                    
+                    <div class="form-group" >
+                      <label for="phone">Cell Phone Number</label>
+                      <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <p id="sent-create" class="alert alert-success"></p>
+                </form>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {% block body %}{% endblock %}
+
+    <div id="route-popup">
+      <h3>Saved Trips</h3>
+      <div id="route-list">
+      </div>
+    </div>
+
+    <div id="map-container">
+    </div>
+
+    <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/static/js/json2.js"></script>
+    <script src="/static/js/underscore.js"></script>
+    <script src="/static/js/initialize-map.js"></script>
+    <script src="/static/js/directions.js"></script>
+    <script src="/static/js/model.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
+    <script src="/static/js/jquery.geocomplete.js"></script> 
+    <script src="/static/js/login.js"></script>
+  </body>
 </html>

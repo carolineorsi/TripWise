@@ -2,103 +2,106 @@
 {% block body %}
 
 
-		<div id="control-bar">
-			<div class="loading">
-			</div>
+  <div id="control-bar">
+    <div class="loading">
+    </div>
 
-			<div id="list-container">
-        	</div>
+    <div id="list-container">
+    </div>
 
-	        <div id="directions">
-			</div>
-			<div id="directions-todo" class="control-buttons">
-				<button class="btn btn-default" id="add-stop" type="button">Add Stop</button>
-				<button class="btn btn-default phone-loggedin" id="send-button" type="button">Send to Phone</button>
-			</div>
-			<div id="phone-loggedout">
-				<label for="phone-input">Phone Number</label>
-				<input type="text" id="phone-input" class="form-control" placeholder="Insert phone number">
-				<div id="send-button-div"><button class="btn btn-default" id="send-loggedout" type="button">Send</button></div>
-				<p id="phone-sent" class="alert alert-success"></p>
-			</div>
+    <div id="directions">
+    </div>
 
-			<div class="form-group sidebar-input">
+    <div id="directions-todo" class="control-buttons">
+      <button class="btn btn-default" id="add-stop" type="button">Add Stop</button>
+      <button class="btn btn-default phone-loggedin" id="send-button" type="button">Send to Phone</button>
+    </div>
 
-				<form id="directions-form">
+    <div id="phone-loggedout">
+      <label for="phone-input">Phone Number</label>
+      <input type="text" id="phone-input" class="form-control" placeholder="Insert phone number">
+      <div id="send-button-div">
+        <button class="btn btn-default" id="send-loggedout" type="button">Send</button>
+      </div>
+      <p id="phone-sent" class="alert alert-success"></p>
+    </div>
 
-					<div class="initial-search" id="start-field">
-						<label for="start">Start</label>
-						<input type="text" id="start" class="form-control" placeholder="Enter start of trip" value="San Francisco, CA"><br>
-						<!-- Uncomment to implement geolocation: 
-							<div class="control-buttons">
-							<button class="btn btn-default" id="geolocation" type="button">Use Current Location</button>
-						</div> -->
-					</div>
-					
-					<div class="initial-search">
-						<label for="end">End</label>
-						<input type="text" id="end" class="form-control" placeholder="Enter end of trip" value="Ventura, CA"><br>
-					</div>
-					
-					<div class="initial-search">
-						<label for="keyword">Keyword</label>
-						<input type="text" id="keyword" class="form-control" placeholder="Enter keyword" value="Burrito"><br>
-					</div>
-					
-					<div id="extra-search-criteria">
-						<div class="initial-search" id="sort-by">
-							<label for="results-sort">Sort By: </label>
-							<select id="results-sort">
-								<option value="rating">Highest Rated</option>
-								<option value="distance">Distance From Route</option>
-							</select>
-						</div>
+    <div class="form-group sidebar-input">
+      <form id="directions-form">
 
-						<div class="initial-search" id="radios">
-							<div>
-								<input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
-								<label for="opennow" class="travel-mode">Drive</label>
-							</div>
+        <div class="initial-search" id="start-field">
+          <label for="start">Start</label>
+          <input type="text" id="start" class="form-control" placeholder="Enter start of trip" value="San Francisco, CA"><br>
+          <!-- Uncomment to implement geolocation: 
+            <div class="control-buttons">
+            <button class="btn btn-default" id="geolocation" type="button">Use Current Location</button>
+          </div> -->
+        </div>
+        
+        <div class="initial-search">
+          <label for="end">End</label>
+          <input type="text" id="end" class="form-control" placeholder="Enter end of trip" value="Ventura, CA"><br>
+        </div>
+        
+        <div class="initial-search">
+          <label for="keyword">Keyword</label>
+          <input type="text" id="keyword" class="form-control" placeholder="Enter keyword" value="Burrito"><br>
+        </div>
+        
+        <div id="extra-search-criteria">
+          <div class="initial-search" id="sort-by">
+            <label for="results-sort">Sort By: </label>
+            <select id="results-sort">
+              <option value="rating">Highest Rated</option>
+              <option value="distance">Distance From Route</option>
+            </select>
+          </div>
 
-							<div>
-								<input type="radio" name="travel-mode" class="travel-mode" id="biking">
-								<label for="opennow" class="travel-mode">Bike</label>
-							</div>
-							
-							<div>
-								<input type="radio" name="travel-mode" class="travel-mode" id="walking">
-								<label for="opennow" class="travel-mode">Walk</label><br>
-							</div>
-						</div>
+          <div class="initial-search" id="radios">
+            <div>
+              <input type="radio" name="travel-mode" class="travel-mode" id="driving" checked>
+              <label for="opennow" class="travel-mode">Drive</label>
+            </div>
 
-						<div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
-							<label for="opennow">Open Now</label>
-						</div>
-					</div>
-					
-					<div id="submit-buttons" class="control-buttons">
-						<button class="btn btn-default initial-search" type="submit">Go!</button>
-					</div>
-					<div class="control-buttons">
-						<button class="btn btn-default control-buttons" id="get-more-results" type="button" onclick="callDistanceMatrix()">More Results</button>
-					</div>
-				</form>
-			</div>
-			<div id="start-over-div">
-				<button class="btn btn-default" type="button" id="revise-search">Search New Keyword</button>
-				<button class="btn btn-default" type="reset" id="reset">Start Over</button>
-			</div>
-		</div>
+            <div>
+              <input type="radio" name="travel-mode" class="travel-mode" id="biking">
+              <label for="opennow" class="travel-mode">Bike</label>
+            </div>
+            
+            <div>
+              <input type="radio" name="travel-mode" class="travel-mode" id="walking">
+              <label for="opennow" class="travel-mode">Walk</label><br>
+            </div>
+          </div>
 
-		<div style="display:none">
-			{% if start %}
-				<div id="route_start_from_server">{{ start }}</div>
-				<div id="route_end_from_server">{{ end }}</div>
-				<div id="route_travelmode_from_server">{{ travel_mode }}</div>
-				<div id="route_waypointlist_from_server">{{ waypoints }}</div>
-				<div id="route_waypointnames_from_server">{{ waypoint_names }}</div>
-			{% endif %}
-		</div>
+          <div class="initial-search" id="checkbox"><input type="checkbox" id="opennow">
+            <label for="opennow">Open Now</label>
+          </div>
+        </div>
+        
+        <div id="submit-buttons" class="control-buttons">
+          <button class="btn btn-default initial-search" type="submit">Go!</button>
+        </div>
+        <div class="control-buttons">
+          <button class="btn btn-default control-buttons" id="get-more-results" type="button" onclick="callDistanceMatrix()">More Results</button>
+        </div>
+      </form>
+    </div>
+    <div id="start-over-div">
+      <button class="btn btn-default" type="button" id="revise-search">Search New Keyword</button>
+      <button class="btn btn-default" type="reset" id="reset">Start Over</button>
+    </div>
+  </div>
+
+  <div style="display:none">
+    {% if start %}
+      <div id="route_start_from_server">{{ start }}</div>
+      <div id="route_end_from_server">{{ end }}</div>
+      <div id="route_travelmode_from_server">{{ travel_mode }}</div>
+      <div id="route_waypointlist_from_server">{{ waypoints }}</div>
+      <div id="route_waypointnames_from_server">{{ waypoint_names }}</div>
+    {% endif %}
+  </div>
 
 
 {% endblock %}
