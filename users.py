@@ -38,6 +38,8 @@ def save_route_to_db(name, start, end, travel_mode, user):
 
 
 def save_waypoints_to_db(route, places, user):
+    """ Saves each waypoint associated with a route to the database """
+
     places_dict = json.loads(places)
 
     # Create new place for each item in places
@@ -63,6 +65,8 @@ def save_waypoints_to_db(route, places, user):
 
 
 def get_routes_by_user(user_id):
+    """ Queries the database for routes saved for a specific user id """
+
     user = model.session.query(model.User).filter_by(id=user_id).first()
     routes = user.routes
 

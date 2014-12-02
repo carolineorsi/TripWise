@@ -57,6 +57,8 @@ class Waypoint(Base):
 
 
 def connect():
+    """ Used for connecting and creating the database. """
+
     global ENGINE
     global Session
 

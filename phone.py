@@ -41,6 +41,8 @@ def build_url(saddr, daddr, directionsmode):
 
 
 def validate_phone(phone):
+    """ Checks that an entered phone number follows the standard format. """
+
     valid_num = True
 
     if len(phone) != 10:
