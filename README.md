@@ -1,12 +1,12 @@
 ### TripWise
 
 #### Basic Description:
-TripWise is a trip-planning app that allows travelers to search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
+TripWise is a single-page trip-planning app for travelers who are interested in finding a destination along their planned route that will not add too much time to their travel plans. Travelers can search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
 
 <img src="https://raw.githubusercontent.com/carolineorsi/TripWise/master/screenshots/Infowindows.png" style="width: 250px;">
 
 #### Technologies Used:
-JavaScript, Google Maps JavaScript APIs (Directions, Places, Distance Matrix, and Geocoding), JQuery, Underscore.js, HTML, CSS, Flask, Python, Jinja ,SQLite, SQLAlchemy, Twilio API
+JavaScript, Google Maps JavaScript APIs (Directions, Places, Distance Matrix, and Geocoding), JQuery, Underscore.js, HTML, CSS, Flask, Python, Jinja, SQLite, SQLAlchemy, Twilio API
 
 #### Detailed Description of Features:
 
@@ -17,7 +17,7 @@ TripWise uses numerous tools from the Google Maps JavaScript API suite to search
 
 <img src="https://raw.githubusercontent.com/carolineorsi/TripWise/master/screenshots/Search%20bubbles.png" style="width: 250px;">
 
-  3. For earch search point in the array, the getPlaces function calls the Google Places API and searches for places matching the search keyword provided by the user. The Places API returns an array of place objects.
+  3. For each search point in the array, the app calls the Google Places API and searches for places matching the search keyword provided by the user. The Places API returns an array of place objects.
   4. TripWise stores the place objects within a JavaScript object, using the Google place ID as the key in order to remove duplicate entries. 
   5. The places are ranked using one of two ranking algorithms, depending on the user's selection:
     * Sort By Highest Rating compares business rating details provided in the Places API response and sorts higher-rated businesses to the beginning of the list.
