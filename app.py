@@ -1,6 +1,7 @@
 from flask import Flask, request, session, render_template, g, redirect
 from flask import url_for, flash, jsonify, make_response
 from flask import session as flask_session
+# from model import DATABASE_URL
 from passlib.hash import sha256_crypt
 import jinja2
 import os
@@ -10,8 +11,13 @@ import phone
 import users
 import json
 
+
+SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', "abcdefg")
+
 app = Flask(__name__)
-app.secret_key = 'kbegw*^6^Fhjkh'
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///carolineorsi")
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SECRET_KEY'] = SECRET_KEY
 
 
 @app.route("/")
@@ -229,5 +235,9 @@ def logout():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, port=port)
+    model.db.init_app(app)
+    model.db.create_all(app=app)
+
+    PORT = int(os.environ.get("PORT", 5000))
+    DEBUG = "NO_DEBUG" not in os.environ
+    app.run(debug=DEBUG, host="0.0.0.0", port=PORT)

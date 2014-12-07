@@ -2,10 +2,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, Float, String, Boolean, Text, and_, or_
 from sqlalchemy.orm import sessionmaker, relationship, backref
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import scoped_session
 from sqlalchemy import ForeignKey
+from app import app
+import os
 
-engine = create_engine("sqlite:///tripwise.db", echo=False)
+db = SQLAlchemy(app)
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///carolineorsi")
+engine = create_engine(DATABASE_URL, echo=False)
 session = scoped_session(sessionmaker(bind=engine,
                                       autocommit=False,
                                       autoflush=False))
@@ -14,18 +20,18 @@ Base = declarative_base()
 Base.query = session.query_property()
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
     email = Column(String(64), nullable=False)
-    password = Column(String(64), nullable=False)
+    password = Column(String(256), nullable=False)
     firstname = Column(String(30))
     lastname = Column(String(30))
     phone = Column(String(10))
 
 
-class Route(Base):
+class Route(db.Model):
     __tablename__ = "routes"
 
     id = Column(Integer, primary_key=True)
@@ -38,7 +44,7 @@ class Route(Base):
     user = relationship("User", backref=backref("routes", order_by=id))
 
 
-class Waypoint(Base):
+class Waypoint(db.Model):
     __tablename__ = "waypoints"
 
     id = Column(Integer, primary_key=True)
@@ -62,7 +68,7 @@ def connect():
     global ENGINE
     global Session
 
-    ENGINE = create_engine("sqlite:///tripwise.db", echo=False)
+    ENGINE = create_engine(DATABASE_URL, echo=False)
     Session = sessionmaker(bind=ENGINE)
     return Session()
 
