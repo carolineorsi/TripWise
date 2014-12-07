@@ -1,12 +1,10 @@
 from flask import Flask, request, session, render_template, g, redirect
 from flask import url_for, flash, jsonify, make_response
 from flask import session as flask_session
-# from model import DATABASE_URL
 from passlib.hash import sha256_crypt
 import jinja2
 import os
 import model
-import map_data
 import phone
 import users
 import json
