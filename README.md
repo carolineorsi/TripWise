@@ -1,5 +1,7 @@
 ### TripWise
 
+Tripwise has been deployed! Check it out at: <a href="https://corsitripwise.herokuapp.com">corsitripwise.herokuapp.com</a>
+
 #### Basic Description:
 TripWise is a single-page trip-planning app for travelers who are interested in finding a destination along their planned route that will not add too much time to their travel plans. Travelers can search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
 
