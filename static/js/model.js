@@ -112,7 +112,7 @@ function Search(keyword, sortby, opennow) {
         route.polyline[i].k,
         route.polyline[i].B,
         this.searchPoints[this.searchPoints.length - 1].k,
-        this.searchPoints[this.searchPoints.length - 1].B
+        this.searchPoints[this.searchPoints.length - 1].D
       );
 
       if ((distanceBetweenPoints * 1000) > (this.radius)) {

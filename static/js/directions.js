@@ -53,7 +53,7 @@ function processPlaces(placeRequestResults) {
   _.each(placeRequestResults, function(place) {
     var latlng = new google.maps.LatLng(
       place.geometry.location.k,
-      place.geometry.location.B
+      place.geometry.location.D
     );
 
     if (place.rating) {
@@ -68,7 +68,7 @@ function processPlaces(placeRequestResults) {
       place.name,
       place.place_id,
       place.geometry.location.k,
-      place.geometry.location.B,
+      place.geometry.location.D,
       latlng,
       rating
     );
@@ -93,7 +93,7 @@ function rankByDistance(place) {
   for (var i = 0; i < polylineLength; i++) {
     var lat1 = route.polyline[i].k;
     var lat2 = place.lat;
-    var lng1 = route.polyline[i].B;
+    var lng1 = route.polyline[i].D;
     var lng2 = place.lng;
 
     var distanceFromPolyline = getDistanceFromLatLonInKm(lat1,
@@ -155,7 +155,7 @@ function getAddedDistance() {
   })
 
   search.unreturnedPlaces = _.map(search.placeList, function(item) {
-    return new google.maps.LatLng(item.location.k, item.location.B);
+    return new google.maps.LatLng(item.location.k, item.location.D);
   })
 
   callDistanceMatrix();
