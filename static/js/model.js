@@ -110,7 +110,7 @@ function Search(keyword, sortby, opennow) {
     for (i = 0; i < pointsInPolyline; i++) {
       distanceBetweenPoints = getDistanceFromLatLonInKm(
         route.polyline[i].k,
-        route.polyline[i].B,
+        route.polyline[i].D,
         this.searchPoints[this.searchPoints.length - 1].k,
         this.searchPoints[this.searchPoints.length - 1].D
       );
