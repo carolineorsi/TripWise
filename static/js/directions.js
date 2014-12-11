@@ -328,6 +328,8 @@ function sendMessage(user_phone) {
   /*  Builds route data object and sends AJAX GET request to server-side
     Twilio API function. */
 
+  $("#send-button").attr({"disabled": "disabled"});
+
   var places = {};
   for (var i = 0; i < route.places.length; i++) {
     places[i] = route.places[i].address;
@@ -347,6 +349,7 @@ function sendMessage(user_phone) {
     route_data,
     function(response) {
       displayResultStatus(response.status, response.message, '#phone-sent');
+      $("#send-button").removeAttr("disabled");
     }
   );
 };

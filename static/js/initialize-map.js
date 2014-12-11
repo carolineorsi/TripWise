@@ -219,13 +219,13 @@ function populatePlaceDetails(place) {
   .then(
     function(response) {
       if (place.website) {
-        var content = '<a href=' + place.website + '>' + place.name +
-        '</a><br>' + place.phone + '<br>' + place.address +
+        var content = '<a href=' + place.website + '><strong>' + place.name +
+        '</strong></a><br>' + place.phone + '<br>' + place.address +
         '<span class="stars"><span>' + place.rating + '</span></span>';
       }
       else {
-        var content = place.name  + '<br>' + place.phone + '<br>' +
-        place.address + '<span class="stars"><span>' +
+        var content = '<strong>' + place.name + '</strong><br>' + place.phone + 
+        '<br>' + place.address + '<span class="stars"><span>' +
         place.rating + '</span></span>';
       }
 
