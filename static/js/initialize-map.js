@@ -221,11 +221,11 @@ function populatePlaceDetails(place) {
       if (place.website) {
         var content = '<a href=' + place.website + '><strong>' + place.name +
         '</strong></a><br>' + place.phone + '<br>' + place.address +
-        '<span class="stars"><span>' + place.rating + '</span></span>';
+        '<br><span class="stars"><span>' + place.rating + '</span></span>';
       }
       else {
         var content = '<strong>' + place.name + '</strong><br>' + place.phone + 
-        '<br>' + place.address + '<span class="stars"><span>' +
+        '<br>' + place.address + '<br><span class="stars"><span>' +
         place.rating + '</span></span>';
       }
 
