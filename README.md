@@ -1,6 +1,6 @@
 ### TripWise
 
-Tripwise has been deployed! Check it out at: <a href="http://www.tripwiseapp.com/">www.tripwiseapp.com</a>
+TripWise is an app written by <a href="http://www.linkedin.com/in/carolineorsi/">Caroline Orsi</a>. It is deployed at <a href="http://www.tripwiseapp.com/">www.tripwiseapp.com</a>
 
 #### Basic Description:
 TripWise is a single-page trip-planning app for travelers who are interested in finding a destination along their planned route that will not add too much time to their travel plans. Travelers can search for a place or business along a route, build a multiple-stop trip, save and retrieve trips, and send trips to a smartphone for navigation.
