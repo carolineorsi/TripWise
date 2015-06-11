@@ -111,8 +111,8 @@ function Search(keyword, sortby, opennow) {
       distanceBetweenPoints = getDistanceFromLatLonInKm(
         route.polyline[i].k,
         route.polyline[i].D,
-        this.searchPoints[this.searchPoints.length - 1].k,
-        this.searchPoints[this.searchPoints.length - 1].D
+        this.searchPoints[this.searchPoints.length - 1].A,
+        this.searchPoints[this.searchPoints.length - 1].F
       );
 
       if ((distanceBetweenPoints * 1000) > (this.radius)) {
@@ -122,10 +122,10 @@ function Search(keyword, sortby, opennow) {
     this.searchPoints.push(route.polyline[route.polyline.length - 1]);
     
     // Uncomment this to show search bubbles:
-    // console.log(this.searchPoints.length);
-    // for (var i = 0; i < this.searchPoints.length; i++) {
-    //  displaySearchPoint(this.searchPoints[i], this.radius);
-    // }
+    console.log(this.searchPoints.length);
+    for (var i = 0; i < this.searchPoints.length; i++) {
+     displaySearchPoint(this.searchPoints[i], this.radius);
+    }
   };
 
   this.getPlaces = function() {

@@ -52,8 +52,8 @@ function processPlaces(placeRequestResults) {
 
   _.each(placeRequestResults, function(place) {
     var latlng = new google.maps.LatLng(
-      place.geometry.location.k,
-      place.geometry.location.D
+      place.geometry.location.A,
+      place.geometry.location.F
     );
 
     if (place.rating) {
@@ -67,8 +67,8 @@ function processPlaces(placeRequestResults) {
     search.places[latlng]['place'] = new Place(
       place.name,
       place.place_id,
-      place.geometry.location.k,
-      place.geometry.location.D,
+      place.geometry.location.A,
+      place.geometry.location.F,
       latlng,
       rating
     );
@@ -91,9 +91,9 @@ function rankByDistance(place) {
   var polylineLength = route.polyline.length;
 
   for (var i = 0; i < polylineLength; i++) {
-    var lat1 = route.polyline[i].k;
+    var lat1 = route.polyline[i].A;
     var lat2 = place.lat;
-    var lng1 = route.polyline[i].D;
+    var lng1 = route.polyline[i].F;
     var lng2 = place.lng;
 
     var distanceFromPolyline = getDistanceFromLatLonInKm(lat1,
@@ -155,7 +155,7 @@ function getAddedDistance() {
   })
 
   search.unreturnedPlaces = _.map(search.placeList, function(item) {
-    return new google.maps.LatLng(item.location.k, item.location.D);
+    return new google.maps.LatLng(item.location.A, item.location.F);
   })
 
   callDistanceMatrix();
@@ -192,6 +192,8 @@ function callDistanceMatrix() {
 
 function processDistancesFromStart(response, requestList) {
   // Stores distance and duration of waypoint from trip start point in places object.
+
+  console.log(requestList);
 
   _.each(requestList, function(item, index) {
     search.places[item]['duration'] = response
