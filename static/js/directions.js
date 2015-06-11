@@ -193,8 +193,6 @@ function callDistanceMatrix() {
 function processDistancesFromStart(response, requestList) {
   // Stores distance and duration of waypoint from trip start point in places object.
 
-  console.log(requestList);
-
   _.each(requestList, function(item, index) {
     search.places[item]['duration'] = response
                                         .rows[0]
